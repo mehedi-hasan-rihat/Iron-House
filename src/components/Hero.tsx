@@ -18,11 +18,11 @@ const IMG4 = "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg";
 const easeOut = cubicBezier(0.16, 1, 0.3, 1);
 const easeIn  = cubicBezier(0.4, 0, 1, 1);
 
-/* act1 / act3 content slide variants */
-const fadeUp = {
-  enter:   { opacity: 0, y: 36 },
-  visible: { opacity: 1, y: 0,   transition: { duration: 0.72, ease: easeOut } },
-  exit:    { opacity: 0, y: -24, transition: { duration: 0.45, ease: easeIn  } },
+/* act1 / act3 content — pure opacity crossfade, no y shift */
+const fadeThrough = {
+  enter:   { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.65, ease: easeOut } },
+  exit:    { opacity: 0, transition: { duration: 0.4,  ease: easeIn  } },
 };
 
 /* masked word reveal */
@@ -114,7 +114,7 @@ export default function Hero() {
         {/* ════════════════════════════════
             BG layer — swaps per act
         ════════════════════════════════ */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
 
           {/* ACT 1 bg */}
           {act === 0 && (
@@ -202,13 +202,13 @@ export default function Hero() {
         {/* ════════════════════════════════
             CONTENT layer — swaps per act
         ════════════════════════════════ */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence mode="sync">
 
           {/* ── ACT 1 content ── */}
           {act === 0 && (
             <motion.div key="c0"
               className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-28 md:pb-0 md:px-16 max-w-4xl pointer-events-none z-2"
-              variants={fadeUp} initial="enter" animate="visible" exit="exit"
+              variants={fadeThrough} initial="enter" animate="visible" exit="exit"
             >
               <div className="flex items-center gap-4 mb-8">
                 <motion.span className="block h-px bg-[#BFE01D] w-9"
@@ -302,7 +302,7 @@ export default function Hero() {
           {act === 2 && (
             <motion.div key="c2"
               className="absolute inset-0 z-2 pointer-events-none"
-              variants={fadeUp} initial="enter" animate="visible" exit="exit"
+              variants={fadeThrough} initial="enter" animate="visible" exit="exit"
             >
               {/* top-left: eyebrow + huge number */}
               <motion.div
@@ -397,7 +397,7 @@ export default function Hero() {
 
         {/* ── slide counter ── */}
         <div className="absolute top-24 right-6 md:right-16 hidden md:block pointer-events-none z-3">
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="sync">
             <motion.span key={act} className="label text-white/25 tracking-[0.35em]"
               initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3 }}

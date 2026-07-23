@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Anton, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Cursor from "@/components/Cursor";
 
 const anton = Anton({
   weight:   "400",
@@ -44,6 +45,7 @@ export default function RootLayout({
           fontFamily: "var(--font-sans-loaded, var(--font-sans))",
         }}
       >
+        <Cursor />
         {children}
       </body>
     </html>
