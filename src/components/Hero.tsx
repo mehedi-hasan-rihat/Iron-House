@@ -12,7 +12,6 @@ import {
 const BG   = "https://iron-house.lovable.app/assets/hero-1-Bht4wyUw.jpg";
 const IMG2 = "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg";
 const IMG3 = "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg";
-const IMG4 = "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg";
 
 /*
   Timeline (scrollYProgress 0 → 1, section height = 300vh)
@@ -85,18 +84,19 @@ export default function Hero() {
   const scrollCueOp = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
   const labelOp     = useTransform(scrollYProgress, [0, 0.14], [1, 0]);
 
-  /* ── ACT 2 opacity: fades IN 0.33→0.42, holds, fades OUT 0.60→0.67 ── */
-  const act2Op = useTransform(scrollYProgress, [0.33, 0.42, 0.60, 0.67], [0, 1, 1, 0]);
+  /* ── ACT 2 opacity: fades IN 0.33→0.42, then STAYS (never fades out) ── */
+  const act2Op = useTransform(scrollYProgress, [0.33, 0.42], [0, 1]);
   /* panels slide in */
-  const panel1X  = useTransform(scrollYProgress, [0.33, 0.46], ["-100%", "0%"]);
-  const panel2X  = useTransform(scrollYProgress, [0.36, 0.50], ["100%",  "0%"]);
-  /* stamp rises in, then rises out */
-  const stampY0  = useTransform(scrollYProgress, [0.38, 0.50], ["40px", "0px"]);
-  const stampY1  = useTransform(scrollYProgress, [0.42, 0.54], ["40px", "0px"]);
+  const panel1X = useTransform(scrollYProgress, [0.33, 0.46], ["-100%", "0%"]);
+  const panel2X = useTransform(scrollYProgress, [0.36, 0.50], ["100%",  "0%"]);
+  /* stamp rises in, fades out before act 3 content arrives */
+  const stampOp = useTransform(scrollYProgress, [0.38, 0.50, 0.60, 0.67], [0, 1, 1, 0]);
+  const stampY0 = useTransform(scrollYProgress, [0.38, 0.50], ["40px", "0px"]);
+  const stampY1 = useTransform(scrollYProgress, [0.42, 0.54], ["40px", "0px"]);
 
-  /* ── ACT 3 opacity: fades IN 0.67→0.77, stays until end ── */
+  /* ── ACT 3: content overlay fades IN over Act 2's BG (0.67→0.77) ── */
+  /* Act 2 images stay visible — Act 3 is only the content layer on top */
   const act3Op       = useTransform(scrollYProgress, [0.67, 0.77], [0, 1]);
-  const act3ImgY     = useTransform(scrollYProgress, [0.67, 1.0],  ["8%", "0%"]);
   const act3ContentY = useTransform(scrollYProgress, [0.69, 0.80], ["28px", "0px"]);
 
   return (
@@ -287,7 +287,7 @@ export default function Hero() {
 
 
         {/* ════════════════════════════════════
-            ACT 2 — side panels
+            ACT 2 — side panels (stays as BG for Act 3)
         ════════════════════════════════════ */}
         <motion.div
           className="absolute inset-0 bg-[#050505]"
@@ -365,11 +365,12 @@ export default function Hero() {
                 letterSpacing: "0.4em",
                 textTransform: "uppercase",
                 y: stampY0,
+                opacity: stampOp,
               }}
             >
               Discipline
             </motion.p>
-            <motion.div className="my-3 flex items-center gap-5" style={{ y: stampY0 }}>
+            <motion.div className="my-3 flex items-center gap-5" style={{ y: stampY0, opacity: stampOp }}>
               <span className="block h-px w-12 bg-[#c8a96e]/60" />
               <span className="label text-[#c8a96e] tracking-[0.5em]">×</span>
               <span className="block h-px w-12 bg-[#c8a96e]/60" />
@@ -381,6 +382,7 @@ export default function Hero() {
                 letterSpacing: "0.4em",
                 textTransform: "uppercase",
                 y: stampY1,
+                opacity: stampOp,
               }}
             >
               Strength
@@ -391,24 +393,14 @@ export default function Hero() {
 
 
         {/* ════════════════════════════════════
-            ACT 3 — strength floor takeover
+            ACT 3 — content overlay on top of Act 2 BG
         ════════════════════════════════════ */}
         <motion.div
-          className="absolute inset-0 bg-[#050505]"
+          className="absolute inset-0"
           style={{ opacity: act3Op }}
         >
-          {/* full-bleed image */}
-          <motion.div className="absolute inset-[-4%]" style={{ y: act3ImgY }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={IMG4}
-              alt="Strength floor"
-              className="h-full w-full object-cover object-center"
-            />
-          </motion.div>
-
-          {/* overlays */}
-          <div className="absolute inset-0 bg-[#050505]/55" />
+          {/* dark overlay so text reads over the split images */}
+          <div className="absolute inset-0 bg-[#050505]/70" />
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
