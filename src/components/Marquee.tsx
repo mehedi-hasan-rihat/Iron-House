@@ -1,30 +1,24 @@
-const words = [
-  "DISCIPLINE", "·",
-  "STRENGTH",   "·",
-  "COMMUNITY",  "·",
-  "PERFORMANCE","·",
-  "CONFIDENCE", "·",
-  "TRANSFORMATION", "·",
+const items = [
+  "DISCIPLINE","STRENGTH","COMMUNITY",
+  "PERFORMANCE","CONFIDENCE","TRANSFORMATION",
 ];
 
 export default function Marquee() {
-  const repeated = [...words, ...words, ...words];
   return (
-    <div className="border-y border-[#1a1a1a] py-4 overflow-hidden bg-[#0a0a0a]">
-      <div className="marquee-track">
-        {repeated.map((w, i) => (
-          <span
-            key={i}
-            className={`whitespace-nowrap mx-5 ${
-              w === "·"
-                ? "text-[#c8a96e] text-xs"
-                : "text-[9px] tracking-[0.45em] text-[#333] font-medium"
-            }`}
-          >
-            {w}
-          </span>
+    <div className="relative border-y border-[#1a1a1a] bg-[#050505] py-6 overflow-hidden">
+      <div className="flex marquee-track whitespace-nowrap">
+        {[0, 1].map((dup) => (
+          <div key={dup} className="flex shrink-0 items-center">
+            {items.map((t, i) => (
+              <span key={`${dup}-${i}`} className="flex items-center px-8">
+                <span className="font-display text-4xl md:text-6xl tracking-tight">{t}</span>
+                <span className="mx-8 h-2 w-2 rounded-full bg-[#BFE01D]" />
+              </span>
+            ))}
+          </div>
         ))}
       </div>
     </div>
   );
 }
+

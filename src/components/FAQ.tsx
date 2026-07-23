@@ -1,82 +1,61 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const faqs = [
-  { q: "What is the monthly membership fee?",   a: "Monthly membership starts at BDT 3,500. Quarterly and annual plans reduce the effective monthly cost significantly." },
-  { q: "Do you have separate ladies' timing?",  a: "Yes. Female-only hours every morning 06:00–09:00 and evening 19:00–21:00." },
-  { q: "Are there female personal trainers?",   a: "Ayesha Rahman leads our women's fitness program. Additional certified female coaches are on staff." },
-  { q: "What are your opening hours?",          a: "Saturday–Thursday: 06:00–23:00. Friday: 15:00–22:00." },
-  { q: "Do you provide diet plans?",            a: "All Quarterly and above memberships include a nutrition consultation. Custom diet plans available à la carte." },
-  { q: "Is parking available?",                 a: "Yes. Secured on-site parking, free for all members." },
+  { q: "What is the monthly membership fee?",  a: "Monthly membership starts at BDT 3,500. Quarterly and annual plans reduce the effective monthly cost significantly." },
+  { q: "Do you have separate ladies' timing?", a: "Yes. Our women-only studio operates daily between 10 AM – 4 PM, with dedicated female trainers." },
+  { q: "Are there female personal trainers?",  a: "Absolutely. Our female coaches are ACE / NASM certified, including pre & post-natal specialisations." },
+  { q: "What are your opening hours?",         a: "Saturday to Thursday, 6 AM – 11 PM. Friday, 3 PM – 10 PM." },
+  { q: "Do you provide diet plans?",           a: "Yes. Every member gets a baseline nutrition plan. Personalised plans are included in Half-Year and Annual memberships." },
+  { q: "Is parking available?",               a: "Yes — secure, camera-monitored parking for cars and bikes on-site." },
 ];
 
 export default function FAQ() {
-  const [open, setOpen]       = useState<number | null>(null);
-  const ref                   = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.1 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section ref={ref} className="bg-[#0a0a0a] py-32 md:py-40 px-8 md:px-16">
+    <section className="relative bg-[#050505] py-24 md:py-40">
+      <div className="mx-auto grid max-w-[1600px] gap-12 px-5 md:grid-cols-12 md:px-10">
 
-      {/* Two-col header */}
-      <div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-20 border-b border-[#141414] pb-14 transition-all duration-700"
-        style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)" }}
-      >
-        <div>
-          <p className="text-[8px] tracking-[0.55em] text-[#c8a96e] mb-5">08 — FAQ</p>
-          <h2
-            className="font-black text-white leading-none"
-            style={{ fontSize: "clamp(3rem, 7vw, 7rem)", letterSpacing: "-0.04em" }}
-          >
-            ANSWERS,<br />
-            <span className="text-[#1e1e1e]">NO FLUFF.</span>
-          </h2>
+        <div className="md:col-span-4">
+          <span className="label">(08) — FAQ</span>
+          <h2 className="mt-3 text-display">Answers,<br />no fluff.</h2>
         </div>
-      </div>
 
-      {/* Accordion — full width, no container cap */}
-      <div>
-        {faqs.map((faq, i) => (
-          <div
-            key={i}
-            className="border-b border-[#111] transition-all duration-700"
-            style={{
-              opacity: visible ? 1 : 0,
-              transitionDelay: visible ? `${i * 60}ms` : "0ms",
-            }}
-          >
-            <button
-              onClick={() => setOpen(open === i ? null : i)}
-              className="w-full flex items-center justify-between py-7 text-left group"
-              aria-expanded={open === i}
-            >
-              <span
-                className={`text-sm leading-6 transition-colors duration-300 max-w-lg ${
-                  open === i ? "text-white" : "text-[#3a3a3a] group-hover:text-[#888]"
-                }`}
-              >
-                {faq.q}
-              </span>
-              <span
-                className={`ml-6 shrink-0 text-base font-light transition-all duration-400 ${
-                  open === i ? "rotate-45 text-[#c8a96e]" : "text-[#2a2a2a] group-hover:text-[#444]"
-                }`}
-              >
-                +
-              </span>
-            </button>
-            <div className={`accordion-content ${open === i ? "open" : ""}`}>
-              <p className="text-sm text-[#444] leading-7 pb-7 max-w-lg">{faq.a}</p>
-            </div>
+        <div className="md:col-span-8">
+          <div className="divide-y divide-[#1a1a1a] border-y border-[#1a1a1a]">
+            {faqs.map((f, i) => {
+              const isOpen = open === i;
+              return (
+                <div key={f.q} className="py-6">
+                  <button
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    className="flex w-full items-center justify-between gap-6 text-left"
+                  >
+                    <span className="font-display text-2xl md:text-4xl leading-tight">{f.q}</span>
+                    <span className={`text-[#BFE01D] text-2xl transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}>
+                      +
+                    </span>
+                  </button>
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pt-4 max-w-2xl text-[#bdbdbd]">{f.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );

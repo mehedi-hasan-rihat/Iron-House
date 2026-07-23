@@ -1,92 +1,64 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 
-const programs = [
-  { code: "P01", title: "WEIGHT LOSS",       desc: "12-week body recomposition.",       img: "https://iron-house.lovable.app/assets/hero-1-Bht4wyUw.jpg"   },
-  { code: "P02", title: "MUSCLE BUILDING",   desc: "Hypertrophy split, overload.",      img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg"   },
-  { code: "P03", title: "STRENGTH",          desc: "Squat, bench, deadlift.",           img: "https://iron-house.lovable.app/assets/hero-1-Bht4wyUw.jpg"   },
-  { code: "P04", title: "FUNCTIONAL",        desc: "Mobility, movement, athleticism.",  img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg"   },
-  { code: "P05", title: "HIIT & CARDIO",     desc: "Fat burn, VO₂ max.",               img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg"   },
-  { code: "P06", title: "WOMEN'S FITNESS",   desc: "Female-only studio & coaching.",    img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg"   },
-  { code: "P07", title: "PERSONAL TRAINING", desc: "1-on-1 certified coaching.",        img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg"},
-  { code: "P08", title: "SENIOR FITNESS",    desc: "Low-impact, joint-safe.",           img: "https://iron-house.lovable.app/assets/trainer-2-C9g2Jo5V.jpg"},
+const items = [
+  { n: "P01", t: "Weight Loss",       d: "12-week body recomposition program.",       size: "big"  },
+  { n: "P02", t: "Muscle Building",   d: "Hypertrophy split, progressive overload."               },
+  { n: "P03", t: "Strength",          d: "Powerlifting: squat, bench, deadlift."                  },
+  { n: "P04", t: "Functional",        d: "Movement patterns, mobility, athleticism.", size: "wide" },
+  { n: "P05", t: "HIIT & Cardio",     d: "Fat burn, endurance, VO₂ max."                         },
+  { n: "P06", t: "Women's Fitness",   d: "Female-only coaching & studio."                         },
+  { n: "P07", t: "Personal Training", d: "1-on-1 with certified coach.",              size: "big"  },
+  { n: "P08", t: "Senior Fitness",    d: "Low-impact, joint-safe programming."                    },
 ];
 
 export default function Programs() {
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [hovered, setHovered] = useState<number | null>(null);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.08 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-
   return (
-    <section ref={ref} id="programs" className="bg-[#0a0a0a] py-32 md:py-40">
+    <section id="programs" className="relative bg-[#0b0b0b] py-24 md:py-40">
+      <div className="mx-auto max-w-[1600px] px-5 md:px-10">
 
-      {/* Section header */}
-      <div
-        className="px-8 md:px-16 mb-20 transition-all duration-700"
-        style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)" }}
-      >
-        <p className="text-[8px] tracking-[0.55em] text-[#c8a96e] mb-6">04 — PROGRAMS</p>
-        <div className="flex items-end justify-between flex-wrap gap-6">
-          <h2
-            className="font-black text-white leading-none"
-            style={{ fontSize: "clamp(3rem, 8vw, 8rem)", letterSpacing: "-0.04em" }}
-          >
-            TRAINED FOR<br />
-            <span className="text-[#c8a96e]">WHATEVER.</span>
-          </h2>
-          <p className="text-[#3a3a3a] text-xs leading-6 max-w-xs pb-2">
-            Eight signature tracks. Every one built around your goal, your body, your schedule.
+        <div className="mb-16 grid gap-8 md:grid-cols-12">
+          <div className="md:col-span-6">
+            <span className="label">(04) — Programs</span>
+            <h2 className="mt-3 text-display">
+              Trained for<br />whatever you&apos;re<br />after.
+            </h2>
+          </div>
+          <p className="md:col-span-5 md:col-start-8 self-end text-[#bdbdbd]">
+            Eight signature tracks — every one built and adjusted by our head coaches
+            around your goal, your body, and your schedule.
           </p>
         </div>
-      </div>
 
-      {/* Editorial program list — NOT a card grid */}
-      <div className="border-t border-[#111]">
-        {programs.map((p, i) => (
-          <div
-            key={p.code}
-            className="group relative border-b border-[#111] overflow-hidden cursor-default transition-all duration-700"
-            style={{
-              opacity: visible ? 1 : 0,
-              transitionDelay: visible ? `${i * 50}ms` : "0ms",
-            }}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
-          >
-            {/* Background image — only visible on hover */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={p.img}
-              alt=""
-              aria-hidden
-              className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-10 transition-opacity duration-700 pointer-events-none"
-            />
-
-            <div className="relative flex items-center gap-8 px-8 md:px-16 py-7">
-              <span className={`text-[8px] tracking-widest w-8 shrink-0 transition-colors duration-300 ${hovered === i ? "text-[#c8a96e]" : "text-[#222]"}`}>
-                {p.code}
-              </span>
-              <h3
-                className={`font-black flex-1 leading-none transition-colors duration-300 ${hovered === i ? "text-white" : "text-[#2a2a2a]"}`}
-                style={{ fontSize: "clamp(1.4rem, 4vw, 3.5rem)", letterSpacing: "-0.025em" }}
-              >
-                {p.title}
-              </h3>
-              <p className={`text-[11px] text-[#555] tracking-wide hidden md:block max-w-[180px] text-right transition-opacity duration-300 ${hovered === i ? "opacity-100" : "opacity-0"}`}>
-                {p.desc}
-              </p>
-              <span className={`text-xs shrink-0 transition-all duration-300 ${hovered === i ? "text-[#c8a96e] translate-x-0" : "text-[#1a1a1a] -translate-x-2"}`}>
-                →
-              </span>
-            </div>
-          </div>
-        ))}
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          {items.map((it, i) => (
+            <motion.div
+              key={it.n}
+              initial={{ y: 40, opacity: 0 }}
+              whileInView={{ y: 0, opacity: 1 }}
+              viewport={{ once: true, margin: "-80px" }}
+              transition={{ duration: 0.7, delay: (i % 4) * 0.08, ease: [0.19, 1, 0.22, 1] }}
+              className={`group relative flex flex-col justify-between overflow-hidden bg-[#111111] p-6 transition-colors hover:bg-[#161616] ${
+                it.size === "big"  ? "row-span-2 min-h-[360px]" :
+                it.size === "wide" ? "col-span-2 min-h-[220px]" :
+                "min-h-[220px]"
+              }`}
+            >
+              <div className="flex items-start justify-between">
+                <span className="label text-[#BFE01D]">{it.n}</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" className="text-[#bdbdbd] transition-transform group-hover:rotate-45 group-hover:text-[#BFE01D]">
+                  <path d="M5 15L15 5M15 5H7M15 5V13" stroke="currentColor" strokeWidth="1.4" fill="none" />
+                </svg>
+              </div>
+              <div>
+                <h3 className={`font-display leading-none ${it.size === "big" ? "text-5xl md:text-7xl" : "text-3xl md:text-5xl"}`}>
+                  {it.t}
+                </h3>
+                <p className="mt-3 max-w-[260px] text-sm text-[#bdbdbd]">{it.d}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

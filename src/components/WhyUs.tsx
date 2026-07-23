@@ -1,88 +1,72 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-const reasons = [
-  { num: "01", title: "INTERNATIONAL EQUIPMENT",  desc: "Rogue · Technogym · Hammer Strength."   },
-  { num: "02", title: "CERTIFIED TRAINERS",        desc: "ACE, NASM & ISSA certified coaches."    },
-  { num: "03", title: "WOMEN'S FITNESS",           desc: "Female-only hours, female trainers."    },
-  { num: "04", title: "FUNCTIONAL TRAINING",       desc: "TRX, rigs, plyo, mobility zone."        },
-  { num: "05", title: "NUTRITION PLANNING",        desc: "Custom diet plans by dietitians."       },
-  { num: "06", title: "LOCKER · STEAM · PARKING",  desc: "Full amenities, secured parking."       },
-  { num: "07", title: "24/7 SECURITY",             desc: "CCTV, keycard access, on-site staff."   },
+const items = [
+  { t: "International Equipment",  d: "Rogue · Technogym · Hammer Strength.", n: "01" },
+  { t: "Certified Trainers",       d: "ACE, NASM & ISSA certified coaches.",  n: "02" },
+  { t: "Women's Fitness",          d: "Female-only hours, female trainers.",  n: "03" },
+  { t: "Functional Training",      d: "TRX, rigs, plyo, mobility zone.",      n: "04" },
+  { t: "Nutrition Planning",       d: "Custom diet plans by dietitians.",     n: "05" },
+  { t: "Locker · Steam · Parking", d: "Full amenities, secured parking.",     n: "06" },
+  { t: "24/7 Security",            d: "CCTV, keycard access, on-site staff.", n: "07" },
 ];
 
 export default function WhyUs() {
-  const ref = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.1 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
+  const [hover, setHover] = useState<number | null>(null);
 
   return (
-    <section ref={ref} className="bg-[#0a0a0a] py-32 md:py-40 px-8 md:px-16">
+    <section className="relative bg-[#050505] py-24 md:py-40">
+      <div className="mx-auto max-w-[1600px] px-5 md:px-10">
 
-      {/* Two-column header */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-24 border-b border-[#141414] pb-16">
-        <div
-          className="transition-all duration-700"
-          style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(30px)" }}
-        >
-          <p className="text-[8px] tracking-[0.55em] text-[#c8a96e] mb-6">03 — WHY IRON HOUSE</p>
-          <h2
-            className="font-black text-white leading-none"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 6rem)", letterSpacing: "-0.035em" }}
-          >
-            EVERYTHING<br />
-            YOU EXPECT.<br />
-            <span className="text-[#c8a96e]">AND MORE.</span>
-          </h2>
-        </div>
-        <div
-          className="flex items-end transition-all duration-700 delay-200"
-          style={{ opacity: visible ? 1 : 0, transform: visible ? "none" : "translateY(20px)" }}
-        >
-          <p className="text-[#3a3a3a] text-sm leading-7 max-w-xs">
+        <div className="mb-16 flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <span className="label">(03) — Why Iron House</span>
+            <h2 className="mt-3 text-display">
+              Everything you<br />
+              expect. And more<br />
+              you don&apos;t.
+            </h2>
+          </div>
+          <p className="max-w-sm text-[#bdbdbd]">
             Seven reasons Dhaka&apos;s most committed athletes call this home.
-            Not perks — standards.
           </p>
         </div>
-      </div>
 
-      {/* Horizontal rule list — luxury magazine style */}
-      <div>
-        {reasons.map((r, i) => (
-          <div
-            key={r.num}
-            className={`group flex items-center gap-8 py-6 border-b border-[#111] transition-all duration-700 cursor-default hover:border-[#1f1f1f]`}
-            style={{
-              opacity:   visible ? 1 : 0,
-              transform: visible ? "none" : "translateY(20px)",
-              transitionDelay: visible ? `${i * 60}ms` : "0ms",
-            }}
-          >
-            {/* Index */}
-            <span className="text-[8px] tracking-widest text-[#c8a96e] w-6 shrink-0">{r.num}</span>
-
-            {/* Title — expands on hover */}
-            <h3
-              className="font-black text-[#2a2a2a] group-hover:text-white transition-colors duration-400 flex-1"
-              style={{ fontSize: "clamp(1.1rem, 3vw, 2.2rem)", letterSpacing: "-0.02em", lineHeight: 1 }}
+        <div className="divide-y divide-[#1a1a1a] border-y border-[#1a1a1a]">
+          {items.map((it, i) => (
+            <div
+              key={it.n}
+              onMouseEnter={() => setHover(i)}
+              onMouseLeave={() => setHover(null)}
+              className="group relative flex cursor-default items-center justify-between gap-8 py-8 md:py-10"
             >
-              {r.title}
-            </h3>
-
-            {/* Description — slides in from right */}
-            <p className="text-[11px] text-[#444] tracking-wide max-w-[200px] text-right opacity-0 group-hover:opacity-100 transition-opacity duration-400 hidden md:block">
-              {r.desc}
-            </p>
-
-            {/* Arrow */}
-            <span className="text-[#1a1a1a] group-hover:text-[#c8a96e] transition-colors duration-300 text-sm shrink-0">→</span>
-          </div>
-        ))}
+              <div className="flex items-baseline gap-6 md:gap-12">
+                <span className="label w-8">{it.n}</span>
+                <motion.h3
+                  animate={{ x: hover === i ? 24 : 0, color: hover === i ? "#BFE01D" : "#ffffff" }}
+                  transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
+                  className="font-display text-4xl leading-none md:text-7xl"
+                >
+                  {it.t}
+                </motion.h3>
+              </div>
+              <div className="hidden max-w-[220px] text-right text-sm text-[#bdbdbd] md:block">{it.d}</div>
+              <AnimatePresence>
+                {hover === i && (
+                  <motion.div
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    exit={{ scaleX: 0 }}
+                    transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
+                    style={{ transformOrigin: "left" }}
+                    className="absolute bottom-0 left-0 right-0 h-px bg-[#BFE01D]"
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
