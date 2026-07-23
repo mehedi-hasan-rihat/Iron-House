@@ -54,7 +54,7 @@
   h1, h2, h3, h4, .display {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
-    line-height: 0.88;
+    line-height: 0.95;
     text-transform: uppercase;
   }
 
@@ -71,7 +71,7 @@
 @utility text-hero {
   font-family: var(--font-display);
   font-size: clamp(4rem, 14vw, 18rem);
-  line-height: 0.82;
+  line-height: 0.88;
   letter-spacing: -0.03em;
   text-transform: uppercase;
 }
@@ -79,7 +79,7 @@
 @utility text-display {
   font-family: var(--font-display);
   font-size: clamp(3rem, 8vw, 9rem);
-  line-height: 0.88;
+  line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
 }
