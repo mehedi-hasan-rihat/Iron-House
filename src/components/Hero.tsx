@@ -98,6 +98,8 @@ export default function Hero() {
   /* Act 2 images stay visible — Act 3 is only the content layer on top */
   const act3Op       = useTransform(scrollYProgress, [0.67, 0.77], [0, 1]);
   const act3ContentY = useTransform(scrollYProgress, [0.69, 0.80], ["28px", "0px"]);
+  /* panel labels fade out as Act 3 content comes in */
+  const panelLabelOp = useTransform(scrollYProgress, [0.60, 0.70], [1, 0]);
 
   return (
     <section
@@ -306,7 +308,7 @@ export default function Hero() {
             />
             <div className="absolute inset-0 bg-linear-to-r from-[#050505]/40 to-transparent" />
             <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
-            <div className="absolute bottom-12 left-8 md:left-14">
+            <motion.div className="absolute bottom-12 left-8 md:left-14" style={{ opacity: panelLabelOp }}>
               <p className="label text-[#c8a96e] mb-2 tracking-[0.4em]">01 — Program</p>
               <p
                 className="font-display text-white"
@@ -317,10 +319,10 @@ export default function Hero() {
               <p className="mt-3 text-[#bdbdbd] text-xs leading-relaxed max-w-[20ch]">
                 Female-only hours · dedicated coaches · safe space
               </p>
-            </div>
-            <div className="absolute top-8 left-8 border border-white/20 px-2 py-1">
+            </motion.div>
+            <motion.div className="absolute top-8 left-8 border border-white/20 px-2 py-1" style={{ opacity: panelLabelOp }}>
               <span className="label text-white/50">01 / 02</span>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Right panel — Combat Training */}
@@ -336,7 +338,7 @@ export default function Hero() {
             />
             <div className="absolute inset-0 bg-linear-to-l from-[#050505]/40 to-transparent" />
             <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
-            <div className="absolute bottom-12 right-8 md:right-14 text-right">
+            <motion.div className="absolute bottom-12 right-8 md:right-14 text-right" style={{ opacity: panelLabelOp }}>
               <p className="label text-[#c8a96e] mb-2 tracking-[0.4em]">02 — Program</p>
               <p
                 className="font-display text-white"
@@ -347,14 +349,14 @@ export default function Hero() {
               <p className="mt-3 text-[#bdbdbd] text-xs leading-relaxed max-w-[20ch] ml-auto">
                 Heavy bags · ring work · private coaching
               </p>
-            </div>
-            <div className="absolute top-8 right-8 border border-white/20 px-2 py-1">
+            </motion.div>
+            <motion.div className="absolute top-8 right-8 border border-white/20 px-2 py-1" style={{ opacity: panelLabelOp }}>
               <span className="label text-white/50">02 / 02</span>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* thin divider line between panels */}
-          <div className="absolute inset-y-0 left-1/2 w-px bg-[#1a1a1a] -translate-x-px" />
+          <motion.div className="absolute inset-y-0 left-1/2 w-px bg-[#1a1a1a] -translate-x-px" style={{ opacity: panelLabelOp }} />
 
           {/* Center stamp */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
