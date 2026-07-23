@@ -16,32 +16,35 @@ import FAQ             from "@/components/FAQ";
 import Contact         from "@/components/Contact";
 import Footer          from "@/components/Footer";
 import MobileCTA       from "@/components/MobileCTA";
+import PageWrapper     from "@/components/PageWrapper";
 
 export default function Home() {
   return (
-    <div className="relative bg-[#050505] text-white antialiased">
-      <SmoothScroll />
-      <ProgressBar />
-      <Spotlight />
-      <Navbar />
-      <main>
-        <Hero />
-        <Marquee />
-        <About />
-        <Experience />
-        <WhyUs />
-        <Programs />
-        <Trainers />
-        <Transformation />
-        <Stats />
-        <Membership />
-        <FAQ />
-        <Contact />
-      </main>
-      <Footer />
-      <MobileCTA />
-      {/* Mobile bottom bar spacer */}
-      <div className="h-16 md:h-0" />
-    </div>
+    <PageWrapper>
+      <div className="relative bg-[#050505] text-white antialiased">
+        <SmoothScroll />
+        <ProgressBar />
+        <Spotlight />
+        <Navbar />
+        <main>
+          <Hero />
+          <Marquee />
+          <About />
+          <Experience />
+          <WhyUs />
+          <Programs />
+          <Trainers />
+          <Transformation />
+          <Stats />
+          <Membership />
+          <FAQ />
+          <Contact />
+        </main>
+        <Footer />
+        <MobileCTA />
+        {/* Mobile bottom bar spacer */}
+        <div className="h-16 md:h-0" />
+      </div>
+    </PageWrapper>
   );
 }
