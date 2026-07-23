@@ -22,7 +22,7 @@ export default function Experience() {
       className="relative bg-[#050505]"
       style={{ height: `${panels.length * 90}vh` }}
     >
-      <div className="sticky top-0 flex h-screen items-center overflow-hidden">
+      <div className="sticky top-2 flex h-screen items-center overflow-hidden">
         {/* Header */}
         <div className="absolute left-5 top-10 z-10 md:left-10">
           <span className="label">(02) — Step Inside</span>
