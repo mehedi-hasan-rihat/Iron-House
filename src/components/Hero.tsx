@@ -5,31 +5,29 @@ import {
   useMotionValue,
   useSpring,
   useScroll,
-  useTransform,
+  AnimatePresence,
+  cubicBezier,
 } from "framer-motion";
 
 /* ── images ── */
 const BG   = "https://iron-house.lovable.app/assets/hero-1-Bht4wyUw.jpg";
 const IMG2 = "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg";
 const IMG3 = "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg";
+const IMG4 = "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg";
 
-/*
-  Timeline (scrollYProgress 0 → 1, section height = 300vh)
-  ─────────────────────────────────────────────────────────
-  0.00 → 0.28   ACT 1 visible, fades OUT by 0.33
-  0.33 → 0.62   ACT 2 visible, fades OUT by 0.67
-  0.67 → 1.00   ACT 3 visible
-*/
+const easeOut = cubicBezier(0.16, 1, 0.3, 1);
+const easeIn  = cubicBezier(0.4, 0, 1, 1);
 
-/* ─── masked word reveal ─── */
-function Word({
-  children,
-  delay = 0,
-  className = "",
-}: {
-  children: React.ReactNode;
-  delay?: number;
-  className?: string;
+/* act1 / act3 content slide variants */
+const fadeUp = {
+  enter:   { opacity: 0, y: 36 },
+  visible: { opacity: 1, y: 0,   transition: { duration: 0.72, ease: easeOut } },
+  exit:    { opacity: 0, y: -24, transition: { duration: 0.45, ease: easeIn  } },
+};
+
+/* masked word reveal */
+function Word({ children, delay = 0, className = "" }: {
+  children: React.ReactNode; delay?: number; className?: string;
 }) {
   return (
     <span className="inline-block overflow-hidden leading-[0.9]">
@@ -45,8 +43,26 @@ function Word({
   );
 }
 
+/* progress dots */
+function Dots({ active }: { active: number }) {
+  return (
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20 pointer-events-none">
+      {[0, 1, 2].map((i) => (
+        <motion.span
+          key={i}
+          className="block rounded-full bg-white"
+          animate={{ width: active === i ? 24 : 6, opacity: active === i ? 1 : 0.3 }}
+          transition={{ duration: 0.4 }}
+          style={{ height: 6 }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
   const [ready, setReady] = useState(false);
+  const [act, setAct] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -58,8 +74,8 @@ export default function Hero() {
 
   useEffect(() => {
     const fn = (e: MouseEvent) => {
-      mouseX.set((e.clientX / window.innerWidth - 0.5) * 20);
-      mouseY.set((e.clientY / window.innerHeight - 0.5) * 12);
+      mouseX.set((e.clientX / window.innerWidth - 0.5) * 18);
+      mouseY.set((e.clientY / window.innerHeight - 0.5) * 10);
     };
     window.addEventListener("mousemove", fn, { passive: true });
     return () => window.removeEventListener("mousemove", fn);
@@ -73,33 +89,18 @@ export default function Hero() {
     offset: ["start start", "end end"],
   });
 
-  /* ── ACT 1 opacity: fully visible 0→0.25, fades out by 0.33 ── */
-  const act1Op = useTransform(scrollYProgress, [0, 0.25, 0.33], [1, 1, 0]);
-  /* photo parallax during act 1 */
-  const photoY     = useTransform(scrollYProgress, [0, 0.33], ["0%", "-10%"]);
-  const photoScale = useTransform(scrollYProgress, [0, 0.33], [1.05, 1.0]);
-  /* elements inside act 1 */
-  const titleY      = useTransform(scrollYProgress, [0, 0.25], ["0%", "-6%"]);
-  const barY        = useTransform(scrollYProgress, [0, 0.20], ["0%", "30%"]);
-  const scrollCueOp = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
-  const labelOp     = useTransform(scrollYProgress, [0, 0.14], [1, 0]);
+  useEffect(() => {
+    return scrollYProgress.on("change", (v) => {
+      if (v < 0.34)      setAct(0);
+      else if (v < 0.67) setAct(1);
+      else               setAct(2);
+    });
+  }, [scrollYProgress]);
 
-  /* ── ACT 2 opacity: fades IN 0.33→0.42, then STAYS (never fades out) ── */
-  const act2Op = useTransform(scrollYProgress, [0.33, 0.42], [0, 1]);
-  /* panels slide in */
-  const panel1X = useTransform(scrollYProgress, [0.33, 0.46], ["-100%", "0%"]);
-  const panel2X = useTransform(scrollYProgress, [0.36, 0.50], ["100%",  "0%"]);
-  /* stamp rises in, fades out before act 3 content arrives */
-  const stampOp = useTransform(scrollYProgress, [0.38, 0.50, 0.60, 0.67], [0, 1, 1, 0]);
-  const stampY0 = useTransform(scrollYProgress, [0.38, 0.50], ["40px", "0px"]);
-  const stampY1 = useTransform(scrollYProgress, [0.42, 0.54], ["40px", "0px"]);
-
-  /* ── ACT 3: content overlay fades IN over Act 2's BG (0.67→0.77) ── */
-  /* Act 2 images stay visible — Act 3 is only the content layer on top */
-  const act3Op       = useTransform(scrollYProgress, [0.67, 0.77], [0, 1]);
-  const act3ContentY = useTransform(scrollYProgress, [0.69, 0.80], ["28px", "0px"]);
-  /* panel labels fade out as Act 3 content comes in */
-  const panelLabelOp = useTransform(scrollYProgress, [0.60, 0.70], [1, 0]);
+  const [scrolled, setScrolled] = useState(false);
+  useEffect(() => {
+    return scrollYProgress.on("change", (v) => { if (v > 0.04) setScrolled(true); });
+  }, [scrollYProgress]);
 
   return (
     <section
@@ -110,370 +111,304 @@ export default function Hero() {
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#050505]">
 
-        {/* ════════════════════════════════════
-            ACT 1 — main hero
-        ════════════════════════════════════ */}
-        <motion.div
-          className="absolute inset-0"
-          style={{ opacity: act1Op }}
-        >
-          {/* BG photo */}
-          <motion.div
-            className="absolute inset-[-6%] will-change-transform"
-            style={{ x: smoothX, y: smoothY }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{ y: photoY, scale: photoScale }}
+        {/* ════════════════════════════════
+            BG layer — swaps per act
+        ════════════════════════════════ */}
+        <AnimatePresence mode="wait">
+
+          {/* ACT 1 bg */}
+          {act === 0 && (
+            <motion.div key="bg0" className="absolute inset-[-6%]"
+              style={{ x: smoothX, y: smoothY }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.55 }}
             >
-              <motion.img
-                src={BG}
-                alt="IRON HOUSE athlete"
+              <motion.img src={BG} alt=""
                 className="h-full w-full object-cover object-[62%_18%]"
-                initial={{ scale: 1.14 }}
+                initial={{ scale: 1.12 }}
                 animate={ready ? { scale: 1.05 } : {}}
                 transition={{ duration: 2.4, ease: [0.25, 0.46, 0.45, 0.94] }}
               />
             </motion.div>
-          </motion.div>
+          )}
 
-          {/* colour grade */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to top,  #050505 0%, #05050590 18%, transparent 45%)," +
-                "linear-gradient(to right, #050505 0%, #05050570 28%, transparent 55%)," +
-                "linear-gradient(to bottom, #05050555 0%, transparent 20%)",
-            }}
-          />
-
-          {/* Headline + CTA */}
-          <motion.div
-            className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-32 md:pb-0 md:px-16 max-w-4xl pointer-events-none"
-            style={{ y: titleY }}
-          >
-            <motion.div
-              className="flex items-center gap-4 mb-8"
-              initial={{ opacity: 0 }}
-              animate={ready ? { opacity: 1 } : {}}
-              transition={{ delay: 0.3, duration: 0.7 }}
+          {/* ACT 3 bg — strength floor */}
+          {act === 2 && (
+            <motion.div key="bg2" className="absolute inset-[-4%]"
+              initial={{ opacity: 0, scale: 1.08 }}
+              animate={{ opacity: 1, scale: 1.02 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.8, ease: [0.25, 0.46, 0.45, 0.94] }}
             >
-              <motion.span
-                className="block h-px bg-[#BFE01D] w-9"
-                initial={{ scaleX: 0 }}
-                animate={ready ? { scaleX: 1 } : {}}
-                transition={{ delay: 0.28, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                style={{ transformOrigin: "left" }}
-              />
-              <span className="label tracking-[0.45em] text-[#BFE01D]">
-                Gulshan, Dhaka · Est. 2016
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={IMG4} alt="" className="h-full w-full object-cover object-center" />
+            </motion.div>
+          )}
+
+        </AnimatePresence>
+
+        {/* ACT 2 bg — two panels slide from sides (NOT in AnimatePresence wait, so they animate independently) */}
+        {act === 1 && (
+          <>
+            {/* LEFT panel slides in from left */}
+            <motion.div
+              className="absolute left-0 top-0 bottom-0 w-1/2 overflow-hidden"
+              initial={{ x: "-100%" }}
+              animate={{ x: "0%" }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.85, ease: easeOut }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={IMG2} alt="" className="h-full w-full object-cover object-center" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #050505 0%, rgba(5,5,5,0.5) 28%, transparent 58%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to right, rgba(5,5,5,0.2) 0%, transparent 45%)" }} />
             </motion.div>
 
-            <h1
-              className="font-display text-white"
-              style={{
-                fontSize: "clamp(4.2rem, 12vw, 14rem)",
-                lineHeight: 0.87,
-                letterSpacing: "-0.03em",
-                textTransform: "uppercase",
-              }}
+            {/* RIGHT panel slides in from right */}
+            <motion.div
+              className="absolute right-0 top-0 bottom-0 w-1/2 overflow-hidden"
+              initial={{ x: "100%" }}
+              animate={{ x: "0%" }}
+              exit={{ x: "100%" }}
+              transition={{ duration: 0.85, ease: easeOut }}
             >
-              {ready && (
-                <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={IMG3} alt="" className="h-full w-full object-cover object-center" />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, #050505 0%, rgba(5,5,5,0.5) 28%, transparent 58%)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to left, rgba(5,5,5,0.2) 0%, transparent 45%)" }} />
+            </motion.div>
+
+            {/* center divider */}
+            <motion.div
+              className="absolute inset-y-0 left-1/2 -translate-x-px w-px bg-white/10"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.4 }}
+            />
+          </>
+        )}
+
+        {/* ── global colour grades on top of every bg ── */}
+        <div className="absolute inset-0 pointer-events-none z-1" style={{
+          background:
+            "linear-gradient(to top,    #050505 0%, rgba(5,5,5,0.45) 15%, transparent 40%)," +
+            "linear-gradient(to bottom, rgba(5,5,5,0.3) 0%, transparent 16%)",
+        }} />
+        {/* act 3 extra dark overlay so text pops */}
+        {act === 2 && (
+          <div className="absolute inset-0 bg-[#050505]/60 pointer-events-none z-1" />
+        )}
+
+
+        {/* ════════════════════════════════
+            CONTENT layer — swaps per act
+        ════════════════════════════════ */}
+        <AnimatePresence mode="wait">
+
+          {/* ── ACT 1 content ── */}
+          {act === 0 && (
+            <motion.div key="c0"
+              className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-28 md:pb-0 md:px-16 max-w-4xl pointer-events-none z-2"
+              variants={fadeUp} initial="enter" animate="visible" exit="exit"
+            >
+              <div className="flex items-center gap-4 mb-8">
+                <motion.span className="block h-px bg-[#BFE01D] w-9"
+                  initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.18, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                  style={{ transformOrigin: "left" }}
+                />
+                <span className="label tracking-[0.45em] text-[#BFE01D]">Gulshan, Dhaka · Est. 2016</span>
+              </div>
+
+              <h1 className="font-display text-white"
+                style={{ fontSize: "clamp(4.2rem, 12vw, 14rem)", lineHeight: 0.87, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                {ready && (<>
                   <div className="flex gap-[0.18em]">
-                    <Word delay={0.38}>IRON</Word>
-                    <Word delay={0.50}>HOUSE</Word>
+                    <Word delay={0.08}>IRON</Word>
+                    <Word delay={0.20}>HOUSE</Word>
                   </div>
-                  <div>
-                    <Word delay={0.64} className="text-[#BFE01D]">DHAKA</Word>
-                  </div>
-                </>
-              )}
-            </h1>
+                  <div><Word delay={0.34} className="text-[#BFE01D]">DHAKA</Word></div>
+                </>)}
+              </h1>
 
-            <motion.p
-              className="mt-7 max-w-xs text-[#bdbdbd] text-sm leading-[1.8] tracking-wide"
-              initial={{ opacity: 0, y: 12 }}
-              animate={ready ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.05, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Not a gym. A standard.{" "}
-              <span className="text-white/40">
-                International equipment · Certified coaches · Premium experience.
-              </span>
-            </motion.p>
+              <p className="mt-7 max-w-xs text-[#bdbdbd] text-sm leading-[1.8] tracking-wide">
+                Not a gym. A standard.{" "}
+                <span className="text-white/40">International equipment · Certified coaches · Premium experience.</span>
+              </p>
 
-            <motion.div
-              className="mt-10 flex flex-wrap items-center gap-5 pointer-events-auto"
-              initial={{ opacity: 0, y: 12 }}
-              animate={ready ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.2, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-3 bg-[#BFE01D] text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-accent-hover transition-colors duration-300"
-              >
-                Book Free Trial
-                <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                  <path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </a>
-              <a
-                href="#experience"
-                className="group inline-flex items-center gap-2 text-[#bdbdbd] text-xs uppercase tracking-[0.25em] hover:text-white transition-colors duration-300 pointer-events-auto"
-              >
-                Explore
-                <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                  <path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </a>
+              <div className="mt-10 flex flex-wrap items-center gap-5 pointer-events-auto">
+                <a href="#contact" className="group inline-flex items-center gap-3 bg-[#BFE01D] text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-accent-hover transition-colors duration-300">
+                  Book Free Trial
+                  <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1"><path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" /></svg>
+                </a>
+                <a href="#experience" className="group inline-flex items-center gap-2 text-[#bdbdbd] text-xs uppercase tracking-[0.25em] hover:text-white transition-colors duration-300 pointer-events-auto">
+                  Explore
+                  <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1"><path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" /></svg>
+                </a>
+              </div>
             </motion.div>
-          </motion.div>
+          )}
 
-          {/* Bottom stats bar */}
-          <motion.div
-            className="absolute bottom-0 left-0 right-0 border-t border-[#1a1a1a] bg-[#050505]/60 backdrop-blur-sm pointer-events-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={ready ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 1.4, duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            style={{ y: barY }}
-          >
-            <div className="mx-auto flex max-w-[1600px] items-stretch divide-x divide-[#1a1a1a] px-6 md:px-16">
-              {[
-                { value: "3,240+", label: "Active Members" },
-                { value: "12",     label: "Elite Trainers" },
-                { value: "8",      label: "Years Running"  },
-                { value: "15+",    label: "Programs"       },
-              ].map((s, i) => (
-                <div
-                  key={s.label}
-                  className={`flex-1 py-5 px-4 md:px-8 ${i > 1 ? "hidden md:flex" : "flex"} flex-col gap-0.5`}
-                >
-                  <span className="font-display text-xl md:text-2xl text-white leading-none">
-                    {s.value.replace(/[+]/g, "")}
-                    <span className="text-[#BFE01D]">{s.value.includes("+") ? "+" : ""}</span>
-                  </span>
-                  <span className="label mt-1">{s.label}</span>
+          {/* ── ACT 2 content — labels slide in after panels ── */}
+          {act === 1 && (
+            <motion.div key="c1" className="absolute inset-0 pointer-events-none z-2"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+            >
+              {/* left label */}
+              <motion.div
+                className="absolute bottom-0 left-0 w-1/2 px-8 md:px-14 pb-14"
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.65, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <p className="font-display leading-none select-none text-[#BFE01D]/10 mb-1"
+                  style={{ fontSize: "clamp(4rem, 7vw, 8rem)", letterSpacing: "-0.04em" }}>01</p>
+                <div className="border-t border-[#BFE01D]/30 pt-5">
+                  <p className="label text-[#BFE01D] tracking-[0.35em] mb-3">Women&apos;s Program</p>
+                  <h3 className="font-display text-white"
+                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.88, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    Built for<br />Her Strength
+                  </h3>
+                  <p className="mt-4 text-[#bdbdbd] text-xs leading-loose max-w-[20ch]">
+                    Female-only floors<br />Certified women coaches<br />Zero judgment
+                  </p>
                 </div>
-              ))}
-              <div className="ml-auto hidden lg:flex flex-col items-end justify-center gap-2 py-5 px-8">
-                <p className="label">N 23.7925° · E 90.4155°</p>
-                <motion.div className="flex items-center gap-2" style={{ opacity: scrollCueOp }}>
-                  <span className="label text-[#BFE01D]/60 tracking-[0.4em]">scroll</span>
-                  <motion.div
-                    className="w-px h-6 bg-[#BFE01D]/40"
-                    animate={{ scaleY: [0, 1, 0] }}
-                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.4 }}
-                    style={{ transformOrigin: "top" }}
-                  />
+              </motion.div>
+
+              {/* right label */}
+              <motion.div
+                className="absolute bottom-0 right-0 w-1/2 px-8 md:px-14 pb-14 text-right"
+                initial={{ opacity: 0, y: 28 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.78, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <p className="font-display leading-none select-none text-[#BFE01D]/10 mb-1"
+                  style={{ fontSize: "clamp(4rem, 7vw, 8rem)", letterSpacing: "-0.04em" }}>02</p>
+                <div className="border-t border-[#BFE01D]/30 pt-5">
+                  <p className="label text-[#BFE01D] tracking-[0.35em] mb-3">Combat Program</p>
+                  <h3 className="font-display text-white"
+                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.88, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    Train Like<br />You Mean It
+                  </h3>
+                  <p className="mt-4 text-[#bdbdbd] text-xs leading-loose max-w-[20ch] ml-auto">
+                    Heavy bags &amp; ring work<br />Private coaching<br />Real intensity
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+
+          {/* ── ACT 3 content — bold horizontal split ── */}
+          {act === 2 && (
+            <motion.div key="c2"
+              className="absolute inset-0 z-2 pointer-events-none"
+              variants={fadeUp} initial="enter" animate="visible" exit="exit"
+            >
+              {/* top-left: eyebrow + huge number */}
+              <motion.div
+                className="absolute top-28 left-6 md:left-16"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <p className="label text-[#BFE01D] tracking-[0.45em] mb-2">Strength Floor · Since 2016</p>
+                <p className="font-display text-white/6 leading-none select-none"
+                  style={{ fontSize: "clamp(6rem, 18vw, 22rem)", letterSpacing: "-0.05em", lineHeight: 0.8 }}>
+                  03
+                </p>
+              </motion.div>
+
+              {/* bottom: big headline left + copy+cta right */}
+              <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-14 flex flex-col md:flex-row md:items-end md:justify-between gap-8">
+                <motion.div
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <h2 className="font-display text-white"
+                    style={{ fontSize: "clamp(3.5rem, 10vw, 12rem)", lineHeight: 0.87, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    <span className="block">No</span>
+                    <span className="block text-[#BFE01D]">Limits.</span>
+                    <span className="block">No</span>
+                    <span className="block">Excuses.</span>
+                  </h2>
+                </motion.div>
+
+                <motion.div
+                  className="md:max-w-70 shrink-0 pointer-events-auto"
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.42, duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <p className="text-[#bdbdbd] text-sm leading-[1.8] tracking-wide mb-6">
+                    Rogue racks. Calibrated plates. Mirror walls.{" "}
+                    <span className="text-white/40">Everything you need. Nothing you don&apos;t.</span>
+                  </p>
+                  <a href="#programs"
+                    className="group inline-flex items-center gap-3 bg-[#BFE01D] text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-accent-hover transition-colors duration-300">
+                    View All Programs
+                    <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1"><path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" /></svg>
+                  </a>
                 </motion.div>
               </div>
-            </div>
-          </motion.div>
-
-          {/* Top-right label */}
-          <motion.div
-            className="absolute top-24 right-6 md:right-16 hidden md:flex flex-col items-end gap-1 pointer-events-none"
-            initial={{ opacity: 0 }}
-            animate={ready ? { opacity: 1 } : {}}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            style={{ opacity: labelOp }}
-          >
-            <span className="label text-white/30 tracking-[0.35em]">Premium Fitness</span>
-            <span className="label text-white/30 tracking-[0.35em]">Bangladesh</span>
-          </motion.div>
-        </motion.div>
-        {/* ── end ACT 1 ── */}
-
-
-        {/* ════════════════════════════════════
-            ACT 2 — side panels (stays as BG for Act 3)
-        ════════════════════════════════════ */}
-        <motion.div
-          className="absolute inset-0 bg-[#050505]"
-          style={{ opacity: act2Op }}
-        >
-          {/* Left panel — Women's Strength */}
-          <motion.div
-            className="absolute left-0 top-0 bottom-0 w-1/2 overflow-hidden"
-            style={{ x: panel1X }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={IMG2}
-              alt="Women's strength training"
-              className="h-full w-full object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-linear-to-r from-[#050505]/40 to-transparent" />
-            <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
-            <motion.div className="absolute bottom-12 left-8 md:left-14" style={{ opacity: panelLabelOp }}>
-              <p className="label text-[#BFE01D] mb-2 tracking-[0.4em]">01 — Program</p>
-              <p
-                className="font-display text-white"
-                style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 0.9, letterSpacing: "-0.02em", textTransform: "uppercase" }}
-              >
-                WOMEN&apos;S<br />STRENGTH
-              </p>
-              <p className="mt-3 text-[#bdbdbd] text-xs leading-relaxed max-w-[20ch]">
-                Female-only hours · dedicated coaches · safe space
-              </p>
             </motion.div>
-            <motion.div className="absolute top-8 left-8 border border-white/20 px-2 py-1" style={{ opacity: panelLabelOp }}>
-              <span className="label text-white/50">01 / 02</span>
-            </motion.div>
-          </motion.div>
+          )}
 
-          {/* Right panel — Combat Training */}
-          <motion.div
-            className="absolute right-0 top-0 bottom-0 w-1/2 overflow-hidden"
-            style={{ x: panel2X }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={IMG3}
-              alt="Combat training"
-              className="h-full w-full object-cover object-top"
-            />
-            <div className="absolute inset-0 bg-linear-to-l from-[#050505]/40 to-transparent" />
-            <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
-            <motion.div className="absolute bottom-12 right-8 md:right-14 text-right" style={{ opacity: panelLabelOp }}>
-              <p className="label text-[#BFE01D] mb-2 tracking-[0.4em]">02 — Program</p>
-              <p
-                className="font-display text-white"
-                style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 0.9, letterSpacing: "-0.02em", textTransform: "uppercase" }}
-              >
-                COMBAT<br />TRAINING
-              </p>
-              <p className="mt-3 text-[#bdbdbd] text-xs leading-relaxed max-w-[20ch] ml-auto">
-                Heavy bags · ring work · private coaching
-              </p>
-            </motion.div>
-            <motion.div className="absolute top-8 right-8 border border-white/20 px-2 py-1" style={{ opacity: panelLabelOp }}>
-              <span className="label text-white/50">02 / 02</span>
-            </motion.div>
-          </motion.div>
+        </AnimatePresence>
 
-          {/* thin divider line between panels */}
-          <motion.div className="absolute inset-y-0 left-1/2 w-px bg-[#1a1a1a] -translate-x-px" style={{ opacity: panelLabelOp }} />
-
-          {/* Center stamp */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-            <motion.p
-              className="font-display text-white text-center"
-              style={{
-                fontSize: "clamp(0.9rem, 3vw, 3.5rem)",
-                letterSpacing: "0.4em",
-                textTransform: "uppercase",
-                y: stampY0,
-                opacity: stampOp,
-              }}
+        {/* ── stats bar — act 1 only ── */}
+        <AnimatePresence>
+          {act === 0 && (
+            <motion.div key="stats"
+              className="absolute bottom-0 left-0 right-0 border-t border-[#1a1a1a] bg-[#050505]/60 backdrop-blur-sm pointer-events-auto z-3"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0, transition: { delay: 1.3, duration: 0.8 } }}
+              exit={{ opacity: 0, y: 10, transition: { duration: 0.3 } }}
             >
-              Discipline
-            </motion.p>
-            <motion.div className="my-3 flex items-center gap-5" style={{ y: stampY0, opacity: stampOp }}>
-              <span className="block h-px w-12 bg-[#BFE01D]/60" />
-              <span className="label text-[#BFE01D] tracking-[0.5em]">×</span>
-              <span className="block h-px w-12 bg-[#BFE01D]/60" />
+              <div className="mx-auto flex max-w-[1600px] items-stretch divide-x divide-[#1a1a1a] px-6 md:px-16">
+                {[
+                  { value: "3,240+", label: "Active Members" },
+                  { value: "12",     label: "Elite Trainers" },
+                  { value: "8",      label: "Years Running"  },
+                  { value: "15+",    label: "Programs"       },
+                ].map((s, i) => (
+                  <div key={s.label} className={`flex-1 py-5 px-4 md:px-8 ${i > 1 ? "hidden md:flex" : "flex"} flex-col gap-0.5`}>
+                    <span className="font-display text-xl md:text-2xl text-white leading-none">
+                      {s.value.replace(/[+]/g, "")}<span className="text-[#BFE01D]">{s.value.includes("+") ? "+" : ""}</span>
+                    </span>
+                    <span className="label mt-1">{s.label}</span>
+                  </div>
+                ))}
+                <div className="ml-auto hidden lg:flex flex-col items-end justify-center gap-2 py-5 px-8">
+                  <p className="label">N 23.7925° · E 90.4155°</p>
+                  <div className="flex items-center gap-2">
+                    <span className="label text-[#BFE01D]/60 tracking-[0.4em]">scroll</span>
+                    <motion.div className="w-px h-6 bg-[#BFE01D]/40"
+                      animate={scrolled ? { opacity: 0 } : { scaleY: [0, 1, 0] }}
+                      transition={scrolled ? { duration: 0.3 } : { duration: 1.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.4 }}
+                      style={{ transformOrigin: "top" }}
+                    />
+                  </div>
+                </div>
+              </div>
             </motion.div>
-            <motion.p
-              className="font-display text-[#BFE01D] text-center"
-              style={{
-                fontSize: "clamp(0.9rem, 3vw, 3.5rem)",
-                letterSpacing: "0.4em",
-                textTransform: "uppercase",
-                y: stampY1,
-                opacity: stampOp,
-              }}
+          )}
+        </AnimatePresence>
+
+        {/* ── slide counter ── */}
+        <div className="absolute top-24 right-6 md:right-16 hidden md:block pointer-events-none z-3">
+          <AnimatePresence mode="wait">
+            <motion.span key={act} className="label text-white/25 tracking-[0.35em]"
+              initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.3 }}
             >
-              Strength
-            </motion.p>
-          </div>
-        </motion.div>
-        {/* ── end ACT 2 ── */}
+              0{act + 1} / 03
+            </motion.span>
+          </AnimatePresence>
+        </div>
 
-
-        {/* ════════════════════════════════════
-            ACT 3 — content overlay on top of Act 2 BG
-        ════════════════════════════════════ */}
-        <motion.div
-          className="absolute inset-0"
-          style={{ opacity: act3Op }}
-        >
-          {/* dark overlay so text reads over the split images */}
-          <div className="absolute inset-0 bg-[#050505]/70" />
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background:
-                "linear-gradient(to top,    #050505 0%, #05050580 22%, transparent 50%)," +
-                "linear-gradient(to bottom, #05050560 0%, transparent 25%)",
-            }}
-          />
-
-          {/* content */}
-          <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none"
-            style={{ y: act3ContentY }}
-          >
-            <div className="flex items-center gap-4 mb-8">
-              <span className="block h-px w-12 bg-[#BFE01D]" />
-              <span className="label tracking-[0.5em] text-[#BFE01D]">The Floor</span>
-              <span className="block h-px w-12 bg-[#BFE01D]" />
-            </div>
-
-            <p
-              className="font-display text-white"
-              style={{
-                fontSize: "clamp(3rem, 9vw, 11rem)",
-                lineHeight: 0.88,
-                letterSpacing: "-0.03em",
-                textTransform: "uppercase",
-              }}
-            >
-              Where
-              <br />
-              <span className="text-[#BFE01D]">Limits</span>
-              <br />
-              Break
-            </p>
-
-            <p className="mt-8 max-w-sm text-[#bdbdbd] text-sm leading-relaxed">
-              Rogue racks. Calibrated plates. Mirror walls.
-              <br />
-              <span className="text-white/40">Everything you need. Nothing you don&apos;t.</span>
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-5 pointer-events-auto">
-              <a
-                href="#programs"
-                className="group inline-flex items-center gap-3 border border-[#BFE01D] text-[#BFE01D] text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#BFE01D] hover:text-black transition-all duration-300"
-              >
-                View Programs
-                <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                  <path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </a>
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-3 bg-white text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#BFE01D] transition-colors duration-300"
-              >
-                Join Now
-                <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
-                  <path d="M1 4h14m0 0L11 1m4 3l-4 3" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </a>
-            </div>
-          </motion.div>
-
-          {/* bottom-right tag */}
-          <div className="absolute bottom-8 right-8 hidden md:flex flex-col items-end gap-1">
-            <span className="label text-white/30 tracking-[0.35em]">03 / 03</span>
-            <span className="label text-white/30 tracking-[0.35em]">Strength Floor</span>
-          </div>
-        </motion.div>
-        {/* ── end ACT 3 ── */}
+        {/* ── progress dots ── */}
+        <Dots active={act} />
 
       </div>
     </section>

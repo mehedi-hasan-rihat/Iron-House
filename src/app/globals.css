@@ -10,7 +10,7 @@
   --color-fg-muted:           #bdbdbd;
   --color-line:               #1a1a1a;
   --color-accent:             #BFE01D;
-  --color-accent-hover:       #dbbf7f;
+  --color-accent-hover:       #d4f520;
   --color-background:         #050505;
   --color-foreground:         #ffffff;
   --color-primary:            #BFE01D;
@@ -58,9 +58,8 @@
     text-transform: uppercase;
   }
 
-  ::-webkit-scrollbar       { width: 3px; }
-  ::-webkit-scrollbar-track { background: #050505; }
-  ::-webkit-scrollbar-thumb { background: #1a1a1a; }
+  /* hide native cursor site-wide — custom cursor handles it */
+  * { cursor: none !important; }
 }
 
 /* ── Custom utilities ── */
