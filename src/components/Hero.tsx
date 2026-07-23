@@ -217,11 +217,11 @@ export default function Hero() {
               </div>
 
               <h1 className="font-display text-white"
-                style={{ fontSize: "clamp(4.2rem, 12vw, 14rem)", lineHeight: 0.87, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                style={{ fontSize: "clamp(4rem, 10vw, 12rem)", lineHeight: 0.87, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
                 {ready && (<>
                   <div className="flex gap-[0.18em]">
-                    <Word delay={0.08}>IRON</Word>
-                    <Word delay={0.20}>HOUSE</Word>
+                    <Word delay={0.08}>IRON </Word>
+                    <Word delay={0.20}>HOUSE </Word>
                   </div>
                   <div><span className="inline-block overflow-hidden leading-[0.9]"><motion.span className="inline-block font-display" style={{ color: ACC }} initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 1.1, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}>DHAKA</motion.span></span></div>
                 </>)}
