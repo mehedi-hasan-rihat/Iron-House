@@ -9,11 +9,11 @@
   --color-fg:                 #ffffff;
   --color-fg-muted:           #bdbdbd;
   --color-line:               #1a1a1a;
-  --color-accent:             #c8a96e;
+  --color-accent:             #BFE01D;
   --color-accent-hover:       #dbbf7f;
   --color-background:         #050505;
   --color-foreground:         #ffffff;
-  --color-primary:            #c8a96e;
+  --color-primary:            #BFE01D;
   --color-primary-foreground: #050505;
   --color-muted:              #0b0b0b;
   --color-muted-foreground:   #bdbdbd;
@@ -47,7 +47,7 @@
   }
 
   ::selection {
-    background: #c8a96e;
+    background: #BFE01D;
     color: #050505;
   }
 

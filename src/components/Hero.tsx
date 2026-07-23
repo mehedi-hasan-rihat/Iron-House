@@ -160,13 +160,13 @@ export default function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
             >
               <motion.span
-                className="block h-px bg-[#c8a96e] w-9"
+                className="block h-px bg-[#BFE01D] w-9"
                 initial={{ scaleX: 0 }}
                 animate={ready ? { scaleX: 1 } : {}}
                 transition={{ delay: 0.28, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 style={{ transformOrigin: "left" }}
               />
-              <span className="label tracking-[0.45em] text-[#c8a96e]">
+              <span className="label tracking-[0.45em] text-[#BFE01D]">
                 Gulshan, Dhaka · Est. 2016
               </span>
             </motion.div>
@@ -187,7 +187,7 @@ export default function Hero() {
                     <Word delay={0.50}>HOUSE</Word>
                   </div>
                   <div>
-                    <Word delay={0.64} className="text-[#c8a96e]">DHAKA</Word>
+                    <Word delay={0.64} className="text-[#BFE01D]">DHAKA</Word>
                   </div>
                 </>
               )}
@@ -213,7 +213,7 @@ export default function Hero() {
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-3 bg-[#c8a96e] text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-accent-hover transition-colors duration-300"
+                className="group inline-flex items-center gap-3 bg-[#BFE01D] text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-accent-hover transition-colors duration-300"
               >
                 Book Free Trial
                 <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
@@ -253,7 +253,7 @@ export default function Hero() {
                 >
                   <span className="font-display text-xl md:text-2xl text-white leading-none">
                     {s.value.replace(/[+]/g, "")}
-                    <span className="text-[#c8a96e]">{s.value.includes("+") ? "+" : ""}</span>
+                    <span className="text-[#BFE01D]">{s.value.includes("+") ? "+" : ""}</span>
                   </span>
                   <span className="label mt-1">{s.label}</span>
                 </div>
@@ -261,9 +261,9 @@ export default function Hero() {
               <div className="ml-auto hidden lg:flex flex-col items-end justify-center gap-2 py-5 px-8">
                 <p className="label">N 23.7925° · E 90.4155°</p>
                 <motion.div className="flex items-center gap-2" style={{ opacity: scrollCueOp }}>
-                  <span className="label text-[#c8a96e]/60 tracking-[0.4em]">scroll</span>
+                  <span className="label text-[#BFE01D]/60 tracking-[0.4em]">scroll</span>
                   <motion.div
-                    className="w-px h-6 bg-[#c8a96e]/40"
+                    className="w-px h-6 bg-[#BFE01D]/40"
                     animate={{ scaleY: [0, 1, 0] }}
                     transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut", repeatDelay: 0.4 }}
                     style={{ transformOrigin: "top" }}
@@ -309,7 +309,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-linear-to-r from-[#050505]/40 to-transparent" />
             <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
             <motion.div className="absolute bottom-12 left-8 md:left-14" style={{ opacity: panelLabelOp }}>
-              <p className="label text-[#c8a96e] mb-2 tracking-[0.4em]">01 — Program</p>
+              <p className="label text-[#BFE01D] mb-2 tracking-[0.4em]">01 — Program</p>
               <p
                 className="font-display text-white"
                 style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 0.9, letterSpacing: "-0.02em", textTransform: "uppercase" }}
@@ -339,7 +339,7 @@ export default function Hero() {
             <div className="absolute inset-0 bg-linear-to-l from-[#050505]/40 to-transparent" />
             <div className="absolute inset-0 bg-linear-to-t from-[#050505]/80 via-transparent to-transparent" />
             <motion.div className="absolute bottom-12 right-8 md:right-14 text-right" style={{ opacity: panelLabelOp }}>
-              <p className="label text-[#c8a96e] mb-2 tracking-[0.4em]">02 — Program</p>
+              <p className="label text-[#BFE01D] mb-2 tracking-[0.4em]">02 — Program</p>
               <p
                 className="font-display text-white"
                 style={{ fontSize: "clamp(1.8rem, 3vw, 3.5rem)", lineHeight: 0.9, letterSpacing: "-0.02em", textTransform: "uppercase" }}
@@ -373,12 +373,12 @@ export default function Hero() {
               Discipline
             </motion.p>
             <motion.div className="my-3 flex items-center gap-5" style={{ y: stampY0, opacity: stampOp }}>
-              <span className="block h-px w-12 bg-[#c8a96e]/60" />
-              <span className="label text-[#c8a96e] tracking-[0.5em]">×</span>
-              <span className="block h-px w-12 bg-[#c8a96e]/60" />
+              <span className="block h-px w-12 bg-[#BFE01D]/60" />
+              <span className="label text-[#BFE01D] tracking-[0.5em]">×</span>
+              <span className="block h-px w-12 bg-[#BFE01D]/60" />
             </motion.div>
             <motion.p
-              className="font-display text-[#c8a96e] text-center"
+              className="font-display text-[#BFE01D] text-center"
               style={{
                 fontSize: "clamp(0.9rem, 3vw, 3.5rem)",
                 letterSpacing: "0.4em",
@@ -418,9 +418,9 @@ export default function Hero() {
             style={{ y: act3ContentY }}
           >
             <div className="flex items-center gap-4 mb-8">
-              <span className="block h-px w-12 bg-[#c8a96e]" />
-              <span className="label tracking-[0.5em] text-[#c8a96e]">The Floor</span>
-              <span className="block h-px w-12 bg-[#c8a96e]" />
+              <span className="block h-px w-12 bg-[#BFE01D]" />
+              <span className="label tracking-[0.5em] text-[#BFE01D]">The Floor</span>
+              <span className="block h-px w-12 bg-[#BFE01D]" />
             </div>
 
             <p
@@ -434,7 +434,7 @@ export default function Hero() {
             >
               Where
               <br />
-              <span className="text-[#c8a96e]">Limits</span>
+              <span className="text-[#BFE01D]">Limits</span>
               <br />
               Break
             </p>
@@ -448,7 +448,7 @@ export default function Hero() {
             <div className="mt-10 flex flex-wrap items-center justify-center gap-5 pointer-events-auto">
               <a
                 href="#programs"
-                className="group inline-flex items-center gap-3 border border-[#c8a96e] text-[#c8a96e] text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#c8a96e] hover:text-black transition-all duration-300"
+                className="group inline-flex items-center gap-3 border border-[#BFE01D] text-[#BFE01D] text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#BFE01D] hover:text-black transition-all duration-300"
               >
                 View Programs
                 <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
@@ -457,7 +457,7 @@ export default function Hero() {
               </a>
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-3 bg-white text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#c8a96e] transition-colors duration-300"
+                className="group inline-flex items-center gap-3 bg-white text-black text-xs font-bold uppercase tracking-[0.25em] px-7 py-4 hover:bg-[#BFE01D] transition-colors duration-300"
               >
                 Join Now
                 <svg width="16" height="8" viewBox="0 0 16 8" fill="none" className="transition-transform duration-300 group-hover:translate-x-1">
