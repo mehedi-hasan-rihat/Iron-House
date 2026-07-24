@@ -274,7 +274,7 @@ export default function Hero() {
           {act === 0 && (
             <motion.div
               key="c0"
-              className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-28 md:pb-0 md:px-16 pointer-events-none z-2"
+              className="absolute inset-0 flex flex-col justify-center px-6 pb-28 md:pb-0 md:px-16 pointer-events-none z-2"
               variants={fade}
               initial="enter"
               animate="show"
@@ -299,59 +299,65 @@ export default function Hero() {
                 </span>
               </motion.div>
 
-              {/* main headline — gym name only */}
+              {/* main headline — full-width dominant */}
               <h1
                 className="font-display text-white"
                 style={{
-                  fontSize: "clamp(1.8rem, 5.5vw, 7rem)",
-                  lineHeight: 0.9,
-                  letterSpacing: "0.04em",
+                  fontSize: "clamp(4.2rem, 13vw, 16rem)",
+                  lineHeight: 0.82,
+                  letterSpacing: "-0.01em",
                   textTransform: "uppercase",
                 }}
               >
                 {ready && (
-                  <div className="flex items-end gap-[0.2em] flex-wrap">
-                    <Word delay={0.08}>FIT</Word>
-                    <Word delay={0.20}>GYM</Word>
-                    <span className="inline-block overflow-hidden leading-[0.9]">
-                      <motion.span
-                        className="inline-block font-display"
-                        style={{ color: ACC }}
-                        initial={{ y: "110%" }}
-                        animate={{ y: "0%" }}
-                        transition={{ duration: 1.1, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                      >
-                        CENTER
-                      </motion.span>
-                    </span>
-                  </div>
+                  <>
+                    {/* FIT GYM — line 1 */}
+                    <div className="flex gap-[0.18em]">
+                      <Word delay={0.08}>FIT</Word>
+                      <Word delay={0.22}>GYM</Word>
+                    </div>
+                    {/* CENTER — line 2, accent, bigger to fill */}
+                    <div>
+                      <span className="inline-block overflow-hidden" style={{ lineHeight: 0.82 }}>
+                        <motion.span
+                          className="inline-block font-display"
+                          style={{ color: ACC, fontSize: "1.08em" }}
+                          initial={{ y: "110%" }}
+                          animate={{ y: "0%" }}
+                          transition={{ duration: 1.1, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
+                        >
+                          CENTER
+                        </motion.span>
+                      </span>
+                    </div>
+                  </>
                 )}
               </h1>
 
-              {/* location row — sits below headline, clean and readable */}
+              {/* location row */}
               <motion.div
-                className="flex items-center gap-2 mt-5"
+                className="flex items-center gap-2 mt-6"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.55, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.6, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               >
                 <MapPin
-                  style={{ color: ACC, width: 14, height: 14, flexShrink: 0, marginTop: 1 }}
+                  style={{ color: ACC, width: 15, height: 15, flexShrink: 0 }}
                 />
-                <span className="label tracking-[0.35em] text-[#bdbdbd]">
+                <span className="font-mono text-[11px] tracking-[0.4em] uppercase text-[#bdbdbd]">
                   Sabujbag, Patuakhali
                 </span>
               </motion.div>
 
               {/* tagline */}
               <motion.p
-                className="mt-6 max-w-xs text-[#bdbdbd] text-sm leading-[1.8] tracking-wide"
+                className="mt-5 max-w-sm text-[#bdbdbd] text-sm leading-[1.8] tracking-wide"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ delay: 0.75, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
               >
                 Not a gym. A standard.{" "}
-                <span className="text-white/35">
+                <span className="text-white/30">
                   Modern equipment · Certified coaches · Premium experience.
                 </span>
               </motion.p>
