@@ -40,7 +40,7 @@ export default function About() {
             </p>
             <p className="text-lg leading-relaxed">
               International equipment. Certified coaches. A community that lifts
-              each other — literally. From Gulshan to the rest of Dhaka, we are
+              each other — literally. From Sabujbag to the rest of Dhaka, we are
               raising the standard of what a fitness experience should feel like
               in Bangladesh.
             </p>

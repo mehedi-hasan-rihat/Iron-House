@@ -40,7 +40,7 @@ export default function Contact() {
             </div>
             <div className="mt-10 flex flex-wrap gap-4">
               <Magnetic href="https://wa.me/8801700000000" variant="primary">Book Free Trial</Magnetic>
-              <Magnetic href="https://maps.google.com/?q=Gulshan+2+Dhaka" variant="ghost">Get Directions</Magnetic>
+              <Magnetic href="https://maps.google.com/?q=Sabujbag+2+Dhaka" variant="ghost">Get Directions</Magnetic>
             </div>
           </div>
 
@@ -50,7 +50,7 @@ export default function Contact() {
               <div className="label">Address</div>
               <div className="mt-3 font-display text-2xl leading-tight">
                 House 42, Road 11<br />
-                Gulshan 2, Dhaka 1212<br />
+                Sabujbag 2, Dhaka 1212<br />
                 Bangladesh
               </div>
               <div className="mt-8 label">Hours</div>
