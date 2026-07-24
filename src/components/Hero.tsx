@@ -303,34 +303,28 @@ export default function Hero() {
               <h1
                 className="font-display text-white"
                 style={{
-                  fontSize: "clamp(3.6rem, 10.5vw, 13rem)",
+                  fontSize: "clamp(1.8rem, 5.5vw, 7rem)",
                   lineHeight: 0.9,
                   letterSpacing: "0.04em",
                   textTransform: "uppercase",
                 }}
               >
                 {ready && (
-                  <>
-                    <div className="flex gap-[0.14em]">
-                      <Word delay={0.08}>FIT</Word>
-                    </div>
-                    <div className="flex gap-[0.14em]">
-                      <Word delay={0.20}>GYM</Word>
-                    </div>
-                    <div className="flex gap-[0.14em]">
-                      <span className="inline-block overflow-hidden leading-[0.9]">
-                        <motion.span
-                          className="inline-block font-display"
-                          style={{ color: ACC }}
-                          initial={{ y: "110%" }}
-                          animate={{ y: "0%" }}
-                          transition={{ duration: 1.1, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
-                        >
-                          CENTER
-                        </motion.span>
-                      </span>
-                    </div>
-                  </>
+                  <div className="flex items-end gap-[0.2em] flex-wrap">
+                    <Word delay={0.08}>FIT</Word>
+                    <Word delay={0.20}>GYM</Word>
+                    <span className="inline-block overflow-hidden leading-[0.9]">
+                      <motion.span
+                        className="inline-block font-display"
+                        style={{ color: ACC }}
+                        initial={{ y: "110%" }}
+                        animate={{ y: "0%" }}
+                        transition={{ duration: 1.1, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
+                      >
+                        CENTER
+                      </motion.span>
+                    </span>
+                  </div>
                 )}
               </h1>
 
