@@ -110,7 +110,7 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative bg-[#050505] h-[240vh] sm:h-[250vh] md:h-[280vh]"
+      className="relative bg-[#050505] h-[200vh] sm:h-[250vh] md:h-[280vh]"
     >
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#050505]">
         {/* ══════════════════════════════════════
