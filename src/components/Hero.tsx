@@ -96,7 +96,7 @@ export default function Hero() {
 
   return (
     <section ref={sectionRef} id="top"
-      className="relative bg-[#050505]" style={{ height: "300vh" }}>
+      className="relative bg-[#050505]" style={{ height: "260vh" }}>
 
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-[#050505]">
 
