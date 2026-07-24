@@ -23,7 +23,7 @@ export default function Navbar() {
         {/* Wordmark */}
         <a href="#top" className="flex items-center gap-2">
           <span className="h-2 w-2 rounded-full bg-[#BFE01D] accent-dot" />
-          <span className="font-display text-lg tracking-widest">IRON HOUSE</span>
+          <span className="font-display text-lg tracking-widest">FIT GYM CENTER</span>
         </a>
 
         {/* Nav links */}

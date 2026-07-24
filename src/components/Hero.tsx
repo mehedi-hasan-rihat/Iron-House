@@ -205,7 +205,7 @@ export default function Hero() {
           {/* ── ACT 1 ── */}
           {act === 0 && (
             <motion.div key="c0"
-              className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-28 md:pb-0 md:px-16 max-w-4xl pointer-events-none z-2"
+              className="absolute inset-0 flex flex-col justify-end md:justify-center px-6 pb-28 md:pb-0 md:px-16 max-w-8xl pointer-events-none z-2"
               variants={fade} initial="enter" animate="show" exit="exit"
             >
               <div className="flex items-center gap-4 mb-8">
@@ -220,11 +220,12 @@ export default function Hero() {
               </div>
 
               <h1 className="font-display text-white"
-                style={{ fontSize: "clamp(4rem, 10vw, 12rem)", lineHeight: 0.87, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                style={{ fontSize: "clamp(4rem, 10vw, 12rem)", lineHeight: 0.87, letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                 {ready && (<>
                   <div className="flex gap-[0.18em]">
-                    <Word delay={0.08}>IRON </Word>
-                    <Word delay={0.20}>HOUSE </Word>
+                    <Word delay={0.08}>FIT </Word>
+                    <Word delay={0.20}>GYM </Word>
+                    <Word delay={0.32}>CENTER </Word>
                   </div>
                   <div><span className="inline-block overflow-hidden leading-[0.9]"><motion.span className="inline-block font-display" style={{ color: ACC }} initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 1.1, delay: 0.34, ease: [0.16, 1, 0.3, 1] }}>DHAKA</motion.span></span></div>
                 </>)}
@@ -270,7 +271,7 @@ export default function Hero() {
                     <span className="label" style={{ color: ACC }}>Women&apos;s</span>
                   </div>
                   <h3 className="font-display text-white text-4xl leading-none mb-2"
-                    style={{ letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    style={{ letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                     Built for<br />Her Strength
                   </h3>
                   <p className="text-[#bdbdbd] text-xs leading-loose">
@@ -289,7 +290,7 @@ export default function Hero() {
                     <span className="label" style={{ color: ACC }}>Combat</span>
                   </div>
                   <h3 className="font-display text-white text-4xl leading-none mb-2"
-                    style={{ letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    style={{ letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                     Train Like<br />You Mean It
                   </h3>
                   <p className="text-[#bdbdbd] text-xs leading-loose">
@@ -310,7 +311,7 @@ export default function Hero() {
                 <div className="pt-5" style={{ borderTop: `1px solid ${ACC}33` }}>
                   <p className="label tracking-[0.35em] mb-3" style={{ color: ACC }}>Women&apos;s Program</p>
                   <h3 className="font-display text-white"
-                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                     Built for<br />Her Strength
                   </h3>
                   <p className="mt-4 text-[#bdbdbd] text-xs leading-loose max-w-[22ch]">
@@ -330,7 +331,7 @@ export default function Hero() {
                 <div className="pt-5" style={{ borderTop: `1px solid ${ACC}33` }}>
                   <p className="label tracking-[0.35em] mb-3" style={{ color: ACC }}>Combat Program</p>
                   <h3 className="font-display text-white"
-                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    style={{ fontSize: "clamp(2rem, 3.2vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                     Train Like<br />You Mean It
                   </h3>
                   <p className="mt-4 text-[#bdbdbd] text-xs leading-loose max-w-[22ch] ml-auto">
@@ -370,7 +371,7 @@ export default function Hero() {
                   initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
                   <h2 className="font-display text-white"
-                    style={{ fontSize: "clamp(3rem, 10vw, 12rem)", lineHeight: 0.9, letterSpacing: "-0.03em", textTransform: "uppercase" }}>
+                    style={{ fontSize: "clamp(3rem, 10vw, 12rem)", lineHeight: 0.9, letterSpacing: "-0.01em", textTransform: "uppercase" }}>
                     <span className="block">No Limits.</span>
                     <span className="block" style={{ color: ACC }}>No Excuses.</span>
                   </h2>

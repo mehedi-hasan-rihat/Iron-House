@@ -4,8 +4,8 @@ import Magnetic from "./Magnetic";
 const channels = [
   { l: "Call",      v: "+880 1700 000 000", href: "tel:+8801700000000"              },
   { l: "WhatsApp",  v: "+880 1700 000 000", href: "https://wa.me/8801700000000"     },
-  { l: "Instagram", v: "@ironhouse.dhk",    href: "https://instagram.com/ironhouse.dhk" },
-  { l: "Facebook",  v: "/ironhousebd",      href: "https://facebook.com/ironhousebd"    },
+  { l: "Instagram", v: "@fitgymcenter.dhk",    href: "https://instagram.com/fitgymcenter.dhk" },
+  { l: "Facebook",  v: "/fitgymcenterbd",      href: "https://facebook.com/fitgymcenterbd"    },
 ];
 
 export default function Contact() {

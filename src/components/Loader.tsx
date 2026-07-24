@@ -193,7 +193,7 @@ export default function Loader({ onDone }: { onDone: () => void }) {
         >
           <span className="h-2 w-2 rounded-full" style={{ backgroundColor: ACC }} />
           <span className="font-display text-white tracking-[0.45em] text-sm md:text-base">
-            IRON HOUSE
+            FIT GYM CENTER
           </span>
         </motion.div>
 

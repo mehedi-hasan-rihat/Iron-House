@@ -33,7 +33,7 @@ export default function About() {
 
           <div className="mt-12 grid gap-10 text-[#bdbdbd] md:grid-cols-2">
             <p className="text-lg leading-relaxed">
-              We built IRON HOUSE for the people who show up when nobody&apos;s
+              We built FIT GYM CENTER for the people who show up when nobody&apos;s
               watching. For the ones who understand that transformation isn&apos;t
               loud — it&apos;s consistent. Every square meter of our floor is
               engineered around one idea: give you no excuse.

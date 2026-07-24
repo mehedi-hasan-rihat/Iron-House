@@ -21,7 +21,7 @@ export default function WhyUs() {
 
         <div className="mb-16 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <span className="label">(03) — Why Iron House</span>
+            <span className="label">(03) — Why FIT GYM Center</span>
             <h2 className="mt-3 text-display">
               Everything you<br />
               expect. And more<br />

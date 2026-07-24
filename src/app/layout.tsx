@@ -23,13 +23,13 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IRON HOUSE — Dhaka's Premium Fitness Center",
+  title: "FIT GYM CENTER — Dhaka's Premium Fitness Center",
   description:
-    "Discipline begins here. IRON HOUSE Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
+    "Discipline begins here. FIT GYM CENTER Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
   openGraph: {
-    title: "IRON HOUSE — Dhaka's Premium Fitness Center",
+    title: "FIT GYM CENTER — Dhaka's Premium Fitness Center",
     description:
-      "Discipline begins here. IRON HOUSE Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
+      "Discipline begins here. FIT GYM CENTER Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
   },
 };
 

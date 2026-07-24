@@ -15,7 +15,7 @@ export default function Transformation() {
           </h2>
           <p className="mt-8 max-w-md text-lg text-[#bdbdbd]">
             &ldquo;I walked in tired of my body. I walked out with something I built.
-            IRON HOUSE didn&apos;t just change my weight — it changed my discipline.&rdquo;
+            FIT GYM CENTER didn&apos;t just change my weight — it changed my discipline.&rdquo;
           </p>
           <div className="mt-8 flex items-center gap-4">
             <div className="h-12 w-12 rounded-full bg-[#BFE01D]/10 border border-[#BFE01D]/30 flex items-center justify-center">

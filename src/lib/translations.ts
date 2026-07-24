@@ -41,7 +41,7 @@ const t = {
     aboutLabel: "(01) — The House",
     aboutHeading1: "Not a gym.",
     aboutHeading2: "A standard.",
-    aboutP1: "We built IRON HOUSE for the people who show up when nobody's watching. For the ones who understand that transformation isn't loud — it's consistent. Every square meter of our floor is engineered around one idea: give you no excuse.",
+    aboutP1: "We built FIT GYM CENTER for the people who show up when nobody's watching. For the ones who understand that transformation isn't loud — it's consistent. Every square meter of our floor is engineered around one idea: give you no excuse.",
     aboutP2: "International equipment. Certified coaches. A community that lifts each other — literally. From Gulshan to the rest of Dhaka, we are raising the standard of what a fitness experience should feel like in Bangladesh.",
     aboutPillars: ["Discipline", "Coaching", "Equipment", "Community"],
 
@@ -57,7 +57,7 @@ const t = {
     ],
 
     // why us
-    whyLabel: "(03) — Why Iron House",
+    whyLabel: "(03) — Why FIT GYM Center",
     whyHeading: "Everything you\nexpect. And more\nyou don't.",
     whySub: "Seven reasons Dhaka's most committed athletes call this home.",
     whyItems: [
@@ -97,7 +97,7 @@ const t = {
 
     // transformation
     transLabel: "(06) — Transformation",
-    transQuote: "I walked in tired of my body. I walked out with something I built. IRON HOUSE didn't just change my weight — it changed my discipline.",
+    transQuote: "I walked in tired of my body. I walked out with something I built. FIT GYM CENTER didn't just change my weight — it changed my discipline.",
     transMember: "Member · 2 years",
 
     // stats
@@ -139,8 +139,8 @@ const t = {
     contactChannels: [
       { l: "Call",      v: "+880 1700 000 000" },
       { l: "WhatsApp",  v: "+880 1700 000 000" },
-      { l: "Instagram", v: "@ironhouse.dhk"    },
-      { l: "Facebook",  v: "/ironhousebd"      },
+      { l: "Instagram", v: "@fitgymcenter.dhk"    },
+      { l: "Facebook",  v: "/fitgymcenterbd"      },
     ],
     getDirections: "Get Directions",
     contactAddrLabel: "Address",
@@ -152,7 +152,7 @@ const t = {
     ],
 
     // footer
-    footerCopy: "Iron House Fitness · Dhaka, Bangladesh",
+    footerCopy: "FIT GYM Center · Dhaka, Bangladesh",
     footerTag: "Built with discipline.",
 
     // mobile cta
@@ -201,7 +201,7 @@ const t = {
     aboutLabel: "(০১) — দ্য হাউস",
     aboutHeading1: "শুধু জিম নয়।",
     aboutHeading2: "একটি মান।",
-    aboutP1: "যারা কেউ না দেখলেও হাজির হন, আমরা তাদের জন্যই আয়রন হাউস তৈরি করেছি। যারা বোঝেন যে রূপান্তর শোরগোলে নয় — ধারাবাহিকতায়। আমাদের প্রতিটি বর্গমিটার একটি ধারণার চারপাশে গড়া: আপনাকে কোনো অজুহাত না দেওয়া।",
+    aboutP1: "যারা কেউ না দেখলেও হাজির হন, আমরা তাদের জন্যই ফিট জিন সেন্টার তৈরি করেছি। যারা বোঝেন যে রূপান্তর শোরগোলে নয় — ধারাবাহিকতায়। আমাদের প্রতিটি বর্গমিটার একটি ধারণার চারপাশে গড়া: আপনাকে কোনো অজুহাত না দেওয়া।",
     aboutP2: "আন্তর্জাতিক সরঞ্জাম। সার্টিফাইড কোচ। একে অপরকে সত্যিকার অর্থে তুলে ধরার একটি সম্প্রদায়। গুলশান থেকে পুরো ঢাকায়, আমরা বাংলাদেশে ফিটনেস অভিজ্ঞতার মান উঁচুতে নিয়ে যাচ্ছি।",
     aboutPillars: ["শৃঙ্খলা", "কোচিং", "সরঞ্জাম", "সম্প্রদায়"],
 
@@ -217,7 +217,7 @@ const t = {
     ],
 
     // why us
-    whyLabel: "(০৩) — কেন আয়রন হাউস",
+    whyLabel: "(০৩) — কেন ফিট জিন সেন্টার",
     whyHeading: "আপনি যা\nআশা করেন। তার\nচেয়েও বেশি।",
     whySub: "ঢাকার সবচেয়ে প্রতিশ্রুতিবদ্ধ অ্যাথলেটরা এখানে আসেন — সাত কারণে।",
     whyItems: [
@@ -257,7 +257,7 @@ const t = {
 
     // transformation
     transLabel: "(০৬) — রূপান্তর",
-    transQuote: "আমি ক্লান্ত শরীর নিয়ে এসেছিলাম। বেরিয়েছি নিজের তৈরি কিছু নিয়ে। আয়রন হাউস শুধু আমার ওজন নয় — আমার শৃঙ্খলা বদলে দিয়েছে।",
+    transQuote: "আমি ক্লান্ত শরীর নিয়ে এসেছিলাম। বেরিয়েছি নিজের তৈরি কিছু নিয়ে। ফিট জিন সেন্টার শুধু আমার ওজন নয় — আমার শৃঙ্খলা বদলে দিয়েছে।",
     transMember: "সদস্য · ২ বছর",
 
     // stats
@@ -299,8 +299,8 @@ const t = {
     contactChannels: [
       { l: "কল",         v: "+৮৮০ ১৭০০ ০০০ ০০০" },
       { l: "হোয়াটসঅ্যাপ", v: "+৮৮০ ১৭০০ ০০০ ০০০" },
-      { l: "ইনস্টাগ্রাম",  v: "@ironhouse.dhk"    },
-      { l: "ফেসবুক",      v: "/ironhousebd"      },
+      { l: "ইনস্টাগ্রাম",  v: "@fitgymcenter.dhk"    },
+      { l: "ফেসবুক",      v: "/fitgymcenterbd"      },
     ],
     getDirections: "দিকনির্দেশনা পান",
     contactAddrLabel: "ঠিকানা",
@@ -312,7 +312,7 @@ const t = {
     ],
 
     // footer
-    footerCopy: "আয়রন হাউস ফিটনেস · ঢাকা, বাংলাদেশ",
+    footerCopy: "ফিট জিন সেন্টার · ঢাকা, বাংলাদেশ",
     footerTag: "শৃঙ্খলায় নির্মিত।",
 
     // mobile cta
