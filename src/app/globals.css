@@ -136,3 +136,12 @@
   0%, 100% { opacity: 1;    }
   50%       { opacity: 0.35; }
 }
+
+/* ── Layout-scoped font tokens ── */
+
+/* Dashboard: no display font — headings fall back to sans */
+[data-layout="dashboard"] {
+  --font-display: var(--font-sans);
+}
+
+/* Landing page: all three fonts active (default, no override needed) */

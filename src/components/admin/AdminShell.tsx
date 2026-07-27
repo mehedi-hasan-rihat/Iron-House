@@ -36,7 +36,7 @@ export default function AdminShell({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-[#050505] text-white overflow-hidden">
+    <div data-layout="dashboard" className="flex h-screen bg-[#050505] text-white overflow-hidden">
 
       {/* ── Sidebar ── */}
       <aside
