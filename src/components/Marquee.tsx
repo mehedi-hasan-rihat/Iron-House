@@ -2,9 +2,11 @@
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 
+/* Imperatives rather than abstract nouns — they read as instructions from the
+   floor, which is the voice the rest of the page uses. */
 const items = [
-  "DISCIPLINE", "STRENGTH", "COMMUNITY",
-  "PERFORMANCE", "CONFIDENCE", "TRANSFORMATION",
+  "SHOW UP", "LIFT HEAVY", "EAT ENOUGH",
+  "SLEEP MORE", "NO SHORTCUTS", "EARN IT",
 ];
 
 export default function Marquee() {

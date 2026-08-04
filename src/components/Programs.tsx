@@ -3,15 +3,17 @@ import { useRef } from "react";
 import { gsap, useGSAP, EASE } from "@/lib/gsap";
 import SplitReveal from "./motion/SplitReveal";
 
+/* Every track carries a duration and a session count — the two things people
+   actually decide on. */
 const items = [
-  { n: "P01", t: "Weight Loss",       d: "12-week body recomposition program.",       size: "big"  },
-  { n: "P02", t: "Muscle Building",   d: "Hypertrophy split, progressive overload."               },
-  { n: "P03", t: "Strength",          d: "Powerlifting: squat, bench, deadlift."                  },
-  { n: "P04", t: "Functional",        d: "Movement patterns, mobility, athleticism.", size: "wide" },
-  { n: "P05", t: "HIIT & Cardio",     d: "Fat burn, endurance, VO₂ max."                          },
-  { n: "P06", t: "Women's Fitness",   d: "Female-only coaching & studio."                         },
-  { n: "P07", t: "Personal Training", d: "1-on-1 with certified coach.",              size: "big"  },
-  { n: "P08", t: "Senior Fitness",    d: "Low-impact, joint-safe programming."                    },
+  { n: "P01", t: "Weight Loss",       d: "12 weeks, 4 sessions a week, weekly weigh-in and photo. Built around what you already eat.", meta: "12 weeks", size: "big"  },
+  { n: "P02", t: "Muscle Building",   d: "Upper/lower split, load logged every set.",       meta: "16 weeks"              },
+  { n: "P03", t: "Powerlifting",      d: "Squat, bench, deadlift. Meet prep if you want it.", meta: "Ongoing"             },
+  { n: "P04", t: "Functional",        d: "Carries, sled, mobility. For people whose job is physical — or whose back hurts from a desk.", meta: "8 weeks", size: "wide" },
+  { n: "P05", t: "Conditioning",      d: "Intervals on the deck. Heart rate capped, not guessed.", meta: "6 weeks"        },
+  { n: "P06", t: "Women's Fitness",   d: "Own studio, own coaches, 10–4 daily.",            meta: "Ongoing"              },
+  { n: "P07", t: "Personal Training", d: "One coach, one hour, your programme written down and revised every fortnight.", meta: "Per session", size: "big"  },
+  { n: "P08", t: "Over-50s",          d: "Joint-safe loading, balance and bone density.",   meta: "Ongoing"              },
 ];
 
 export default function Programs() {
@@ -77,11 +79,9 @@ export default function Programs() {
             <span className="label">(04) — Programs</span>
             <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
               <>
-                Trained for
+                Pick a track.
                 <br />
-                <span className="accent-serif">whatever</span> you&apos;re
-                <br />
-                after.
+                Then <span className="accent-serif">finish</span> it.
               </>
             </SplitReveal>
           </div>
@@ -91,8 +91,9 @@ export default function Programs() {
             className="self-end body-lg md:col-span-5 md:col-start-8"
             stagger={0.05}
           >
-            Eight signature tracks — every one built and adjusted by our head coaches
-            around your goal, your body, and your schedule.
+            Eight programmes with a start date and an end date. Your coach writes
+            it down, reviews it every fortnight, and tells you when you are ready
+            to move up.
           </SplitReveal>
         </div>
 
@@ -109,7 +110,10 @@ export default function Programs() {
               }`}
             >
               <div className="flex items-start justify-between">
-                <span className="label text-[#BFE01D]">{it.n}</span>
+                <span className="flex flex-col gap-1">
+                  <span className="label text-[#BFE01D]">{it.n}</span>
+                  <span className="label text-white/30">{it.meta}</span>
+                </span>
                 <svg
                   data-card-arrow
                   width="20"

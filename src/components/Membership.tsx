@@ -4,11 +4,13 @@ import { gsap, useGSAP, EASE } from "@/lib/gsap";
 import Magnetic from "./Magnetic";
 import SplitReveal from "./motion/SplitReveal";
 
+/* `eq` is the per-month equivalent — the number people are really comparing,
+   so we do the division for them instead of making them work it out. */
 const plans = [
-  { name: "Monthly",   price: "3,500",  per: "/ month",    perks: ["Full floor access", "Locker & steam", "Group classes"],                                    highlight: false },
-  { name: "Quarterly", price: "9,600",  per: "/ 3 months", perks: ["Everything in Monthly", "1 free PT session", "Nutrition consult"],                          highlight: false },
-  { name: "Half-Year", price: "18,000", per: "/ 6 months", perks: ["Everything in Quarterly", "3 PT sessions", "Body composition scan"], badge: "Most chosen",  highlight: true  },
-  { name: "Annual",    price: "32,000", per: "/ year",     perks: ["Everything in Half-Year", "12 PT sessions", "Priority booking"],                           highlight: false },
+  { name: "Monthly",   price: "3,500",  per: "/ month",    eq: "৳3,500 a month",  perks: ["Full floor access", "Locker, steam & parking", "All group classes"],                                highlight: false },
+  { name: "Quarterly", price: "9,600",  per: "/ 3 months", eq: "৳3,200 a month",  perks: ["Everything in Monthly", "1 personal training session", "Nutrition consult"],                       highlight: false },
+  { name: "Half-Year", price: "18,000", per: "/ 6 months", eq: "৳3,000 a month",  perks: ["Everything in Quarterly", "3 personal training sessions", "Body composition scan"], badge: "Most chosen", highlight: true },
+  { name: "Annual",    price: "32,000", per: "/ year",     eq: "৳2,670 a month",  perks: ["Everything in Half-Year", "12 personal training sessions", "Priority class booking"],              highlight: false },
 ];
 
 export default function Membership() {
@@ -112,7 +114,9 @@ export default function Membership() {
             <span className="label">(07) — Membership</span>
             <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
               <>
-                Pick your <span className="accent-serif">pace.</span>
+                One floor.
+                <br />
+                Four <span className="accent-serif">ways</span> in.
               </>
             </SplitReveal>
           </div>
@@ -122,7 +126,9 @@ export default function Membership() {
             className="self-end body-lg md:col-span-4 md:col-start-8"
             stagger={0.05}
           >
-            Prices in BDT. No hidden fees. Cancel anytime with 30 days notice.
+            Every plan includes the whole gym — there is no tier that locks you
+            out of a room. Longer commitment just costs less per month. Cancel
+            with 30 days notice.
           </SplitReveal>
         </div>
 
@@ -150,6 +156,9 @@ export default function Membership() {
                   <span className="font-display text-6xl md:text-7xl">{p.price}</span>
                 </div>
                 <div className="mt-1 font-mono text-xs text-[#bdbdbd]">{p.per}</div>
+                <div className="mt-3 border-t border-[#1a1a1a] pt-3 font-mono text-[11px] uppercase tracking-[0.2em] text-[#BFE01D]">
+                  {p.eq}
+                </div>
                 <ul className="mt-8 space-y-3 text-sm text-[#bdbdbd]">
                   {p.perks.map((k) => (
                     <li key={k} data-perk className="flex items-start gap-3">
@@ -165,9 +174,10 @@ export default function Membership() {
 
         <div className="mt-16 flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
           <SplitReveal as="p" type="lines" className="max-w-md body-lg" stagger={0.05}>
-            The best way to decide is to feel it. Come tour the floor before you commit.
+            Do not sign up from a website. Come in, walk the floor, try a session,
+            then decide. The trial costs nothing.
           </SplitReveal>
-          <Magnetic href="#contact" variant="primary">Visit Our Gym</Magnetic>
+          <Magnetic href="#contact" variant="primary">Book a free trial</Magnetic>
         </div>
       </div>
     </section>

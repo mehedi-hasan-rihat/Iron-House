@@ -2,11 +2,12 @@
 import { useRef } from "react";
 import { gsap, useGSAP, EASE } from "@/lib/gsap";
 
+/* Retention and attendance say more than a satisfaction score nobody audits. */
 const items = [
-  { n: 3240, s: "+", label: "Happy Members"       },
-  { n: 12,   s: "",  label: "Certified Trainers"  },
-  { n: 8,    s: "+", label: "Years in Dhaka"      },
-  { n: 98,   s: "%", label: "Member Satisfaction" },
+  { n: 3240, s: "+", label: "Members trained"       },
+  { n: 71,   s: "%", label: "Still here after a year" },
+  { n: 12,   s: "",  label: "Coaches on the floor"  },
+  { n: 8,    s: "",  label: "Years in Dhaka"        },
 ];
 
 export default function Stats() {

@@ -5,11 +5,13 @@ import SplitReveal from "./motion/SplitReveal";
 
 const EXP1 = "https://iron-house.lovable.app/assets/exp-1-CKXz5iIt.jpg";
 
+/* Concrete figures beat abstract virtues — each pillar carries a number you
+   can check rather than a word anyone could claim. */
 const pillars = [
-  ["01", "Discipline"],
-  ["02", "Coaching"],
-  ["03", "Equipment"],
-  ["04", "Community"],
+  ["23,000", "Sq ft of floor"],
+  ["40+",    "Machines & racks"],
+  ["17h",    "Open daily"],
+  ["1:8",    "Coach to member"],
 ];
 
 export default function About() {
@@ -109,10 +111,10 @@ export default function About() {
 
           <div className="mt-14 grid gap-10 md:grid-cols-2">
             <SplitReveal as="p" type="lines" className="body-lg" stagger={0.045} duration={0.9}>
-              We built FIT GYM CENTER for the people who show up when nobody&apos;s
-              watching. For the ones who understand that transformation isn&apos;t
-              loud — it&apos;s consistent. Every square meter of our floor is
-              engineered around one idea: give you no excuse.
+              Most gyms sell you a card and forget your name. We do the opposite.
+              Every member gets their form checked, their numbers logged, and a
+              coach who notices when you skip a week. That is the entire
+              difference, and it is harder than it sounds.
             </SplitReveal>
             <SplitReveal
               as="p"
@@ -122,10 +124,10 @@ export default function About() {
               duration={0.9}
               delay={0.12}
             >
-              International equipment. Certified coaches. A community that lifts
-              each other — literally. From Sabujbag to the rest of Dhaka, we are
-              raising the standard of what a fitness experience should feel like
-              in Bangladesh.
+              The floor is built to match. Calibrated plates that actually weigh
+              what they say. Racks bolted into concrete. Air conditioning that
+              holds through a July session. Nothing here is decorative —
+              if it is on the floor, it is because it works.
             </SplitReveal>
           </div>
 
@@ -133,9 +135,9 @@ export default function About() {
 
           <div className="mt-10 grid grid-cols-2 gap-8 md:grid-cols-4">
             {pillars.map(([n, t]) => (
-              <div key={n} data-pillar data-anim>
-                <div className="label">{n}</div>
-                <div className="mt-2 font-display text-2xl">{t}</div>
+              <div key={t} data-pillar data-anim>
+                <div className="font-display text-3xl text-[#BFE01D] md:text-4xl">{n}</div>
+                <div className="mt-2 label">{t}</div>
               </div>
             ))}
           </div>

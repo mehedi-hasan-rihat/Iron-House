@@ -189,6 +189,12 @@
   50%       { opacity: 0.35; }
 }
 
+/* Hero scroll cue — a lit segment travelling down a hairline. */
+@keyframes scroll-cue {
+  0%       { transform: translateY(-100%); }
+  60%,100% { transform: translateY(200%);  }
+}
+
 /* ── Layout-scoped font tokens ── */
 
 /* Dashboard: no display font — headings fall back to sans, and the

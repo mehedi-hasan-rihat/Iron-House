@@ -3,14 +3,15 @@ import { useRef } from "react";
 import { gsap, useGSAP, EASE } from "@/lib/gsap";
 import SplitReveal from "./motion/SplitReveal";
 
+/* Written as promises the gym can be held to, not features on a brochure. */
 const items = [
-  { t: "International Equipment",  d: "Rogue · Technogym · Hammer Strength.", n: "01", img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg" },
-  { t: "Certified Trainers",       d: "ACE, NASM & ISSA certified coaches.",  n: "02", img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg" },
-  { t: "Women's Fitness",          d: "Female-only hours, female trainers.",  n: "03", img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg" },
-  { t: "Functional Training",      d: "TRX, rigs, plyo, mobility zone.",      n: "04", img: "https://iron-house.lovable.app/assets/exp-1-CKXz5iIt.jpg" },
-  { t: "Nutrition Planning",       d: "Custom diet plans by dietitians.",     n: "05", img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg" },
-  { t: "Locker · Steam · Parking", d: "Full amenities, secured parking.",     n: "06", img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg" },
-  { t: "24/7 Security",            d: "CCTV, keycard access, on-site staff.", n: "07", img: "https://iron-house.lovable.app/assets/trainer-3-3mi-LptE.jpg" },
+  { t: "Your form gets fixed",   d: "A coach walks the floor every hour. Unasked.",       n: "01", img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg" },
+  { t: "Plates that weigh right", d: "Calibrated to ±10g. Your log is honest.",           n: "02", img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg" },
+  { t: "Women train in peace",    d: "Separate studio, own entrance, 10–4 daily.",        n: "03", img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg" },
+  { t: "No equipment queue",      d: "Six racks. We cap peak-hour entry.",                n: "04", img: "https://iron-house.lovable.app/assets/exp-1-CKXz5iIt.jpg" },
+  { t: "Food advice that fits",   d: "Plans built on rice and dal, not almond flour.",    n: "05", img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg" },
+  { t: "It stays clean",          d: "Full wipe-down twice daily. Steam room included.",  n: "06", img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg" },
+  { t: "Your bike is safe",       d: "Covered parking, CCTV, guard on shift till close.", n: "07", img: "https://iron-house.lovable.app/assets/trainer-3-3mi-LptE.jpg" },
 ];
 
 export default function WhyUs() {
@@ -114,16 +115,17 @@ export default function WhyUs() {
             <span className="label">(03) — Why FIT GYM Center</span>
             <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
               <>
-                Everything you
+                Seven things
                 <br />
-                expect. And <span className="accent-serif">more</span>
+                we actually
                 <br />
-                you don&apos;t.
+                <span className="accent-serif">guarantee.</span>
               </>
             </SplitReveal>
           </div>
           <SplitReveal as="p" type="lines" className="max-w-sm body-lg" stagger={0.05}>
-            Seven reasons Dhaka&apos;s most committed athletes call this home.
+            Not features. Promises — the kind you can hold us to on any given
+            Tuesday at 7pm.
           </SplitReveal>
         </div>
 

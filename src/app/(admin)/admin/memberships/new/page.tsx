@@ -27,7 +27,9 @@ export default async function NewMembershipPage({
       </div>
       <MembershipForm
         members={members}
-        plans={plans}
+        /* Prisma returns `price` as a Decimal, which the client component types
+           as a number and which does not serialize across the boundary. */
+        plans={plans.map((p) => ({ ...p, price: Number(p.price) }))}
         trainers={trainers}
         defaultMemberId={sp.memberId ?? ""}
       />

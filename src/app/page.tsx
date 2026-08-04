@@ -16,7 +16,6 @@ import FAQ            from "@/components/FAQ";
 import Contact        from "@/components/Contact";
 import Footer         from "@/components/Footer";
 import MobileCTA      from "@/components/MobileCTA";
-import PageWrapper    from "@/components/PageWrapper";
 import { auth }       from "@/auth";
 
 export default async function Home() {
@@ -26,30 +25,28 @@ export default async function Home() {
   const dashboardHref = role === "member" ? "/dashboard" : "/admin/dashboard";
 
   return (
-    <PageWrapper>
-      <div className="relative bg-[#050505] text-white antialiased">
-        <SmoothScroll />
-        <ProgressBar />
-        <Spotlight />
-        <NavbarSmart isLoggedIn={isLoggedIn} dashboardHref={dashboardHref} />
-        <main>
-          <Hero />
-          <Marquee />
-          <About />
-          <Experience />
-          <WhyUs />
-          <Programs />
-          <Trainers />
-          <Transformation />
-          <Stats />
-          <Membership />
-          <FAQ />
-          <Contact />
-        </main>
-        <Footer />
-        <MobileCTA />
-        <div className="h-16 md:h-0" />
-      </div>
-    </PageWrapper>
+    <div className="relative bg-[#050505] text-white antialiased">
+      <SmoothScroll />
+      <ProgressBar />
+      <Spotlight />
+      <NavbarSmart isLoggedIn={isLoggedIn} dashboardHref={dashboardHref} />
+      <main>
+        <Hero />
+        <Marquee />
+        <About />
+        <Experience />
+        <WhyUs />
+        <Programs />
+        <Trainers />
+        <Transformation />
+        <Stats />
+        <Membership />
+        <FAQ />
+        <Contact />
+      </main>
+      <Footer />
+      <MobileCTA />
+      <div className="h-16 md:h-0" />
+    </div>
   );
 }

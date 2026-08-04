@@ -3,13 +3,15 @@ import { useRef, useState } from "react";
 import { gsap, ScrollTrigger, useGSAP, EASE } from "@/lib/gsap";
 import SplitReveal from "./motion/SplitReveal";
 
+/* Answers commit to specifics — a number, a time, a yes or a no. Vague FAQ
+   copy is the fastest way to lose someone who is nearly ready to sign up. */
 const faqs = [
-  { q: "What is the monthly membership fee?",  a: "Monthly membership starts at BDT 3,500. Quarterly and annual plans reduce the effective monthly cost significantly." },
-  { q: "Do you have separate ladies' timing?", a: "Yes. Our women-only studio operates daily between 10 AM – 4 PM, with dedicated female trainers." },
-  { q: "Are there female personal trainers?",  a: "Absolutely. Our female coaches are ACE / NASM certified, including pre & post-natal specialisations." },
-  { q: "What are your opening hours?",         a: "Saturday to Thursday, 6 AM – 11 PM. Friday, 3 PM – 10 PM." },
-  { q: "Do you provide diet plans?",           a: "Yes. Every member gets a baseline nutrition plan. Personalised plans are included in Half-Year and Annual memberships." },
-  { q: "Is parking available?",                a: "Yes — secure, camera-monitored parking for cars and bikes on-site." },
+  { q: "I have never lifted before. Will I look stupid?", a: "Everyone here started somewhere, and a coach walks the floor every hour precisely so nobody is left guessing. Your first session is a walkthrough — no weight, no pressure. Book the free trial and see." },
+  { q: "What does it actually cost?",                     a: "BDT 3,500 a month, dropping to about 2,670 a month if you pay annually. That is everything: floor, classes, locker, steam, parking. Personal training is separate." },
+  { q: "Can I cancel?",                                   a: "Yes, with 30 days notice, and we refund unused full months on the longer plans. No cancellation fee and no retention phone call." },
+  { q: "Is there a women-only space?",                    a: "Yes — a separate studio with its own entrance and frosted glass, staffed by female coaches, 10 AM to 4 PM every day." },
+  { q: "How busy does it get at 7pm?",                    a: "Busy, but we cap peak-hour entry so the six racks stay usable. If you want an empty floor, come before 9 AM or after 9:30 PM." },
+  { q: "When are you open?",                              a: "Saturday to Thursday, 6 AM to 11 PM. Friday, 3 PM to 10 PM." },
 ];
 
 export default function FAQ() {
@@ -75,11 +77,14 @@ export default function FAQ() {
           <span className="label">(08) — FAQ</span>
           <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
             <>
-              Answers,
+              Straight
               <br />
-              <span className="accent-serif">no fluff.</span>
+              <span className="accent-serif">answers.</span>
             </>
           </SplitReveal>
+          <p className="mt-8 max-w-xs body-lg">
+            Still unsure? Ring the front desk. A person picks up.
+          </p>
         </div>
 
         <div className="md:col-span-8">

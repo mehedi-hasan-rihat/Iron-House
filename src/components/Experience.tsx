@@ -2,12 +2,14 @@
 import { useRef } from "react";
 import { gsap, ScrollTrigger, useGSAP, EASE } from "@/lib/gsap";
 
+/* Each panel names something specific you'd notice walking through — a spec,
+   a count, a rule. Generic adjectives were doing no work here. */
 const panels = [
-  { n: "01", title: "Reception",      copy: "A quiet arrival. Concrete, warm light, black marble.", img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg"  },
-  { n: "02", title: "Strength Floor", copy: "Rogue racks, calibrated plates, full-mirror walls.",   img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg" },
-  { n: "03", title: "Cardio Deck",    copy: "Technogym line, panoramic city view.",                 img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg"  },
-  { n: "04", title: "Combat Room",    copy: "Heavy bags, ring, private coaching.",                  img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg" },
-  { n: "05", title: "Women's Studio", copy: "Female-only training hours & coaches.",                img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg" },
+  { n: "01", title: "Reception",      meta: "Ground floor",  copy: "Keycard in, bag in a locker, phone on silent. You are training in under four minutes.", img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg"  },
+  { n: "02", title: "Strength Floor", meta: "8,400 sq ft",   copy: "Six power racks, four platforms, calibrated plates to 25kg. Chalk is allowed.",         img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg" },
+  { n: "03", title: "Cardio Deck",    meta: "Level 2",       copy: "Eighteen machines facing the window. Intervals programmed, not guessed.",               img: "https://iron-house.lovable.app/assets/exp-1-CKXz5iIt.jpg"  },
+  { n: "04", title: "Combat Room",    meta: "Sprung floor",  copy: "Six heavy bags, a full ring, and pad work with a coach who has actually fought.",       img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg" },
+  { n: "05", title: "Women's Studio", meta: "10:00 – 16:00", copy: "Separate entrance, frosted glass, female coaches only. No one is watching you learn.",  img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg" },
 ];
 
 export default function Experience() {
@@ -144,8 +146,12 @@ export default function Experience() {
                 data-anim
                 className="absolute inset-x-0 bottom-0 p-6 md:p-10"
               >
-                <div className="label text-[#BFE01D]">{p.n}</div>
-                <h3 className="mt-2 text-section">{p.title}</h3>
+                <div className="flex items-center gap-3">
+                  <span className="label text-[#BFE01D]">{p.n}</span>
+                  <span className="h-px w-8 bg-white/20" />
+                  <span className="label">{p.meta}</span>
+                </div>
+                <h3 className="mt-3 text-section">{p.title}</h3>
                 <p className="mt-3 max-w-md text-sm leading-relaxed text-[#bdbdbd]">{p.copy}</p>
               </div>
 

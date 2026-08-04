@@ -94,8 +94,10 @@ export default function Transformation() {
           </h2>
 
           <SplitReveal as="blockquote" type="lines" className="mt-10 max-w-md body-lg" stagger={0.05}>
-            &ldquo;I walked in tired of my body. I walked out with something I built.
-            FIT GYM CENTER didn&apos;t just change my weight — it changed my discipline.&rdquo;
+            &ldquo;I had quit two gyms before this one. The difference was that
+            somebody here noticed when I stopped coming and messaged me. That is
+            the whole story. I did the work, but they made it hard to
+            disappear.&rdquo;
           </SplitReveal>
 
           <div data-cite data-anim className="mt-8 flex items-center gap-4">
@@ -104,7 +106,7 @@ export default function Transformation() {
             </div>
             <div>
               <div className="font-medium">Sadia Karim</div>
-              <div className="text-sm text-[#bdbdbd]">Member · 2 years</div>
+              <div className="text-sm text-[#bdbdbd]">Member since 2023 · Weight Loss track</div>
             </div>
           </div>
         </div>

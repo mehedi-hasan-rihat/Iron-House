@@ -3,10 +3,11 @@ import { useRef } from "react";
 import { gsap, useGSAP, EASE } from "@/lib/gsap";
 import SplitReveal from "./motion/SplitReveal";
 
+/* A line of actual biography does more than a certification string. */
 const list = [
-  { name: "Rakib Hasan",   role: "Head Strength Coach",  cert: "NASM-CPT · 8 yrs",     img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg" },
-  { name: "Ayesha Rahman", role: "Women's Fitness Lead", cert: "ACE · Pre/Post-natal", img: "https://iron-house.lovable.app/assets/trainer-2-C9g2Jo5V.jpg" },
-  { name: "Tanveer Ahmed", role: "Performance Coach",    cert: "ISSA · Nutrition",     img: "https://iron-house.lovable.app/assets/trainer-3-3mi-LptE.jpg" },
+  { name: "Rakib Hasan",   role: "Head Strength Coach",  cert: "NASM-CPT · 8 yrs",     note: "Competed at national powerlifting twice. Will make you deload.",     img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg" },
+  { name: "Ayesha Rahman", role: "Women's Fitness Lead", cert: "ACE · Pre/Post-natal", note: "Ten years coaching women who had never touched a barbell.",         img: "https://iron-house.lovable.app/assets/trainer-2-C9g2Jo5V.jpg" },
+  { name: "Tanveer Ahmed", role: "Conditioning Coach",   cert: "ISSA · Nutrition",     note: "Ex-footballer. Builds the intervals nobody enjoys and everybody needs.", img: "https://iron-house.lovable.app/assets/trainer-3-3mi-LptE.jpg" },
 ];
 
 /* Each column drifts at its own rate — that offset is what makes the row read
@@ -74,13 +75,13 @@ export default function Trainers() {
             <span className="label">(05) — The Coaches</span>
             <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
               <>
-                The people
+                They will
                 <br />
-                behind the <span className="accent-serif">reps.</span>
+                correct <span className="accent-serif">you.</span>
               </>
             </SplitReveal>
           </div>
-          <span className="label">03 / 12 shown</span>
+          <span className="label">03 of 12 shown</span>
         </div>
 
         <div className="grid gap-8 md:grid-cols-3">
@@ -104,14 +105,19 @@ export default function Trainers() {
                   <div className="label text-[#BFE01D]">0{i + 1}</div>
                 </div>
               </div>
-              <div data-trainer-meta className="mt-5 flex items-end justify-between">
-                <div>
-                  <h3 className="font-display text-3xl">{c.name}</h3>
-                  <div className="mt-1 text-sm text-[#bdbdbd]">{c.role}</div>
+              <div data-trainer-meta className="mt-5">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <h3 className="font-display text-3xl">{c.name}</h3>
+                    <div className="mt-1 text-sm text-[#bdbdbd]">{c.role}</div>
+                  </div>
+                  <div className="shrink-0 text-right font-mono text-[10px] uppercase tracking-[0.24em] text-[#bdbdbd]">
+                    {c.cert}
+                  </div>
                 </div>
-                <div className="text-right font-mono text-[10px] uppercase tracking-[0.24em] text-[#bdbdbd]">
-                  {c.cert}
-                </div>
+                <p className="mt-4 border-t border-[#1a1a1a] pt-4 text-sm leading-relaxed text-white/45">
+                  {c.note}
+                </p>
               </div>
             </div>
           ))}
