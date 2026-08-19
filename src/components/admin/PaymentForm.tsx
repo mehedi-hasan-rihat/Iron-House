@@ -48,8 +48,8 @@ export default function PaymentForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Payment Details</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Payment Details</h2>
 
         <Field label="Member *">
           <select required value={form.memberId} onChange={set("memberId")} className={cls}>
@@ -73,7 +73,7 @@ export default function PaymentForm({
         </div>
 
         {form.amount && (
-          <p className="label text-[#bdbdbd]">
+          <p className="label text-[#9aa87a]">
             Total: <span className="font-display text-xl" style={{ color: ACC }}>৳{total.toLocaleString()}</span>
           </p>
         )}
@@ -103,7 +103,7 @@ export default function PaymentForm({
           {loading ? "Saving…" : "Record Payment"}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors">
+          className="text-[#9aa87a] text-xs uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors">
           Cancel
         </button>
       </div>
@@ -114,9 +114,9 @@ export default function PaymentForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">{label}</label>
+      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
       {children}
     </div>
   );
 }
-const cls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+const cls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";

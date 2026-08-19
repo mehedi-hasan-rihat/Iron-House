@@ -61,8 +61,8 @@ export default async function MembersPage({
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-white uppercase tracking-wide">Members</h1>
-          <p className="label text-[#bdbdbd] mt-1">{total} total</p>
+          <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Members</h1>
+          <p className="label text-[#9aa87a] mt-1">{total} total</p>
         </div>
         <Link
           href="/admin/members/new"
@@ -77,18 +77,18 @@ export default async function MembersPage({
       {/* Filters */}
       <form className="flex flex-wrap gap-3">
         <div className="relative">
-          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#bdbdbd]" />
+          <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9aa87a]" />
           <input
             name="search"
             defaultValue={search}
             placeholder="Name, phone, ID…"
-            className="bg-[#0b0b0b] border border-[#1a1a1a] text-white text-xs pl-8 pr-4 py-2.5 outline-none focus:border-[#BFE01D] w-56 transition-colors"
+            className="panel border border-[#BFE01D]/15 text-[#f2f4e8] text-xs pl-8 pr-4 py-2.5 outline-none focus:border-[#BFE01D] w-56 transition-colors"
           />
         </div>
         <select
           name="status"
           defaultValue={status}
-          className="bg-[#0b0b0b] border border-[#1a1a1a] text-[#bdbdbd] text-xs px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors"
+          className="panel border border-[#BFE01D]/15 text-[#9aa87a] text-xs px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors"
         >
           <option value="">All Status</option>
           <option value="ACTIVE">Active</option>
@@ -97,7 +97,7 @@ export default async function MembersPage({
         </select>
         <button
           type="submit"
-          className="border border-[#1a1a1a] text-[#bdbdbd] hover:text-white hover:border-white text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors"
+          className="border border-[#BFE01D]/15 text-[#9aa87a] hover:text-[#f2f4e8] hover:border-[#BFE01D]/50 text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors"
         >
           Filter
         </button>
@@ -116,7 +116,7 @@ export default async function MembersPage({
               className={`w-8 h-8 flex items-center justify-center text-xs border transition-colors
                 ${p === page
                   ? "border-[#BFE01D] text-black font-bold"
-                  : "border-[#1a1a1a] text-[#bdbdbd] hover:border-white hover:text-white"
+                  : "border-[#BFE01D]/15 text-[#9aa87a] hover:border-[#BFE01D]/50 hover:text-[#f2f4e8]"
                 }`}
               style={p === page ? { backgroundColor: ACC } : {}}
             >

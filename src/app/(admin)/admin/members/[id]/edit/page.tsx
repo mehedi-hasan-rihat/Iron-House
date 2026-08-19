@@ -19,12 +19,12 @@ export default async function EditMemberPage({
   return (
     <div className="max-w-2xl space-y-6">
       <Link href={`/admin/members/${id}`}
-        className="inline-flex items-center gap-2 text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] transition-colors">
+        className="inline-flex items-center gap-2 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] transition-colors">
         <ArrowLeft size={13} /> Back to Profile
       </Link>
       <div>
-        <h1 className="font-display text-3xl text-white uppercase tracking-wide">Edit Member</h1>
-        <p className="label text-[#bdbdbd] mt-1">{member.memberId} · {member.fullName}</p>
+        <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Edit Member</h1>
+        <p className="label text-[#9aa87a] mt-1">{member.memberId} · {member.fullName}</p>
       </div>
       <MemberForm
         mode="edit"

@@ -40,7 +40,7 @@ export default async function MemberProfilePage({
     <div className="space-y-6 max-w-4xl">
 
       {/* Back */}
-      <Link href="/admin/members" className="inline-flex items-center gap-2 text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] transition-colors">
+      <Link href="/admin/members" className="inline-flex items-center gap-2 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] transition-colors">
         <ArrowLeft size={13} /> Members
       </Link>
 
@@ -48,16 +48,16 @@ export default async function MemberProfilePage({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-3xl text-white uppercase tracking-wide">{member.fullName}</h1>
+            <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">{member.fullName}</h1>
             <span className={`text-[10px] font-bold uppercase tracking-[0.2em] px-2 py-1 rounded-sm ${STATUS_COLORS[member.status] ?? ""}`}>
               {member.status}
             </span>
           </div>
-          <p className="label text-[#bdbdbd] mt-1">{member.memberId}</p>
+          <p className="label text-[#9aa87a] mt-1">{member.memberId}</p>
         </div>
         <div className="flex gap-3">
           <Link href={`/admin/members/${id}/edit`}
-            className="inline-flex items-center gap-2 border border-[#1a1a1a] text-[#bdbdbd] hover:border-white hover:text-white text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors">
+            className="inline-flex items-center gap-2 border border-[#BFE01D]/15 text-[#9aa87a] hover:border-[#BFE01D]/50 hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors">
             <Edit size={13} /> Edit
           </Link>
           <Link href={`/admin/memberships/new?memberId=${id}`}
@@ -99,18 +99,18 @@ export default async function MemberProfilePage({
       {/* Membership history */}
       <InfoCard title={`Membership History (${member.memberships.length})`}>
         {member.memberships.length === 0 ? (
-          <p className="text-[#bdbdbd] text-xs">No memberships yet.</p>
+          <p className="text-[#9aa87a] text-xs">No memberships yet.</p>
         ) : (
           <div className="space-y-2">
             {member.memberships.map((ms) => (
-              <div key={ms.id} className="flex items-center justify-between py-2 border-b border-[#1a1a1a] last:border-0">
+              <div key={ms.id} className="flex items-center justify-between py-2 border-b border-[#BFE01D]/15 last:border-0">
                 <div>
-                  <p className="text-white text-sm">{ms.plan.name}</p>
-                  <p className="label text-[#bdbdbd]">
+                  <p className="text-[#f2f4e8] text-sm">{ms.plan.name}</p>
+                  <p className="label text-[#9aa87a]">
                     {new Date(ms.startDate).toLocaleDateString("en-BD")} – {new Date(ms.endDate).toLocaleDateString("en-BD")}
                   </p>
                 </div>
-                <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-sm ${STATUS_COLORS[ms.status] ?? "text-[#bdbdbd]"}`}>
+                <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-sm ${STATUS_COLORS[ms.status] ?? "text-[#9aa87a]"}`}>
                   {ms.status}
                 </span>
               </div>
@@ -122,16 +122,16 @@ export default async function MemberProfilePage({
       {/* Recent payments */}
       <InfoCard title={`Recent Payments (${member.payments.length})`}>
         {member.payments.length === 0 ? (
-          <p className="text-[#bdbdbd] text-xs">No payments yet.</p>
+          <p className="text-[#9aa87a] text-xs">No payments yet.</p>
         ) : (
           <div className="space-y-2">
             {member.payments.map((p) => (
-              <div key={p.id} className="flex items-center justify-between py-2 border-b border-[#1a1a1a] last:border-0">
+              <div key={p.id} className="flex items-center justify-between py-2 border-b border-[#BFE01D]/15 last:border-0">
                 <div>
-                  <p className="text-white text-sm font-mono">{p.invoiceNumber}</p>
-                  <p className="label text-[#bdbdbd]">{p.method} · {p.paymentDate ? new Date(p.paymentDate).toLocaleDateString("en-BD") : "—"}</p>
+                  <p className="text-[#f2f4e8] text-sm font-mono">{p.invoiceNumber}</p>
+                  <p className="label text-[#9aa87a]">{p.method} · {p.paymentDate ? new Date(p.paymentDate).toLocaleDateString("en-BD") : "—"}</p>
                 </div>
-                <p className="text-white text-sm">৳{Number(p.totalAmount).toLocaleString()}</p>
+                <p className="text-[#f2f4e8] text-sm">৳{Number(p.totalAmount).toLocaleString()}</p>
               </div>
             ))}
           </div>
@@ -144,8 +144,8 @@ export default async function MemberProfilePage({
 
 function InfoCard({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-5">
-      <h3 className="label text-[#bdbdbd] mb-4">{title}</h3>
+    <div className="border border-[#BFE01D]/15 panel p-5">
+      <h3 className="label text-[#9aa87a] mb-4">{title}</h3>
       {children}
     </div>
   );
@@ -154,9 +154,9 @@ function InfoCard({ title, children }: { title: string; children: React.ReactNod
 function Row({ label, value }: { label: string; value?: string | null }) {
   if (!value) return null;
   return (
-    <div className="flex justify-between py-1.5 border-b border-[#1a1a1a] last:border-0">
-      <span className="text-[#bdbdbd] text-xs uppercase tracking-[0.15em]">{label}</span>
-      <span className="text-white text-xs text-right max-w-[60%]">{value}</span>
+    <div className="flex justify-between py-1.5 border-b border-[#BFE01D]/15 last:border-0">
+      <span className="text-[#9aa87a] text-xs uppercase tracking-[0.15em]">{label}</span>
+      <span className="text-[#f2f4e8] text-xs text-right max-w-[60%]">{value}</span>
     </div>
   );
 }

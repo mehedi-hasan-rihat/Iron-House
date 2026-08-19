@@ -18,16 +18,16 @@ export default function DangerZone() {
   }
 
   return (
-    <div className="border border-red-900/40 bg-[#0b0b0b] p-6 space-y-4">
+    <div className="border border-red-900/40 panel p-6 space-y-4">
       <h2 className="label text-red-400">Danger Zone</h2>
-      <p className="text-[#bdbdbd] text-xs">
+      <p className="text-[#9aa87a] text-xs">
         These actions are irreversible. Proceed with caution.
       </p>
 
-      <div className="flex items-center justify-between py-3 border-b border-[#1a1a1a]">
+      <div className="flex items-center justify-between py-3 border-b border-[#BFE01D]/15">
         <div>
-          <p className="text-white text-xs uppercase tracking-[0.15em]">Reset All Data</p>
-          <p className="text-[#bdbdbd] text-[11px] mt-0.5">Permanently deletes all members, payments and plans.</p>
+          <p className="text-[#f2f4e8] text-xs uppercase tracking-[0.15em]">Reset All Data</p>
+          <p className="text-[#9aa87a] text-[11px] mt-0.5">Permanently deletes all members, payments and plans.</p>
         </div>
 
         {confirmReset ? (
@@ -41,7 +41,7 @@ export default function DangerZone() {
             </button>
             <button
               onClick={() => setConfirmReset(false)}
-              className="border border-[#1a1a1a] text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors"
+              className="border border-[#BFE01D]/15 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors"
             >
               Cancel
             </button>

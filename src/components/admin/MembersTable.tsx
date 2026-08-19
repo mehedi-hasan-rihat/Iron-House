@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Eye, Edit, MoreVertical } from "lucide-react";
 import { useState } from "react";
+import Stagger from "@/components/motion/Stagger";
 
 const STATUS_COLORS: Record<string, string> = {
   ACTIVE:    "text-[#BFE01D] bg-[#BFE01D]/10",
@@ -20,8 +21,8 @@ export default function MembersTable({ members }: { members: Member[] }) {
 
   if (!members.length) {
     return (
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] py-16 text-center">
-        <p className="text-[#bdbdbd] text-sm">No members found.</p>
+      <div className="border border-[#BFE01D]/15 panel py-16 text-center">
+        <p className="text-[#9aa87a] text-sm">No members found.</p>
         <Link href="/admin/members/new" className="mt-4 inline-block text-[#BFE01D] text-xs uppercase tracking-[0.2em] hover:underline">
           Add first member →
         </Link>
@@ -30,18 +31,19 @@ export default function MembersTable({ members }: { members: Member[] }) {
   }
 
   return (
-    <div className="overflow-x-auto border border-[#1a1a1a]">
+    <div className="overflow-x-auto border border-[#BFE01D]/15">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-[#1a1a1a] bg-[#0b0b0b]">
+          <tr className="border-b border-[#BFE01D]/15 panel">
             {["Member ID", "Name", "Phone", "Plan", "Expires", "Status", ""].map((h) => (
-              <th key={h} className="text-left px-4 py-3 label text-[#bdbdbd] whitespace-nowrap">
+              <th key={h} className="text-left px-4 py-3 label text-[#9aa87a] whitespace-nowrap">
                 {h}
               </th>
             ))}
           </tr>
         </thead>
-        <tbody className="divide-y divide-[#1a1a1a]">
+        <Stagger as="tbody" selector="tr" className="divide-y divide-[#BFE01D]/15"
+          stagger={0.035} y={12} blur={false}>
           {members.map((m) => {
             const activeMembership = m.memberships[0];
             const expired = activeMembership
@@ -49,19 +51,19 @@ export default function MembersTable({ members }: { members: Member[] }) {
               : false;
 
             return (
-              <tr key={m.id} className="bg-[#050505] hover:bg-[#0b0b0b] transition-colors">
-                <td className="px-4 py-3 font-mono text-xs text-[#bdbdbd]">{m.memberId}</td>
-                <td className="px-4 py-3 font-medium text-white whitespace-nowrap">{m.fullName}</td>
-                <td className="px-4 py-3 text-[#bdbdbd]">{m.phone}</td>
-                <td className="px-4 py-3 text-[#bdbdbd]">
-                  {activeMembership?.plan?.name ?? <span className="text-[#1a1a1a]">—</span>}
+              <tr key={m.id} className="bg-[#050505] hover:bg-[#0d0f08] transition-colors">
+                <td className="px-4 py-3 font-mono text-xs text-[#9aa87a]">{m.memberId}</td>
+                <td className="px-4 py-3 font-medium text-[#f2f4e8] whitespace-nowrap">{m.fullName}</td>
+                <td className="px-4 py-3 text-[#9aa87a]">{m.phone}</td>
+                <td className="px-4 py-3 text-[#9aa87a]">
+                  {activeMembership?.plan?.name ?? <span className="text-[#1f2408]">—</span>}
                 </td>
-                <td className="px-4 py-3 text-[#bdbdbd] whitespace-nowrap">
+                <td className="px-4 py-3 text-[#9aa87a] whitespace-nowrap">
                   {activeMembership
                     ? <span className={expired ? "text-red-400" : ""}>
                         {new Date(activeMembership.endDate).toLocaleDateString("en-BD")}
                       </span>
-                    : <span className="text-[#1a1a1a]">—</span>
+                    : <span className="text-[#1f2408]">—</span>
                   }
                 </td>
                 <td className="px-4 py-3">
@@ -72,21 +74,21 @@ export default function MembersTable({ members }: { members: Member[] }) {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1 relative">
                     <Link href={`/admin/members/${m.id}`}
-                      className="p-1.5 text-[#bdbdbd] hover:text-white transition-colors" title="View">
+                      className="p-1.5 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors" title="View">
                       <Eye size={14} />
                     </Link>
                     <Link href={`/admin/members/${m.id}/edit`}
-                      className="p-1.5 text-[#bdbdbd] hover:text-white transition-colors" title="Edit">
+                      className="p-1.5 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors" title="Edit">
                       <Edit size={14} />
                     </Link>
                     <button
                       onClick={() => setMenu(menu === m.id ? null : m.id)}
-                      className="p-1.5 text-[#bdbdbd] hover:text-white transition-colors"
+                      className="p-1.5 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors"
                     >
                       <MoreVertical size={14} />
                     </button>
                     {menu === m.id && (
-                      <div className="absolute right-0 top-8 z-20 w-40 bg-[#111] border border-[#1a1a1a] shadow-xl">
+                      <div className="absolute right-0 top-8 z-20 w-40 bg-[#111] border border-[#BFE01D]/15 shadow-xl">
                         {[
                           { label: "Suspend",  status: "SUSPENDED" },
                           { label: "Freeze",   status: "FROZEN"    },
@@ -102,7 +104,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
                               setMenu(null);
                               window.location.reload();
                             }}
-                            className="w-full text-left px-4 py-2.5 text-xs text-[#bdbdbd] hover:text-white hover:bg-white/5 uppercase tracking-[0.15em]"
+                            className="w-full text-left px-4 py-2.5 text-xs text-[#9aa87a] hover:text-[#f2f4e8] hover:bg-[#BFE01D]/[0.06] uppercase tracking-[0.15em]"
                           >
                             {action.label}
                           </button>
@@ -114,7 +116,7 @@ export default function MembersTable({ members }: { members: Member[] }) {
               </tr>
             );
           })}
-        </tbody>
+        </Stagger>
       </table>
     </div>
   );

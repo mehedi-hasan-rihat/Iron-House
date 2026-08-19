@@ -15,13 +15,13 @@ export default function StaffActions({ staffId, currentStatus }: { staffId: stri
   return (
     <div className="relative">
       <button onClick={() => setOpen(!open)}
-        className="p-1 text-[#bdbdbd] hover:text-white transition-colors">
+        className="p-1 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
         <MoreVertical size={14} />
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-6 z-20 w-40 bg-[#111] border border-[#1a1a1a] shadow-xl">
+          <div className="absolute right-0 top-6 z-20 w-40 bg-[#111] border border-[#BFE01D]/15 shadow-xl">
             {actions.map((a) => (
               <button key={a.status}
                 onClick={async () => {
@@ -33,7 +33,7 @@ export default function StaffActions({ staffId, currentStatus }: { staffId: stri
                   setOpen(false);
                   window.location.reload();
                 }}
-                className="w-full text-left px-4 py-2.5 text-xs text-[#bdbdbd] hover:text-white hover:bg-white/5 uppercase tracking-[0.15em]">
+                className="w-full text-left px-4 py-2.5 text-xs text-[#9aa87a] hover:text-[#f2f4e8] hover:bg-[#BFE01D]/[0.06] uppercase tracking-[0.15em]">
                 {a.label}
               </button>
             ))}

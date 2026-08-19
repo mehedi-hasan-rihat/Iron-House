@@ -67,8 +67,8 @@ export default function MembershipForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Membership Details</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Membership Details</h2>
 
         <div className="grid gap-5 md:grid-cols-2">
           <Field label="Member *">
@@ -98,15 +98,15 @@ export default function MembershipForm({
         </div>
 
         {endDate && (
-          <p className="label text-[#bdbdbd]">
+          <p className="label text-[#9aa87a]">
             End date: <span style={{ color: ACC }}>{endDate}</span>
             {selectedPlan && ` · ${selectedPlan.durationDays} days`}
           </p>
         )}
       </div>
 
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Pricing</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Pricing</h2>
         <div className="grid gap-5 md:grid-cols-3">
           <Field label="Amount (৳) *">
             <input type="number" min={0} value={form.amount} onChange={set("amount")} className={cls} />
@@ -119,16 +119,16 @@ export default function MembershipForm({
           </Field>
         </div>
         <div className="flex items-baseline gap-2 pt-1">
-          <span className="label text-[#bdbdbd]">Total:</span>
+          <span className="label text-[#9aa87a]">Total:</span>
           <span className="font-display text-2xl" style={{ color: ACC }}>৳{final.toLocaleString()}</span>
         </div>
       </div>
 
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-4">
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-4">
         <label className="flex items-center gap-2 cursor-pointer">
           <input type="checkbox" checked={form.recordPayment}
             onChange={set("recordPayment")} className="accent-[#BFE01D] w-4 h-4" />
-          <span className="label text-[#bdbdbd]">Record payment now</span>
+          <span className="label text-[#9aa87a]">Record payment now</span>
         </label>
         {form.recordPayment && (
           <Field label="Payment Method">
@@ -148,7 +148,7 @@ export default function MembershipForm({
           {loading ? "Creating…" : "Create Membership"}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors">
+          className="text-[#9aa87a] text-xs uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors">
           Cancel
         </button>
       </div>
@@ -159,9 +159,9 @@ export default function MembershipForm({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">{label}</label>
+      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
       {children}
     </div>
   );
 }
-const cls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+const cls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";

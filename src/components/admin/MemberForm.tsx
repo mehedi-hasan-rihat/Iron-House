@@ -64,8 +64,8 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
     <form onSubmit={handleSubmit} className="space-y-6">
 
       {/* Personal */}
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Personal Information</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Personal Information</h2>
 
         <div className="grid gap-5 md:grid-cols-2">
           <Field label="Full Name *" required>
@@ -106,8 +106,8 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
       </div>
 
       {/* Medical */}
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Medical & Emergency</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Medical & Emergency</h2>
         <div className="grid gap-5 md:grid-cols-2">
           <Field label="Emergency Contact">
             <input type="text" value={form.emergencyContact} onChange={set("emergencyContact")}
@@ -132,7 +132,7 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
           {loading ? "Saving…" : mode === "edit" ? "Update Member" : "Create Member"}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors">
+          className="text-[#9aa87a] text-xs uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors">
           Cancel
         </button>
       </div>
@@ -143,7 +143,7 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
 function Field({ label, children, required }: { label: string; children: React.ReactNode; required?: boolean }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">
+      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">
         {label}{required && <span className="text-red-400 ml-0.5">*</span>}
       </label>
       {children}
@@ -151,4 +151,4 @@ function Field({ label, children, required }: { label: string; children: React.R
   );
 }
 
-const inputCls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+const inputCls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";

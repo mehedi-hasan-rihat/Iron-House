@@ -11,7 +11,7 @@ const STATUS_COLORS: Record<string, string> = {
   PENDING:   "text-yellow-400 bg-yellow-400/10",
   FAILED:    "text-red-400 bg-red-400/10",
   REFUNDED:  "text-blue-400 bg-blue-400/10",
-  CANCELLED: "text-[#bdbdbd] bg-white/5",
+  CANCELLED: "text-[#9aa87a] bg-[#BFE01D]/[0.06]",
 };
 
 export default async function PaymentDetailPage({
@@ -36,7 +36,7 @@ export default async function PaymentDetailPage({
   return (
     <div className="max-w-2xl space-y-6">
       <Link href="/admin/payments"
-        className="inline-flex items-center gap-2 text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] transition-colors">
+        className="inline-flex items-center gap-2 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] transition-colors">
         <ArrowLeft size={13} /> Payments
       </Link>
 
@@ -44,7 +44,7 @@ export default async function PaymentDetailPage({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="font-display text-3xl text-white uppercase">{payment.invoiceNumber}</h1>
+            <h1 className="font-display text-3xl text-[#f2f4e8] uppercase">{payment.invoiceNumber}</h1>
             <span className={`text-[10px] font-bold uppercase tracking-[0.2em] px-2 py-1 rounded-sm ${STATUS_COLORS[payment.status] ?? ""}`}>
               {payment.status}
             </span>
@@ -58,8 +58,8 @@ export default async function PaymentDetailPage({
       </div>
 
       {/* Details */}
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-5 space-y-0">
-        <h3 className="label text-[#bdbdbd] mb-4">Payment Details</h3>
+      <div className="border border-[#BFE01D]/15 panel p-5 space-y-0">
+        <h3 className="label text-[#9aa87a] mb-4">Payment Details</h3>
         {[
           { label: "Invoice",        value: payment.invoiceNumber },
           { label: "Transaction ID", value: payment.transactionId },
@@ -71,9 +71,9 @@ export default async function PaymentDetailPage({
           { label: "Tax",            value: Number(payment.tax) > 0 ? `৳${Number(payment.tax).toLocaleString()}` : null },
           { label: "Total",          value: `৳${Number(payment.totalAmount).toLocaleString()}`, accent: true },
         ].map(({ label, value, accent }) => value ? (
-          <div key={label} className="flex justify-between py-2 border-b border-[#1a1a1a] last:border-0">
-            <span className="text-[#bdbdbd] text-xs uppercase tracking-[0.15em]">{label}</span>
-            <span className={`text-xs ${accent ? "font-bold" : "text-white"}`}
+          <div key={label} className="flex justify-between py-2 border-b border-[#BFE01D]/15 last:border-0">
+            <span className="text-[#9aa87a] text-xs uppercase tracking-[0.15em]">{label}</span>
+            <span className={`text-xs ${accent ? "font-bold" : "text-[#f2f4e8]"}`}
               style={accent ? { color: ACC } : undefined}>{value}</span>
           </div>
         ) : null)}
@@ -81,14 +81,14 @@ export default async function PaymentDetailPage({
 
       {/* Attempts */}
       {payment.attempts.length > 0 && (
-        <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-5">
-          <h3 className="label text-[#bdbdbd] mb-4">Attempt History</h3>
+        <div className="border border-[#BFE01D]/15 panel p-5">
+          <h3 className="label text-[#9aa87a] mb-4">Attempt History</h3>
           <div className="space-y-2">
             {payment.attempts.map((a) => (
-              <div key={a.id} className="py-2 border-b border-[#1a1a1a] last:border-0">
+              <div key={a.id} className="py-2 border-b border-[#BFE01D]/15 last:border-0">
                 <div className="flex justify-between">
-                  <span className="text-white text-xs uppercase">{a.status}</span>
-                  <span className="label text-[#bdbdbd]">{new Date(a.attemptAt).toLocaleString("en-BD")}</span>
+                  <span className="text-[#f2f4e8] text-xs uppercase">{a.status}</span>
+                  <span className="label text-[#9aa87a]">{new Date(a.attemptAt).toLocaleString("en-BD")}</span>
                 </div>
                 {a.failureReason && <p className="text-red-400 text-xs mt-1">{a.failureReason}</p>}
               </div>

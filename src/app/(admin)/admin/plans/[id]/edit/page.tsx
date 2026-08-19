@@ -19,12 +19,12 @@ export default async function EditPlanPage({
   return (
     <div className="max-w-xl space-y-6">
       <Link href="/admin/plans"
-        className="inline-flex items-center gap-2 text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] transition-colors">
+        className="inline-flex items-center gap-2 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] transition-colors">
         <ArrowLeft size={13} /> Plans
       </Link>
       <div>
-        <h1 className="font-display text-3xl text-white uppercase tracking-wide">Edit Plan</h1>
-        <p className="label text-[#bdbdbd] mt-1">{plan.name}</p>
+        <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Edit Plan</h1>
+        <p className="label text-[#9aa87a] mt-1">{plan.name}</p>
       </div>
       <PlanForm
         mode="edit"

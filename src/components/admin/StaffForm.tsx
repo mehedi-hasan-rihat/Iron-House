@@ -53,12 +53,12 @@ export default function StaffForm({
     router.refresh();
   }
 
-  const cls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+  const cls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Staff Details</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Staff Details</h2>
 
         <div className="grid gap-5 md:grid-cols-2">
           {[
@@ -68,32 +68,32 @@ export default function StaffForm({
             { key: "designation", label: "Designation *",type: "text",  required: true,  placeholder: "Trainer" },
           ].map(({ key, label, type, required, placeholder }) => (
             <div key={key}>
-              <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">{label}</label>
+              <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
               <input type={type} required={required} value={(form as Record<string,string>)[key]}
                 onChange={set(key)} className={cls} placeholder={placeholder} />
             </div>
           ))}
 
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">Role *</label>
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Role *</label>
             <select required value={form.roleName} onChange={set("roleName")} className={cls}>
               {roles.map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
             </select>
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">Joining Date</label>
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Joining Date</label>
             <input type="date" value={form.joiningDate} onChange={set("joiningDate")} className={cls} />
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">Salary (৳)</label>
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Salary (৳)</label>
             <input type="number" min={0} value={form.salary} onChange={set("salary")} className={cls} placeholder="15000" />
           </div>
         </div>
 
         <div>
-          <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">Address</label>
+          <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Address</label>
           <input type="text" value={form.address} onChange={set("address")} className={cls} placeholder="Area, City" />
         </div>
       </div>
@@ -107,7 +107,7 @@ export default function StaffForm({
           {loading ? "Saving…" : mode === "edit" ? "Update Staff" : "Add Staff"}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors">
+          className="text-[#9aa87a] text-xs uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors">
           Cancel
         </button>
       </div>

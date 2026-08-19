@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const ACC = "#BFE01D";
-const cls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+const cls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
 
 export default function CustomerProfilePage() {
   const { data: session } = useSession();
@@ -39,19 +39,19 @@ export default function CustomerProfilePage() {
     router.refresh();
   }
 
-  if (loading) return <div className="py-12 text-center text-[#bdbdbd] text-xs uppercase tracking-widest">Loading…</div>;
+  if (loading) return <div className="py-12 text-center text-[#9aa87a] text-xs uppercase tracking-widest">Loading…</div>;
   if (!member) return null;
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-white uppercase tracking-wide">Profile</h1>
-        <p className="label text-[#bdbdbd] mt-1">{member.memberId}</p>
+        <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Profile</h1>
+        <p className="label text-[#9aa87a] mt-1">{member.memberId}</p>
       </div>
 
       <form onSubmit={save} className="space-y-5">
-        <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-          <h2 className="label text-[#bdbdbd]">Personal Information</h2>
+        <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+          <h2 className="label text-[#9aa87a]">Personal Information</h2>
           <div className="grid gap-5 md:grid-cols-2">
             {[
               { name: "fullName", label: "Full Name",       type: "text"  },
@@ -61,7 +61,7 @@ export default function CustomerProfilePage() {
               { name: "emergencyContact", label: "Emergency Contact", type: "text" },
             ].map(({ name, label, type }) => (
               <div key={name}>
-                <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">{label}</label>
+                <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
                 <input name={name} type={type} defaultValue={member[name] ?? ""}
                   className={cls} />
               </div>

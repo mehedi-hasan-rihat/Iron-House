@@ -22,8 +22,8 @@ export default async function NewMembershipPage({
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-white uppercase tracking-wide">New Membership</h1>
-        <p className="label text-[#bdbdbd] mt-1">Assign a plan to a member</p>
+        <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">New Membership</h1>
+        <p className="label text-[#9aa87a] mt-1">Assign a plan to a member</p>
       </div>
       <MembershipForm
         members={members}

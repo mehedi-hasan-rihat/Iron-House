@@ -18,8 +18,8 @@ export default async function NewPaymentPage({
   return (
     <div className="max-w-xl space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-white uppercase tracking-wide">Record Payment</h1>
-        <p className="label text-[#bdbdbd] mt-1">Manually record a payment</p>
+        <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Record Payment</h1>
+        <p className="label text-[#9aa87a] mt-1">Manually record a payment</p>
       </div>
       <PaymentForm
         members={members}

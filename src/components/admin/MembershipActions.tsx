@@ -46,7 +46,7 @@ export default function MembershipActions({
       )}
       {(currentStatus === "ACTIVE" || currentStatus === "EXPIRED") && (
         <button onClick={() => act("renew", { paymentMethod: "CASH" })} disabled={busy}
-          className="border border-[#1a1a1a] text-[#bdbdbd] hover:border-white hover:text-white text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors disabled:opacity-50">
+          className="border border-[#BFE01D]/15 text-[#9aa87a] hover:border-[#BFE01D]/50 hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors disabled:opacity-50">
           Renew
         </button>
       )}

@@ -29,7 +29,7 @@ export default function NotificationBell() {
     <div className="relative">
       <button
         onClick={() => { setOpen(!open); if (!open && count > 0) markRead(); }}
-        className="relative p-2 text-[#bdbdbd] hover:text-white transition-colors"
+        className="relative p-2 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors"
       >
         <Bell size={18} />
         {count > 0 && (
@@ -45,23 +45,23 @@ export default function NotificationBell() {
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 top-10 z-20 w-80 bg-[#111] border border-[#1a1a1a] shadow-2xl max-h-80 overflow-y-auto">
-            <div className="px-4 py-3 border-b border-[#1a1a1a] flex items-center justify-between">
-              <span className="label text-[#bdbdbd]">Notifications</span>
+          <div className="absolute right-0 top-10 z-20 w-80 bg-[#111] border border-[#BFE01D]/15 shadow-2xl max-h-80 overflow-y-auto">
+            <div className="px-4 py-3 border-b border-[#BFE01D]/15 flex items-center justify-between">
+              <span className="label text-[#9aa87a]">Notifications</span>
               {items.length > 0 && (
-                <button onClick={markRead} className="text-[10px] uppercase tracking-[0.2em] hover:text-white transition-colors"
+                <button onClick={markRead} className="text-[10px] uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors"
                   style={{ color: ACC }}>
                   Mark all read
                 </button>
               )}
             </div>
             {items.length === 0 ? (
-              <p className="px-4 py-6 text-center text-[#bdbdbd] text-xs">No notifications.</p>
+              <p className="px-4 py-6 text-center text-[#9aa87a] text-xs">No notifications.</p>
             ) : (
               items.map((n) => (
-                <div key={n.id} className={`px-4 py-3 border-b border-[#1a1a1a] last:border-0 ${!n.isRead ? "bg-[#BFE01D]/5" : ""}`}>
-                  <p className="text-white text-xs leading-relaxed">{n.message}</p>
-                  <p className="label text-[#bdbdbd] mt-1">
+                <div key={n.id} className={`px-4 py-3 border-b border-[#BFE01D]/15 last:border-0 ${!n.isRead ? "bg-[#BFE01D]/5" : ""}`}>
+                  <p className="text-[#f2f4e8] text-xs leading-relaxed">{n.message}</p>
+                  <p className="label text-[#9aa87a] mt-1">
                     {new Date(n.createdAt).toLocaleDateString("en-BD")}
                   </p>
                 </div>

@@ -67,8 +67,8 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-        <h2 className="label text-[#bdbdbd]">Plan Details</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+        <h2 className="label text-[#9aa87a]">Plan Details</h2>
 
         <Field label="Plan Name *">
           <input required value={form.name} onChange={set("name")} className={inputCls} placeholder="Monthly Premium" />
@@ -100,14 +100,14 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
             <label key={key} className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={(form as Record<string, unknown>)[key] as boolean}
                 onChange={set(key)} className="accent-[#BFE01D] w-4 h-4" />
-              <span className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em]">{label}</span>
+              <span className="text-[#9aa87a] text-xs uppercase tracking-[0.2em]">{label}</span>
             </label>
           ))}
         </div>
       </div>
 
-      <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-4">
-        <h2 className="label text-[#bdbdbd]">Features</h2>
+      <div className="border border-[#BFE01D]/15 panel p-6 space-y-4">
+        <h2 className="label text-[#9aa87a]">Features</h2>
         <div className="grid grid-cols-2 gap-3">
           {[
             { key: "gymAccess",       label: "Gym Access"        },
@@ -119,7 +119,7 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
             <label key={key} className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={form.features[key as keyof typeof form.features]}
                 onChange={setFeature(key)} className="accent-[#BFE01D] w-4 h-4" />
-              <span className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em]">{label}</span>
+              <span className="text-[#9aa87a] text-xs uppercase tracking-[0.2em]">{label}</span>
             </label>
           ))}
         </div>
@@ -134,7 +134,7 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
           {loading ? "Saving…" : mode === "edit" ? "Update Plan" : "Create Plan"}
         </button>
         <button type="button" onClick={() => router.back()}
-          className="text-[#bdbdbd] text-xs uppercase tracking-[0.2em] hover:text-white transition-colors">
+          className="text-[#9aa87a] text-xs uppercase tracking-[0.2em] hover:text-[#f2f4e8] transition-colors">
           Cancel
         </button>
       </div>
@@ -145,10 +145,10 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">{label}</label>
+      <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
       {children}
     </div>
   );
 }
 
-const inputCls = "w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";
+const inputCls = "w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors";

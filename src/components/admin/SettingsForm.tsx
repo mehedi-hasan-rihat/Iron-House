@@ -30,19 +30,19 @@ export default function SettingsForm() {
   }
 
   return (
-    <div className="border border-[#1a1a1a] bg-[#0b0b0b] p-6 space-y-5">
-      <h2 className="label text-[#bdbdbd]">Gym Information</h2>
+    <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
+      <h2 className="label text-[#9aa87a]">Gym Information</h2>
       <div className="grid gap-5 md:grid-cols-2">
         {FIELDS.map(({ label, placeholder }) => (
           <div key={label}>
-            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#bdbdbd] mb-2">
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">
               {label}
             </label>
             <input
               value={values[label]}
               onChange={(e) => setValues((v) => ({ ...v, [label]: e.target.value }))}
               placeholder={placeholder}
-              className="w-full bg-[#050505] border border-[#1a1a1a] text-white text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors"
+              className="w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-2.5 outline-none focus:border-[#BFE01D] transition-colors"
             />
           </div>
         ))}

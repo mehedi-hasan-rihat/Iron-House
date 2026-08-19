@@ -27,7 +27,7 @@ export default function RefundButton({ paymentId }: { paymentId: string }) {
           {busy ? "Processing…" : "Confirm Refund"}
         </button>
         <button onClick={() => setConfirm(false)}
-          className="border border-[#1a1a1a] text-[#bdbdbd] hover:text-white text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors">
+          className="border border-[#BFE01D]/15 text-[#9aa87a] hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors">
           Cancel
         </button>
       </div>
@@ -36,7 +36,7 @@ export default function RefundButton({ paymentId }: { paymentId: string }) {
 
   return (
     <button onClick={() => setConfirm(true)}
-      className="border border-[#1a1a1a] text-[#bdbdbd] hover:border-red-400 hover:text-red-400 text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors">
+      className="border border-[#BFE01D]/15 text-[#9aa87a] hover:border-red-400 hover:text-red-400 text-xs uppercase tracking-[0.2em] px-4 py-2 transition-colors">
       Refund
     </button>
   );

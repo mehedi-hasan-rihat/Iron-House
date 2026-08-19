@@ -74,8 +74,13 @@
     text-transform: uppercase;
   }
 
-  /* hide native cursor site-wide — custom cursor handles it */
-  * { cursor: none !important; }
+  /* The landing page hides the native cursor and draws its own. The dashboard
+     is scoped out: an I-beam in a field, a pointer on a row, a not-allowed on a
+     disabled button all carry information a drawn dot can't replace. Scoping
+     out rather than overriding also leaves `cursor-pointer` utilities working. */
+  html:not(:has([data-layout="dashboard"])) * {
+    cursor: none !important;
+  }
 
   ::-webkit-scrollbar       { width: 3px; }
   ::-webkit-scrollbar-track { background: #050505; }
@@ -211,6 +216,34 @@
   letter-spacing: -0.01em;
   line-height: 1.2;
   text-transform: none;
+}
+
+/* Dashboard surface palette — deliberately lime-tinted rather than neutral
+   gray. Every "gray" in the panels is a desaturated lime, so the accent never
+   sits on a dead surface. */
+[data-layout="dashboard"] {
+  --dash-bg:         #050505;
+  --dash-panel:      #0d0f08;
+  --dash-panel-2:    #121509;
+  --dash-fg:         #f2f4e8;
+  --dash-muted:      #9aa87a;
+  --dash-line:       rgb(191 224 29 / 0.15);
+  --dash-line-hover: rgb(191 224 29 / 0.5);
+
+  background: var(--dash-bg);
+  color: var(--dash-fg);
+}
+
+/* The mono eyebrow label defaults to the landing page's gray. */
+[data-layout="dashboard"] .label {
+  color: var(--dash-muted);
+}
+
+/* Panels get a barely-there lime wash from the top-left instead of flat #0b0b0b. */
+[data-layout="dashboard"] .panel {
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgb(191 224 29 / 0.05), transparent 60%),
+    var(--dash-panel);
 }
 
 /* Landing page: all four fonts active (default, no override needed) */

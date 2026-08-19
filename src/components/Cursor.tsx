@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 
 export default function Cursor() {
@@ -19,7 +20,19 @@ export default function Cursor() {
   const [hidden, setHidden]   = useState(true);
   const rafRef = useRef<number>(0);
 
+  /* This mounts from the root layout, so it also lands on the dashboard — where
+     the ring is the wrong tool. The shells render their own accent cursor and
+     keep the native one, so bail out entirely when one is on screen. Checked
+     against the DOM rather than a route list so it can't drift. */
+  const pathname = usePathname();
+  const [inDashboard, setInDashboard] = useState(false);
   useEffect(() => {
+    setInDashboard(!!document.querySelector('[data-layout="dashboard"]'));
+  }, [pathname]);
+
+  useEffect(() => {
+    if (inDashboard) return;
+
     const move = (e: MouseEvent) => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
@@ -57,7 +70,9 @@ export default function Cursor() {
       window.removeEventListener("mouseup",   up);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [cursorX, cursorY]);
+  }, [cursorX, cursorY, inDashboard]);
+
+  if (inDashboard) return null;
 
   /* don't render on touch devices */
   if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
