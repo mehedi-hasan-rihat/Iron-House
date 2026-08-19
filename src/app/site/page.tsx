@@ -1,6 +1,7 @@
 import SmoothScroll    from "@/components/SmoothScroll";
 import ProgressBar     from "@/components/ProgressBar";
 import Spotlight       from "@/components/Spotlight";
+import OfferBar        from "@/components/OfferBar";
 import Navbar          from "@/components/Navbar";
 import Hero            from "@/components/Hero";
 import Marquee         from "@/components/Marquee";
@@ -12,10 +13,12 @@ import Trainers        from "@/components/Trainers";
 import Transformation  from "@/components/Transformation";
 import Stats           from "@/components/Stats";
 import Membership      from "@/components/Membership";
+import Offers          from "@/components/Offers";
 import FAQ             from "@/components/FAQ";
 import Contact         from "@/components/Contact";
 import Footer          from "@/components/Footer";
 import MobileCTA       from "@/components/MobileCTA";
+import { OFFERS }      from "@/content/offers";
 
 export default function Home() {
   return (
@@ -23,10 +26,12 @@ export default function Home() {
       <SmoothScroll />
       <ProgressBar />
       <Spotlight />
+      <OfferBar offers={OFFERS} />
       <Navbar />
       <main>
         <Hero />
         <Marquee />
+        <Offers offers={OFFERS} />
         <About />
         <Experience />
         <WhyUs />

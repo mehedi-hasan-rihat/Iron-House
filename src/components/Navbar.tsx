@@ -14,7 +14,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed left-0 right-0 top-0 z-50 transition-all duration-500 ${
+      /* `--offer-bar-h` is owned by OfferBar; it falls back to 0 on pages that
+         do not render one, and returns to 0 when the bar is dismissed. */
+      style={{ top: "var(--offer-bar-h, 0px)" }}
+      className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "backdrop-blur-md bg-[#050505]/70 border-b border-[#1a1a1a]"
           : "bg-transparent"
@@ -22,7 +25,7 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-5 md:px-10">
         {/* Wordmark */}
-        <a href="#top" className="flex items-center gap-2">
+        <a href="#top" className="flex shrink-0 items-center gap-2">
           <div
             style={{
               width: 28,
@@ -104,14 +107,15 @@ export default function Navbar() {
               </svg>
             </div>
           </div>
-          <span className="font-display text-lg tracking-widest">
+          <span className="whitespace-nowrap font-display text-lg tracking-widest">
             FIT GYM CENTER
           </span>
         </a>
 
-        {/* Nav links */}
-        <nav className="hidden items-center gap-9 text-xs uppercase tracking-[0.24em] text-[#bdbdbd] md:flex">
-          {["Experience", "Programs", "Trainers", "Membership", "Contact"].map(
+        {/* Nav links. Six items no longer fit at tablet widths on the old
+            gap-9 / md: pairing, so the row opens later and tightens up. */}
+        <nav className="hidden shrink-0 items-center gap-5 whitespace-nowrap text-xs uppercase tracking-[0.18em] text-[#bdbdbd] lg:flex xl:gap-8 xl:tracking-[0.24em]">
+          {["Experience", "Programs", "Trainers", "Membership", "Offers", "Contact"].map(
             (l) => (
               <a
                 key={l}

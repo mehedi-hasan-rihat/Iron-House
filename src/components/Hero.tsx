@@ -1,7 +1,8 @@
 "use client";
 import Image from "next/image";
-import { useRef, useCallback, useSyncExternalStore } from "react";
+import { useRef } from "react";
 import { gsap, SplitText, useGSAP, EASE } from "@/lib/gsap";
+import { useMinuteTick } from "@/lib/use-minute-tick";
 
 /* One backdrop instead of five slabs. The old hero shipped five full-bleed
    JPEGs straight from the asset host; this ships a single optimised derivative
@@ -21,26 +22,6 @@ const OPEN_HOURS: Record<number, [number, number] | null> = {
   5: [15, 22],           // Friday
   6: [6, 23],
 };
-
-/**
- * The wall clock as an external store. Subscribing this way (rather than
- * setState-in-effect) keeps the server snapshot `null`, so the first client
- * render matches the HTML and hydration stays quiet.
- */
-function useMinuteTick(): number | null {
-  const subscribe = useCallback((onChange: () => void) => {
-    const id = setInterval(onChange, 30_000);
-    return () => clearInterval(id);
-  }, []);
-
-  return useSyncExternalStore(
-    subscribe,
-    /* Bucketed to the minute so the snapshot is referentially stable between
-       ticks — returning Date.now() here would re-render on every check. */
-    () => Math.floor(Date.now() / 60_000),
-    () => null
-  );
-}
 
 /** Live open/closed pill. A small real-time detail the eye lands on. */
 function OpenStatus() {
@@ -253,7 +234,9 @@ export default function Hero() {
         </div>
 
         {/* ── Content ── */}
-        <div className="relative z-20 flex h-full flex-col px-6 pb-8 pt-20 md:px-16 md:pb-14 md:pt-28">
+        {/* Top padding clears the navbar, which OfferBar pushes down by
+            `--offer-bar-h` when it is showing. */}
+        <div className="relative z-20 flex h-full flex-col px-6 pb-8 pt-[calc(5rem+var(--offer-bar-h,0px))] md:px-16 md:pb-14 md:pt-[calc(7rem+var(--offer-bar-h,0px))]">
 
           {/* Top rail. The wrapper is the scrub target, the children are the
               entry targets — see the note on the entry timeline. */}
