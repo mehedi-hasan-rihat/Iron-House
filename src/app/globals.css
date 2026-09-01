@@ -19,9 +19,15 @@
   --color-muted-foreground:   #bdbdbd;
   --color-border:             #1a1a1a;
 
-  --font-display: var(--font-display-loaded, "Anton"), "Bebas Neue", ui-sans-serif, system-ui, sans-serif;
-  --font-sans:    var(--font-sans-loaded,    "Inter"),  ui-sans-serif, system-ui, sans-serif;
-  --font-mono:    var(--font-mono-loaded,    "JetBrains Mono"), ui-monospace, monospace;
+  --font-display: var(--font-display-loaded, "Archivo"), "Helvetica Neue", ui-sans-serif, system-ui, sans-serif;
+  --font-serif:   var(--font-serif-loaded,   "Instrument Serif"), Georgia, "Times New Roman", serif;
+  --font-sans:    var(--font-sans-loaded,    "Geist"), ui-sans-serif, system-ui, sans-serif;
+  --font-mono:    var(--font-mono-loaded,    "Geist Mono"), ui-monospace, monospace;
+
+  /* Display width/weight axes — the expanded cut is the whole look.
+     Overridden per-utility where a narrower cut reads better. */
+  --display-wdth: 118;
+  --display-wght: 800;
 }
 
 /* ── Base resets ── */
@@ -51,15 +57,30 @@
     color: #050505;
   }
 
+  body {
+    font-weight: 300;
+    letter-spacing: 0.005em;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
   h1, h2, h3, h4, .display {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
-    line-height: 0.95;
+    font-variation-settings: "wdth" var(--display-wdth), "wght" var(--display-wght);
+    letter-spacing: -0.035em;
+    line-height: 0.88;
     text-transform: uppercase;
   }
 
-  /* hide native cursor site-wide — custom cursor handles it */
-  * { cursor: none !important; }
+  /* The landing page hides the native cursor and draws its own. The dashboard
+     is scoped out: an I-beam in a field, a pointer on a row, a not-allowed on a
+     disabled button all carry information a drawn dot can't replace. Scoping
+     out rather than overriding also leaves `cursor-pointer` utilities working. */
+  html:not(:has([data-layout="dashboard"])) * {
+    cursor: none !important;
+  }
 
   ::-webkit-scrollbar       { width: 3px; }
   ::-webkit-scrollbar-track { background: #050505; }
@@ -70,31 +91,67 @@
 
 @utility text-hero {
   font-family: var(--font-display);
-  font-size: clamp(4rem, 14vw, 18rem);
-  line-height: 0.88;
-  letter-spacing: -0.01em;
+  font-variation-settings: "wdth" 120, "wght" 900;
+  font-size: clamp(3.6rem, 13vw, 17rem);
+  line-height: 0.8;
+  letter-spacing: -0.045em;
   text-transform: uppercase;
 }
 
 @utility text-display {
   font-family: var(--font-display);
-  font-size: clamp(3rem, 8vw, 9rem);
-  line-height: 0.9;
-  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 118, "wght" 850;
+  font-size: clamp(2.8rem, 7.6vw, 8.5rem);
+  line-height: 0.82;
+  letter-spacing: -0.042em;
   text-transform: uppercase;
+}
+
+/* Section-level heading — one step below text-display. */
+@utility text-section {
+  font-family: var(--font-display);
+  font-variation-settings: "wdth" 112, "wght" 800;
+  font-size: clamp(1.9rem, 3.4vw, 3.6rem);
+  line-height: 0.9;
+  letter-spacing: -0.032em;
+  text-transform: uppercase;
+}
+
+/* The serif italic accent word. Mixed-case on purpose — the shift out of
+   uppercase grotesk is what creates the contrast. */
+@utility accent-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-variation-settings: normal;
+  letter-spacing: -0.015em;
+  text-transform: none;
+  color: var(--color-accent);
 }
 
 @utility label {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
+  font-size: 0.68rem;
+  font-weight: 400;
+  letter-spacing: 0.28em;
   text-transform: uppercase;
   color: #bdbdbd;
 }
 
 @utility font-display {
   font-family: var(--font-display);
-  font-weight: 900;
+  font-variation-settings: "wdth" var(--display-wdth), "wght" var(--display-wght);
+  letter-spacing: -0.03em;
+}
+
+/* Body copy at reading size — lighter and airier than the old default. */
+@utility body-lg {
+  font-family: var(--font-sans);
+  font-weight: 300;
+  font-size: clamp(1rem, 1.15vw, 1.2rem);
+  line-height: 1.78;
+  letter-spacing: 0.005em;
+  color: var(--color-fg-muted);
 }
 
 @utility grain-overlay {
@@ -136,3 +193,85 @@
   0%, 100% { opacity: 1;    }
   50%       { opacity: 0.35; }
 }
+
+/* Hero scroll cue — a lit segment travelling down a hairline. */
+@keyframes scroll-cue {
+  0%       { transform: translateY(-100%); }
+  60%,100% { transform: translateY(200%);  }
+}
+
+/* ── Layout-scoped font tokens ── */
+
+/* Dashboard: no display font — headings fall back to sans, and the
+   variable-width axes are cleared so they can't leak onto Geist. */
+[data-layout="dashboard"] {
+  --font-display: var(--font-sans);
+}
+
+[data-layout="dashboard"] h1,
+[data-layout="dashboard"] h2,
+[data-layout="dashboard"] h3,
+[data-layout="dashboard"] h4 {
+  font-variation-settings: normal;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+/* Dashboard surface palette — deliberately lime-tinted rather than neutral
+   gray. Every "gray" in the panels is a desaturated lime, so the accent never
+   sits on a dead surface. */
+[data-layout="dashboard"] {
+  --dash-bg:         #050505;
+  --dash-panel:      #0d0f08;
+  --dash-panel-2:    #121509;
+  --dash-fg:         #f2f4e8;
+  --dash-muted:      #9aa87a;
+  --dash-line:       rgb(191 224 29 / 0.15);
+  --dash-line-hover: rgb(191 224 29 / 0.5);
+
+  background: var(--dash-bg);
+  color: var(--dash-fg);
+}
+
+/* The mono eyebrow label defaults to the landing page's gray. */
+[data-layout="dashboard"] .label {
+  color: var(--dash-muted);
+}
+
+/* Panels get a barely-there lime wash from the top-left instead of flat #0b0b0b. */
+[data-layout="dashboard"] .panel {
+  background:
+    radial-gradient(120% 140% at 0% 0%, rgb(191 224 29 / 0.05), transparent 60%),
+    var(--dash-panel);
+}
+
+/* Landing page: all four fonts active (default, no override needed) */
+
+/* ── GSAP scroll-animation support ── */
+
+/* Elements GSAP will animate in are hidden until their timeline is built,
+   so nothing flashes at final position on first paint. Cleared by the
+   .gsap-ready class the ScrollProvider puts on <html>, so no-JS and
+   reduced-motion users still see everything. */
+html:not(.gsap-ready) [data-anim] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html [data-anim] {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+}
+
+/* SplitText line/word wrapper — gives each line its own overflow box so
+   masked reveals clip cleanly instead of bleeding into neighbours. */
+.split-mask {
+  overflow: hidden;
+  display: block;
+}
+
+@keyframes marquee-none { from { transform: none; } to { transform: none; } }

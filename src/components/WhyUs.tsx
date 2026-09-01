@@ -1,71 +1,183 @@
 "use client";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { gsap, useGSAP, EASE } from "@/lib/gsap";
+import SplitReveal from "./motion/SplitReveal";
 
+/* Written as promises the gym can be held to, not features on a brochure. */
 const items = [
-  { t: "International Equipment",  d: "Rogue · Technogym · Hammer Strength.", n: "01" },
-  { t: "Certified Trainers",       d: "ACE, NASM & ISSA certified coaches.",  n: "02" },
-  { t: "Women's Fitness",          d: "Female-only hours, female trainers.",  n: "03" },
-  { t: "Functional Training",      d: "TRX, rigs, plyo, mobility zone.",      n: "04" },
-  { t: "Nutrition Planning",       d: "Custom diet plans by dietitians.",     n: "05" },
-  { t: "Locker · Steam · Parking", d: "Full amenities, secured parking.",     n: "06" },
-  { t: "24/7 Security",            d: "CCTV, keycard access, on-site staff.", n: "07" },
+  { t: "Your form gets fixed",   d: "A coach walks the floor every hour. Unasked.",       n: "01", img: "https://iron-house.lovable.app/assets/trainer-1-DzcfQTt4.jpg" },
+  { t: "Plates that weigh right", d: "Calibrated to ±10g. Your log is honest.",           n: "02", img: "https://iron-house.lovable.app/assets/hero-2-nGKAHpIT.jpg" },
+  { t: "Women train in peace",    d: "Separate studio, own entrance, 10–4 daily.",        n: "03", img: "https://iron-house.lovable.app/assets/hero-3-DMy7cVqT.jpg" },
+  { t: "No equipment queue",      d: "Six racks. We cap peak-hour entry.",                n: "04", img: "https://iron-house.lovable.app/assets/exp-1-CKXz5iIt.jpg" },
+  { t: "Food advice that fits",   d: "Plans built on rice and dal, not almond flour.",    n: "05", img: "https://iron-house.lovable.app/assets/exp-2-Bx-Wnp-a.jpg" },
+  { t: "It stays clean",          d: "Full wipe-down twice daily. Steam room included.",  n: "06", img: "https://iron-house.lovable.app/assets/hero-4-CDROxHqs.jpg" },
+  { t: "Your bike is safe",       d: "Covered parking, CCTV, guard on shift till close.", n: "07", img: "https://iron-house.lovable.app/assets/trainer-3-3mi-LptE.jpg" },
 ];
 
 export default function WhyUs() {
-  const [hover, setHover] = useState<number | null>(null);
+  const root    = useRef<HTMLElement>(null);
+  const preview = useRef<HTMLDivElement>(null);
+  const rowsRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      const rows = gsap.utils.toArray<HTMLElement>("[data-row]");
+
+      /* Rows rise in sequence as the list scrolls through — reads as the list
+         assembling itself rather than seven independent fades. */
+      rows.forEach((row) => {
+        gsap.set(row, { visibility: "visible" });
+        gsap.from(row, {
+          yPercent: 45,
+          autoAlpha: 0,
+          duration: 1,
+          ease: EASE.out,
+          scrollTrigger: { trigger: row, start: "top 92%", once: true },
+        });
+      });
+
+      /* ── Cursor-following image preview (pointer devices only) ── */
+      const card = preview.current;
+      const list = rowsRef.current;
+      if (!card || !list || !window.matchMedia("(pointer: fine)").matches) return;
+
+      const imgs = gsap.utils.toArray<HTMLElement>("[data-preview-img]");
+
+      const toX = gsap.quickTo(card, "x", { duration: 0.55, ease: "power3.out" });
+      const toY = gsap.quickTo(card, "y", { duration: 0.55, ease: "power3.out" });
+      /* Tilt is driven by pointer speed, so a fast sweep whips the card. */
+      const toR = gsap.quickTo(card, "rotate", { duration: 0.7, ease: "power3.out" });
+
+      let lastX = 0;
+      let active = -1;
+
+      const onMove = (e: PointerEvent) => {
+        const r = list.getBoundingClientRect();
+        toX(e.clientX - r.left + 28);
+        toY(e.clientY - r.top - 130);
+        toR(gsap.utils.clamp(-14, 14, (e.clientX - lastX) * 0.6));
+        lastX = e.clientX;
+      };
+
+      const show = (i: number) => {
+        if (i === active) return;
+        active = i;
+        gsap.to(imgs, { autoAlpha: 0, duration: 0.25, overwrite: true });
+        gsap.to(imgs[i], { autoAlpha: 1, duration: 0.35, overwrite: true });
+        gsap.to(card, { autoAlpha: 1, scale: 1, duration: 0.45, ease: EASE.out, overwrite: "auto" });
+      };
+
+      const hide = () => {
+        active = -1;
+        gsap.to(card, { autoAlpha: 0, scale: 0.9, duration: 0.35, ease: "power2.out", overwrite: "auto" });
+      };
+
+      const cleanups = rows.map((row, i) => {
+        const label = row.querySelector<HTMLElement>("[data-row-title]");
+        const rule  = row.querySelector<HTMLElement>("[data-row-rule]");
+
+        const enter = () => {
+          show(i);
+          gsap.to(label, { x: 28, color: "#BFE01D", duration: 0.5, ease: EASE.out });
+          gsap.fromTo(rule, { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: EASE.out });
+        };
+        const leave = () => {
+          gsap.to(label, { x: 0, color: "#ffffff", duration: 0.5, ease: EASE.out });
+          gsap.to(rule, { scaleX: 0, duration: 0.4, ease: "power2.in" });
+        };
+
+        row.addEventListener("pointerenter", enter);
+        row.addEventListener("pointerleave", leave);
+        return () => {
+          row.removeEventListener("pointerenter", enter);
+          row.removeEventListener("pointerleave", leave);
+        };
+      });
+
+      list.addEventListener("pointermove", onMove);
+      list.addEventListener("pointerleave", hide);
+
+      return () => {
+        cleanups.forEach((fn) => fn());
+        list.removeEventListener("pointermove", onMove);
+        list.removeEventListener("pointerleave", hide);
+      };
+    },
+    { scope: root }
+  );
 
   return (
-    <section className="relative bg-[#050505] py-24 md:py-40">
+    <section ref={root} className="relative bg-[#050505] py-28 md:py-44">
       <div className="mx-auto max-w-[1600px] px-5 md:px-10">
 
         <div className="mb-16 flex flex-wrap items-end justify-between gap-6">
           <div>
             <span className="label">(03) — Why FIT GYM Center</span>
-            <h2 className="mt-3 text-display">
-              Everything you<br />
-              expect. And more<br />
-              you don&apos;t.
-            </h2>
+            <SplitReveal as="h2" type="lines" className="mt-3 text-display" stagger={0.09}>
+              <>
+                Seven things
+                <br />
+                we actually
+                <br />
+                <span className="accent-serif">guarantee.</span>
+              </>
+            </SplitReveal>
           </div>
-          <p className="max-w-sm text-[#bdbdbd]">
-            Seven reasons Dhaka&apos;s most committed athletes call this home.
-          </p>
+          <SplitReveal as="p" type="lines" className="max-w-sm body-lg" stagger={0.05}>
+            Not features. Promises — the kind you can hold us to on any given
+            Tuesday at 7pm.
+          </SplitReveal>
         </div>
 
-        <div className="divide-y divide-[#1a1a1a] border-y border-[#1a1a1a]">
-          {items.map((it, i) => (
-            <div
-              key={it.n}
-              onMouseEnter={() => setHover(i)}
-              onMouseLeave={() => setHover(null)}
-              className="group relative flex cursor-default items-center justify-between gap-8 py-8 md:py-10"
-            >
-              <div className="flex items-baseline gap-6 md:gap-12">
-                <span className="label w-8">{it.n}</span>
-                <motion.h3
-                  animate={{ x: hover === i ? 24 : 0, color: hover === i ? "#BFE01D" : "#ffffff" }}
-                  transition={{ duration: 0.4, ease: [0.19, 1, 0.22, 1] }}
-                  className="font-display text-4xl leading-none md:text-7xl"
-                >
-                  {it.t}
-                </motion.h3>
+        {/* List + floating preview share a positioning context */}
+        <div ref={rowsRef} className="relative">
+          {/* Preview card — sits under the pointer, above the rows */}
+          <div
+            ref={preview}
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-0 z-20 hidden h-[260px] w-[200px] overflow-hidden opacity-0 md:block"
+            style={{ scale: 0.9 }}
+          >
+            {items.map((it) => (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                key={it.n}
+                data-preview-img
+                src={it.img}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover opacity-0"
+                loading="lazy"
+              />
+            ))}
+          </div>
+
+          <div className="border-y border-[#1a1a1a]">
+            {items.map((it) => (
+              <div
+                key={it.n}
+                data-row
+                data-anim
+                className="group relative flex cursor-default items-center justify-between gap-8 border-b border-[#1a1a1a] py-8 last:border-b-0 md:py-10"
+              >
+                <div className="flex items-baseline gap-6 md:gap-12">
+                  <span className="label w-8 shrink-0">{it.n}</span>
+                  <h3
+                    data-row-title
+                    className="font-display text-4xl leading-none md:text-7xl"
+                  >
+                    {it.t}
+                  </h3>
+                </div>
+                <div className="hidden max-w-[220px] text-right text-sm leading-relaxed text-[#bdbdbd] md:block">
+                  {it.d}
+                </div>
+                <span
+                  data-row-rule
+                  className="absolute bottom-0 left-0 right-0 h-px origin-left scale-x-0 bg-[#BFE01D]"
+                />
               </div>
-              <div className="hidden max-w-[220px] text-right text-sm text-[#bdbdbd] md:block">{it.d}</div>
-              <AnimatePresence>
-                {hover === i && (
-                  <motion.div
-                    initial={{ scaleX: 0 }}
-                    animate={{ scaleX: 1 }}
-                    exit={{ scaleX: 0 }}
-                    transition={{ duration: 0.5, ease: [0.19, 1, 0.22, 1] }}
-                    style={{ transformOrigin: "left" }}
-                    className="absolute bottom-0 left-0 right-0 h-px bg-[#BFE01D]"
-                  />
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -1,22 +1,34 @@
 import type { Metadata } from "next";
-import { Anton, Inter, JetBrains_Mono } from "next/font/google";
+import { Archivo, Instrument_Serif, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Cursor from "@/components/Cursor";
+import SessionProvider from "@/components/SessionProvider";
 
-const anton = Anton({
-  weight:   "400",
+/* Display — variable Archivo. The `wdth` axis is what buys the expanded
+   editorial look; `font-variation-settings` in globals.css drives it. */
+const archivo = Archivo({
   subsets:  ["latin"],
+  axes:     ["wdth"],
   variable: "--font-display-loaded",
   display:  "swap",
 });
 
-const inter = Inter({
+/* Accent — the serif italic used for a single word inside a headline. */
+const instrumentSerif = Instrument_Serif({
+  weight:   "400",
+  style:    ["normal", "italic"],
+  subsets:  ["latin"],
+  variable: "--font-serif-loaded",
+  display:  "swap",
+});
+
+const geist = Geist({
   subsets:  ["latin"],
   variable: "--font-sans-loaded",
   display:  "swap",
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const geistMono = Geist_Mono({
   subsets:  ["latin"],
   variable: "--font-mono-loaded",
   display:  "swap",
@@ -37,7 +49,10 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+    <html
+      lang="en"
+      className={`${archivo.variable} ${instrumentSerif.variable} ${geist.variable} ${geistMono.variable}`}
+    >
       <body
         className="bg-[#050505] text-white antialiased"
         suppressHydrationWarning
@@ -45,8 +60,10 @@ export default function RootLayout({
           fontFamily: "var(--font-sans-loaded, var(--font-sans))",
         }}
       >
-        <Cursor />
-        {children}
+        <SessionProvider>
+          <Cursor />
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );
