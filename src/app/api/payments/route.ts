@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
   const where = {
     ...(memberId ? { memberId } : {}),
     ...(status   ? { status: status as "PENDING" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED" } : {}),
-    ...(method   ? { method: method as "CASH" | "CARD" | "BKASH" | "NAGAD" | "ROCKET" | "BANK_TRANSFER" } : {}),
+    ...(method   ? { method: method as "MONEYBAG" } : {}),
   };
 
   const [payments, total] = await Promise.all([
