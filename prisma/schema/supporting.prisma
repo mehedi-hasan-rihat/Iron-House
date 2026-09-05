@@ -1,0 +1,47 @@
+// ─────────────────────────────────────
+// SUPPORTING MODELS
+// ─────────────────────────────────────
+
+model Document {
+  id        String   @id @default(cuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  type      String
+  url       String
+  createdAt DateTime @default(now())
+
+  @@map("documents")
+}
+
+model MemberNote {
+  id        String   @id @default(cuid())
+  memberId  String
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  note      String
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@map("member_notes")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+// ─────────────────────────────────────
+// COUNTERS
+// ─────────────────────────────────────
+
+model Counter {
+  id    String @id
+  value Int    @default(0)
+
+  @@map("counters")
+}

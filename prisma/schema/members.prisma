@@ -1,0 +1,35 @@
+// ─────────────────────────────────────
+// MEMBERS
+// ─────────────────────────────────────
+
+model Member {
+  id               String       @id @default(cuid())
+  memberId         String       @unique
+  userId           String       @unique
+  user             User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName         String
+  gender           String?
+  dob              DateTime?
+  phone            String
+  email            String?
+  address          String?
+  bloodGroup       String?
+  medicalInfo      String?
+  emergencyContact String?
+  profilePhoto     String?
+  status           MemberStatus @default(ACTIVE)
+  memberships      Membership[]
+  payments         Payment[]
+  documents        Document[]
+  notes            MemberNote[]
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  @@map("members")
+}
+
+enum MemberStatus {
+  ACTIVE
+  SUSPENDED
+  FROZEN
+}
