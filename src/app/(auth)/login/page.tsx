@@ -2,11 +2,12 @@
 import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function LoginForm() {
   const router      = useRouter();
   const params      = useSearchParams();
-  const callbackUrl = params.get("callbackUrl") || "/admin/dashboard";
+  const callbackUrl = params.get("callbackUrl") ?? "";
 
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
@@ -21,16 +22,27 @@ function LoginForm() {
     const res = await signIn("credentials", {
       email,
       password,
-      redirect:    false,
-      callbackUrl,
+      redirect: false,
     });
 
     setLoading(false);
 
     if (res?.error) {
       setError("Invalid email or password.");
-    } else {
+      return;
+    }
+
+    // Fetch session to know the role, then route appropriately
+    const sessionRes = await fetch("/api/auth/session");
+    const session    = await sessionRes.json();
+    const role       = session?.user?.role;
+
+    if (callbackUrl) {
       router.push(callbackUrl);
+    } else if (role === "member") {
+      router.push("/dashboard");
+    } else {
+      router.push("/admin/dashboard");
     }
   }
 
@@ -39,18 +51,20 @@ function LoginForm() {
       <div className="w-full max-w-sm">
 
         {/* Logo */}
-        <div className="flex items-center gap-2 mb-10 justify-center">
+        <a href="/" className="flex items-center gap-2 mb-10 justify-center">
           <span className="h-2.5 w-2.5 rounded-full bg-[#BFE01D]" />
           <span className="font-display text-[#f2f4e8] tracking-[0.4em] text-base uppercase">
             Iron House
           </span>
-        </div>
+        </a>
 
         <div className="border border-[#BFE01D]/15 bg-[#0d0f08] p-8">
           <h1 className="font-display text-2xl text-[#f2f4e8] uppercase mb-1 tracking-wide">
             Sign In
           </h1>
-          <p className="text-[#9aa87a] text-xs mb-8">Staff & admin access</p>
+          <p className="text-[#9aa87a] text-xs mb-8">
+            Welcome back — sign in to your account
+          </p>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
@@ -63,7 +77,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-3 outline-none focus:border-[#BFE01D] transition-colors"
-                placeholder="owner@ironhouse.com"
+                placeholder="you@example.com"
               />
             </div>
 
@@ -95,16 +109,22 @@ function LoginForm() {
           </form>
         </div>
 
-        <p className="text-center text-[#1f2408] text-[10px] mt-6 tracking-widest uppercase">
-          Iron House Management
+        {/* Signup link */}
+        <p className="text-center text-[#9aa87a] text-xs mt-6">
+          New member?{" "}
+          <Link
+            href={callbackUrl ? `/signup?callbackUrl=${encodeURIComponent(callbackUrl)}` : "/signup"}
+            className="text-[#BFE01D] hover:opacity-80 transition-opacity"
+          >
+            Create an account
+          </Link>
         </p>
+
       </div>
     </div>
   );
 }
 
-/* useSearchParams opts the subtree into client-side rendering, so the form has
-   to sit behind a Suspense boundary or the page can't be prerendered at all. */
 export default function LoginPage() {
   return (
     <Suspense fallback={<div className="min-h-screen bg-[#050505]" />}>

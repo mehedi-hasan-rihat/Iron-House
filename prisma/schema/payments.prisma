@@ -1,0 +1,51 @@
+// ─────────────────────────────────────
+// PAYMENTS
+// ─────────────────────────────────────
+
+model Payment {
+  id            String           @id @default(cuid())
+  invoiceNumber String           @unique
+  transactionId String?
+  memberId      String
+  member        Member           @relation(fields: [memberId], references: [id])
+  membershipId  String?
+  membership    Membership?      @relation(fields: [membershipId], references: [id])
+  amount        Decimal          @db.Decimal(10, 2)
+  discount      Decimal          @default(0) @db.Decimal(10, 2)
+  tax           Decimal          @default(0) @db.Decimal(10, 2)
+  totalAmount   Decimal          @db.Decimal(10, 2)
+  method        PaymentMethod
+  status        PaymentStatus    @default(PENDING)
+  paymentDate   DateTime?
+  createdBy     String?
+  attempts      PaymentAttempt[]
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  MONEYBAG
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  PAID
+  FAILED
+  CANCELLED
+  REFUNDED
+}
+
+model PaymentAttempt {
+  id              String   @id @default(cuid())
+  paymentId       String
+  payment         Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  status          String
+  failureReason   String?
+  gatewayResponse Json?
+  attemptAt       DateTime @default(now())
+
+  @@map("payment_attempts")
+}
