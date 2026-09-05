@@ -254,11 +254,11 @@ export default function Hero() {
           <div className="flex min-h-0 flex-1 items-center">
             <h1 data-hero-title className="text-hero text-white">
               <span data-hero-line data-anim className="block">
-                Fit Gym
+                Iron
               </span>
               <span className="flex items-center gap-[0.16em]">
                 <span data-hero-line data-anim className="block">
-                  Center
+                  House
                 </span>
                 <span
                   data-hero-chip
