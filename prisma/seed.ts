@@ -73,10 +73,10 @@ async function main() {
 
   // ── Owner account ─────────────────────────────
   const ownerUser = await prisma.user.upsert({
-    where:  { email: "owner@fitgymcenter.com" },
+    where:  { email: "owner@ironhouse.com" },
     update: {},
     create: {
-      email:    "owner@fitgymcenter.com",
+      email:    "owner@ironhouse.com",
       password: await hashPassword("admin123"),
       roleId:   roles["owner"].id,
     },
@@ -95,7 +95,7 @@ async function main() {
       status:      "ACTIVE",
     },
   });
-  console.log("  ✅ Owner account: owner@fitgymcenter.com / admin123");
+  console.log("  ✅ Owner account: owner@ironhouse.com / admin123");
 
   // ── Default Membership Plans ──────────────────
   const plans = [
@@ -161,7 +161,7 @@ async function main() {
 
   console.log("\n✅ Seeding complete!");
   console.log("\n📋 Login credentials:");
-  console.log("   Email:    owner@fitgymcenter.com");
+  console.log("   Email:    owner@ironhouse.com");
   console.log("   Password: admin123");
 }
 

@@ -5,9 +5,9 @@ import { useState } from "react";
 const ACC = "#BFE01D";
 
 const FIELDS = [
-  { label: "Gym Name",     placeholder: "Fit Gym Center",        defaultValue: "Fit Gym Center" },
+  { label: "Gym Name",     placeholder: "Iron House",        defaultValue: "Iron House" },
   { label: "Phone",        placeholder: "+880 1700 000 000",      defaultValue: "" },
-  { label: "Email",        placeholder: "info@fitgymcenter.com",  defaultValue: "" },
+  { label: "Email",        placeholder: "info@ironhouse.com",  defaultValue: "" },
   { label: "Address",      placeholder: "Sabujbag, Patuakhali",   defaultValue: "" },
   { label: "Opening Time", placeholder: "06:00 AM",               defaultValue: "" },
   { label: "Closing Time", placeholder: "11:00 PM",               defaultValue: "" },

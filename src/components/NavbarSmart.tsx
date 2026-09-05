@@ -50,7 +50,7 @@ export default function NavbarSmart({
         <a href="#top" className="flex shrink-0 items-center gap-2">
           <DumbbellIcon />
           <span className="whitespace-nowrap font-display text-lg tracking-widest">
-            FIT GYM CENTER
+            IRON HOUSE
           </span>
         </a>
 

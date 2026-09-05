@@ -15,7 +15,7 @@ export default function WhyUs() {
 
         <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="label mb-2">(03) — Why FIT GYM Center</p>
+            <p className="label mb-2">(03) — Why Iron House</p>
             <h2 className="text-display">
               Seven things<br />
               we actually<br />

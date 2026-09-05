@@ -179,7 +179,7 @@ export default function AdminShell({
         <div className="flex items-center gap-2 px-6 py-5 border-b border-[#BFE01D]/15">
           <span className="h-2 w-2 rounded-full accent-dot" style={{ backgroundColor: ACC }} />
           <span className="font-display text-sm tracking-[0.35em] uppercase text-[#f2f4e8]">
-            Fit Gym Center
+            Iron House
           </span>
         </div>
 

@@ -1,10 +1,10 @@
 import Magnetic from "./Magnetic";
 
 const channels = [
-  { l: "Call",      v: "+880 1700 000 000", href: "tel:+8801700000000"                     },
-  { l: "WhatsApp",  v: "+880 1700 000 000", href: "https://wa.me/8801700000000"            },
-  { l: "Instagram", v: "@fitgymcenter.dhk", href: "https://instagram.com/fitgymcenter.dhk" },
-  { l: "Facebook",  v: "/fitgymcenterbd",   href: "https://facebook.com/fitgymcenterbd"    },
+  { l: "Call",      v: "+880 1700 000 000", href: "tel:+8801601797188"                     },
+  { l: "WhatsApp",  v: "+880 1700 000 000", href: "https://wa.me/8801601797188"            },
+  { l: "Instagram", v: "@ironhouse.dhk", href: "https://instagram.com/ironhouse.dhk" },
+  { l: "Facebook",  v: "/ironhousebd",   href: "https://facebook.com/ironhousebd"    },
 ];
 
 export default function Contact() {
@@ -43,7 +43,7 @@ export default function Contact() {
             </div>
 
             <div className="mt-10 flex flex-wrap gap-4">
-              <Magnetic href="https://wa.me/8801700000000" variant="primary">Book Free Trial</Magnetic>
+              <Magnetic href="https://wa.me/8801601797188" variant="primary">Book Free Trial</Magnetic>
               <Magnetic href="https://maps.google.com/?q=Sabujbag+2+Dhaka" variant="ghost">Get Directions</Magnetic>
             </div>
           </div>

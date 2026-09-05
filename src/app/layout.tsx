@@ -35,13 +35,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "FIT GYM CENTER — Dhaka's Premium Fitness Center",
+  title: "IRON HOUSE — Dhaka's Premium Fitness Center",
   description:
-    "Discipline begins here. FIT GYM CENTER Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
+    "Discipline begins here. Iron House Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
   openGraph: {
-    title: "FIT GYM CENTER — Dhaka's Premium Fitness Center",
+    title: "IRON HOUSE — Dhaka's Premium Fitness Center",
     description:
-      "Discipline begins here. FIT GYM CENTER Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
+      "Discipline begins here. Iron House Dhaka — international equipment, certified trainers, women's fitness, and a luxury training experience.",
   },
 };
 

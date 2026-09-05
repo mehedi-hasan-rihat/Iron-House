@@ -108,7 +108,7 @@ export default function Navbar() {
             </div>
           </div>
           <span className="whitespace-nowrap font-display text-lg tracking-widest">
-            FIT GYM CENTER
+            IRON HOUSE
           </span>
         </a>
 

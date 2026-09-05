@@ -42,7 +42,7 @@ function LoginForm() {
         <div className="flex items-center gap-2 mb-10 justify-center">
           <span className="h-2.5 w-2.5 rounded-full bg-[#BFE01D]" />
           <span className="font-display text-[#f2f4e8] tracking-[0.4em] text-base uppercase">
-            Fit Gym Center
+            Iron House
           </span>
         </div>
 
@@ -63,7 +63,7 @@ function LoginForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full bg-[#050505] border border-[#BFE01D]/15 text-[#f2f4e8] text-sm px-4 py-3 outline-none focus:border-[#BFE01D] transition-colors"
-                placeholder="owner@fitgymcenter.com"
+                placeholder="owner@ironhouse.com"
               />
             </div>
 
@@ -96,7 +96,7 @@ function LoginForm() {
         </div>
 
         <p className="text-center text-[#1f2408] text-[10px] mt-6 tracking-widest uppercase">
-          Fit Gym Center Management
+          Iron House Management
         </p>
       </div>
     </div>

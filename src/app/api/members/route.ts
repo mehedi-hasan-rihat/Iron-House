@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
   const user = await prisma.user.create({
     data: {
-      email:    email ?? `${memberId.toLowerCase()}@fitgymcenter.local`,
+      email:    email ?? `${memberId.toLowerCase()}@ironhouse.local`,
       password: hashedPass,
       roleId:   memberRole.id,
       member: {

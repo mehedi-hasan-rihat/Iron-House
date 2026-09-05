@@ -76,7 +76,7 @@ export default function CustomerShell({
         <div className="mx-auto flex max-w-3xl items-center justify-between px-5 py-4">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full accent-dot" style={{ backgroundColor: ACC }} />
-            <span className="font-display text-sm tracking-[0.35em] uppercase">Fit Gym Center</span>
+            <span className="font-display text-sm tracking-[0.35em] uppercase">Iron House</span>
           </div>
           <div className="flex items-center gap-1">
             <div ref={topNav} className="relative flex items-center gap-1">

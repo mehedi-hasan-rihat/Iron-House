@@ -5,7 +5,7 @@ export default function UnauthorizedPage() {
     <div className="min-h-screen bg-[#050505] flex flex-col items-center justify-center gap-6 text-[#f2f4e8]">
       <div className="flex items-center gap-2">
         <span className="h-2 w-2 rounded-full bg-[#BFE01D]" />
-        <span className="font-display tracking-[0.4em] text-sm uppercase">Fit Gym Center</span>
+        <span className="font-display tracking-[0.4em] text-sm uppercase">Iron House</span>
       </div>
       <h1 className="font-display text-5xl uppercase tracking-wide text-[#BFE01D]">403</h1>
       <p className="text-[#9aa87a] text-sm">You don&apos;t have permission to access this page.</p>
