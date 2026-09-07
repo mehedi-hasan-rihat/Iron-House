@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateInvoiceId } from "@/lib/id-generator";
+import { apiHandler } from "@/lib/api";
 
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -13,7 +14,6 @@ export async function GET(req: NextRequest) {
   const method   = searchParams.get("method")   ?? "";
   const page     = Math.max(1, Number(searchParams.get("page") ?? 1));
   const limit    = 20;
-  const skip     = (page - 1) * limit;
 
   const where = {
     ...(memberId ? { memberId } : {}),
@@ -23,9 +23,7 @@ export async function GET(req: NextRequest) {
 
   const [payments, total] = await Promise.all([
     prisma.payment.findMany({
-      where,
-      skip,
-      take:    limit,
+      where, skip: (page - 1) * limit, take: limit,
       orderBy: { createdAt: "desc" },
       include: { member: { select: { fullName: true, memberId: true } } },
     }),
@@ -33,9 +31,9 @@ export async function GET(req: NextRequest) {
   ]);
 
   return NextResponse.json({ payments, total, page, limit });
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -69,4 +67,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(payment, { status: 201 });
-}
+});

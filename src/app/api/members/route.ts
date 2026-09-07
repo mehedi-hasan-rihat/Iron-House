@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateMemberId } from "@/lib/id-generator";
+import { apiHandler } from "@/lib/api";
 import bcrypt from "bcryptjs";
 
-// GET /api/members?search=&status=&page=1&limit=20
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
     ...(search ? {
       OR: [
         { fullName: { contains: search, mode: "insensitive" as const } },
-        { phone:    { contains: search                                  } },
+        { phone:    { contains: search } },
         { email:    { contains: search, mode: "insensitive" as const } },
         { memberId: { contains: search, mode: "insensitive" as const } },
       ],
@@ -30,16 +30,11 @@ export async function GET(req: NextRequest) {
 
   const [members, total] = await Promise.all([
     prisma.member.findMany({
-      where,
-      skip,
-      take:    limit,
-      orderBy: { createdAt: "desc" },
+      where, skip, take: limit, orderBy: { createdAt: "desc" },
       include: {
         memberships: {
-          where:   { status: "ACTIVE" },
-          include: { plan: true },
-          take:    1,
-          orderBy: { createdAt: "desc" },
+          where: { status: "ACTIVE" }, include: { plan: true },
+          take: 1, orderBy: { createdAt: "desc" },
         },
       },
     }),
@@ -47,10 +42,9 @@ export async function GET(req: NextRequest) {
   ]);
 
   return NextResponse.json({ members, total, page, limit });
-}
+});
 
-// POST /api/members
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -62,12 +56,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "fullName and phone are required" }, { status: 400 });
   }
 
-  // get member role
   const memberRole = await prisma.role.findUnique({ where: { name: "member" } });
   if (!memberRole) return NextResponse.json({ error: "Member role not found" }, { status: 500 });
 
-  const memberId     = await generateMemberId();
-  const hashedPass   = await bcrypt.hash(password, 12);
+  const memberId   = await generateMemberId();
+  const hashedPass = await bcrypt.hash(password, 12);
 
   const user = await prisma.user.create({
     data: {
@@ -76,15 +69,13 @@ export async function POST(req: NextRequest) {
       roleId:   memberRole.id,
       member: {
         create: {
-          memberId,
-          fullName,
-          phone,
-          email:           email     ?? null,
-          gender:          gender    ?? null,
-          dob:             dob       ? new Date(dob) : null,
-          address:         address   ?? null,
-          bloodGroup:      bloodGroup ?? null,
-          medicalInfo:     medicalInfo ?? null,
+          memberId, fullName, phone,
+          email:           email            ?? null,
+          gender:          gender           ?? null,
+          dob:             dob ? new Date(dob) : null,
+          address:         address          ?? null,
+          bloodGroup:      bloodGroup       ?? null,
+          medicalInfo:     medicalInfo      ?? null,
           emergencyContact: emergencyContact ?? null,
           status:          "ACTIVE",
         },
@@ -94,4 +85,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(user.member, { status: 201 });
-}
+});

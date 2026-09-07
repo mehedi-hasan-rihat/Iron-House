@@ -1,27 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { apiHandler } from "@/lib/api";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const member = await prisma.member.findUnique({
-    where: { userId: session.user.id },
-  });
-
+  const member = await prisma.member.findUnique({ where: { userId: session.user.id } });
   if (!member) return NextResponse.json({ error: "Not found" }, { status: 404 });
   return NextResponse.json(member);
-}
+});
 
-export async function PATCH(req: NextRequest) {
+export const PATCH = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const body   = await req.json();
   const member = await prisma.member.findUnique({ where: { userId: session.user.id } });
   if (!member) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
   const updated = await prisma.member.update({
     where: { id: member.id },
     data: {
@@ -33,4 +28,4 @@ export async function PATCH(req: NextRequest) {
     },
   });
   return NextResponse.json(updated);
-}
+});

@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateMembershipId, generateInvoiceId } from "@/lib/id-generator";
+import { apiHandler } from "@/lib/api";
 
-// GET /api/memberships?memberId=&status=&page=1
-export async function GET(req: NextRequest) {
+export const GET = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
   const status   = searchParams.get("status")   ?? "";
   const page     = Math.max(1, Number(searchParams.get("page") ?? 1));
   const limit    = 20;
-  const skip     = (page - 1) * limit;
 
   const where = {
     ...(memberId ? { memberId } : {}),
@@ -22,9 +21,7 @@ export async function GET(req: NextRequest) {
 
   const [memberships, total] = await Promise.all([
     prisma.membership.findMany({
-      where,
-      skip,
-      take:    limit,
+      where, skip: (page - 1) * limit, take: limit,
       orderBy: { createdAt: "desc" },
       include: { member: true, plan: true, trainer: true },
     }),
@@ -32,10 +29,9 @@ export async function GET(req: NextRequest) {
   ]);
 
   return NextResponse.json({ memberships, total, page, limit });
-}
+});
 
-// POST /api/memberships  — create + optionally record payment
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -58,52 +54,31 @@ export async function POST(req: NextRequest) {
   const taxNum      = Number(tax);
   const amountNum   = Number(amount);
   const final       = amountNum - discountNum + taxNum;
-
   const membershipNumber = await generateMembershipId();
 
   const membership = await prisma.membership.create({
     data: {
-      membershipNumber,
-      memberId,
-      planId,
-      trainerId: trainerId || null,
-      startDate: start,
-      endDate:   end,
-      amount:    amountNum,
-      discount:  discountNum,
-      tax:       taxNum,
-      finalAmount: final,
-      status:    "ACTIVE",
-      timeline: {
-        create: {
-          event:     "CREATED",
-          note:      `Membership created via admin`,
-          createdBy: session.user.id,
-        },
-      },
+      membershipNumber, memberId, planId,
+      trainerId:   trainerId || null,
+      startDate:   start, endDate: end,
+      amount:      amountNum, discount: discountNum, tax: taxNum, finalAmount: final,
+      status:      "ACTIVE",
+      timeline: { create: { event: "CREATED", note: "Created via admin", createdBy: session.user.id } },
     },
     include: { member: true, plan: true },
   });
 
-  // optionally create payment record
   if (paymentMethod) {
     const invoiceNumber = await generateInvoiceId();
     await prisma.payment.create({
       data: {
-        invoiceNumber,
-        memberId,
-        membershipId: membership.id,
-        amount:       amountNum,
-        discount:     discountNum,
-        tax:          taxNum,
-        totalAmount:  final,
-        method:       paymentMethod,
-        status:       "PAID",
-        paymentDate:  new Date(),
-        createdBy:    session.user.id,
+        invoiceNumber, memberId, membershipId: membership.id,
+        amount: amountNum, discount: discountNum, tax: taxNum, totalAmount: final,
+        method: paymentMethod, status: "PAID", paymentDate: new Date(),
+        createdBy: session.user.id,
       },
     });
   }
 
   return NextResponse.json(membership, { status: 201 });
-}
+});

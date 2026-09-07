@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
+import { apiHandler } from "@/lib/api";
 
-export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { id } = await params;
+  const { id } = await params!;
   const body = await req.json();
-
   const staff = await prisma.staff.update({
     where: { id },
     data: {
@@ -22,16 +21,14 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     },
   });
   return NextResponse.json(staff);
-}
+});
 
-export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export const DELETE = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
-  const { id } = await params;
+  const { id } = await params!;
   const staff = await prisma.staff.findUnique({ where: { id } });
   if (!staff) return NextResponse.json({ error: "Not found" }, { status: 404 });
-
   await prisma.user.delete({ where: { id: staff.userId } });
   return NextResponse.json({ success: true });
-}
+});

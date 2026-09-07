@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateStaffId } from "@/lib/id-generator";
+import { apiHandler } from "@/lib/api";
 import bcrypt from "bcryptjs";
 
-export async function GET() {
+export const GET = apiHandler(async () => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const staff = await prisma.staff.findMany({
     orderBy: { name: "asc" },
     include: { user: { include: { role: true } } },
   });
   return NextResponse.json(staff);
-}
+});
 
-export async function POST(req: NextRequest) {
+export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -36,13 +36,10 @@ export async function POST(req: NextRequest) {
   const user = await prisma.user.create({
     data: {
       email:    email ?? `${staffId.toLowerCase()}@ironhouse.local`,
-      password: hashedPass,
-      roleId:   role.id,
+      password: hashedPass, roleId: role.id,
       staff: {
         create: {
-          staffId,
-          name,
-          phone,
+          staffId, name, phone,
           email:       email       ?? null,
           address:     address     ?? null,
           designation,
@@ -56,4 +53,4 @@ export async function POST(req: NextRequest) {
   });
 
   return NextResponse.json(user.staff, { status: 201 });
-}
+});
