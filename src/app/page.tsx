@@ -27,7 +27,7 @@ export default async function Home() {
   const dashboardHref = role === "member" ? "/dashboard" : "/admin/dashboard";
 
   return (
-    <div className="relative bg-[#050505] text-white antialiased">
+    <div data-layout="landing" className="relative bg-[#050505] text-white antialiased">
       <SmoothScroll />
       <ProgressBar />
       <Spotlight />

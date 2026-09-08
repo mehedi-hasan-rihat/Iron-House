@@ -74,11 +74,10 @@
     text-transform: uppercase;
   }
 
-  /* The landing page hides the native cursor and draws its own. The dashboard
-     is scoped out: an I-beam in a field, a pointer on a row, a not-allowed on a
-     disabled button all carry information a drawn dot can't replace. Scoping
-     out rather than overriding also leaves `cursor-pointer` utilities working. */
-  html:not(:has([data-layout="dashboard"])) * {
+  /* Landing page only: hide the native cursor and draw the custom one.
+     Dashboard pages are scoped out via data-layout="dashboard" — they need
+     real cursors (I-beam in fields, pointer on rows, not-allowed on disabled). */
+  html:has([data-layout="landing"]) *:not([data-layout="dashboard"] *) {
     cursor: none !important;
   }
 

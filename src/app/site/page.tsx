@@ -21,7 +21,7 @@ import { OFFERS }      from "@/content/offers";
 
 export default function Home() {
   return (
-    <div className="relative bg-[#050505] text-white antialiased">
+    <div data-layout="landing" className="relative bg-[#050505] text-white antialiased">
       <SmoothScroll />
       <ProgressBar />
       <Spotlight />
