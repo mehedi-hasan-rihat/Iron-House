@@ -50,7 +50,7 @@ export default async function Membership() {
 
         <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="label mb-2">(07) — Membership</p>
+            <p className="label mb-2">(06) — Membership</p>
             <h2 className="text-display">
               One floor.<br />
               Four <span className="accent-serif">ways</span> in.

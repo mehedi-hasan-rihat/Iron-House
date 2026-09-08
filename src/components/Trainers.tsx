@@ -11,7 +11,7 @@ export default function Trainers() {
 
         <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="label mb-2">(05) — The Coaches</p>
+            <p className="label mb-2">(04) — The Coaches</p>
             <h2 className="text-display">
               They will<br />
               correct <span className="accent-serif">you.</span>

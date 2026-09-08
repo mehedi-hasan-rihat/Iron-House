@@ -23,16 +23,16 @@ export default function FAQ() {
     <section className="bg-[#050505] py-24 md:py-36">
       <div className="mx-auto grid max-w-[1600px] gap-12 px-5 md:grid-cols-12 md:px-10">
 
-        <div className="md:col-span-4">
-          <p className="label mb-2">(08) — FAQ</p>
+        <div className="overflow-hidden md:col-span-4">
+          <p className="label mb-2">(07) — FAQ</p>
           <h2 className="text-display">
-            Straight<br />
+            Raw<br />
             <span className="accent-serif">answers.</span>
           </h2>
           <p className="mt-8 body-lg">Still unsure? Ring the front desk. A person picks up.</p>
         </div>
 
-        <div className="md:col-span-8">
+        <div className="relative z-10 md:col-span-8">
           <div className="border-t border-[#1a1a1a]">
             {faqs.map((f, i) => {
               const isOpen = open === i;

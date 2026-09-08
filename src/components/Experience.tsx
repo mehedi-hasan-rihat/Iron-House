@@ -14,7 +14,7 @@ export default function Experience() {
         <p className="label mb-2">(02) — Step Inside</p>
         <h2 className="text-section mb-12">The Experience</h2>
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {panels.map((p) => (
             <div key={p.n} className="group relative overflow-hidden">
               <div className="aspect-[3/4] overflow-hidden">

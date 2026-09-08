@@ -8,7 +8,6 @@ import Marquee         from "@/components/Marquee";
 import About           from "@/components/About";
 import Experience      from "@/components/Experience";
 import WhyUs           from "@/components/WhyUs";
-import Programs        from "@/components/Programs";
 import Trainers        from "@/components/Trainers";
 import Transformation  from "@/components/Transformation";
 import Stats           from "@/components/Stats";
@@ -35,7 +34,6 @@ export default function Home() {
         <About />
         <Experience />
         <WhyUs />
-        <Programs />
         <Trainers />
         <Transformation />
         <Stats />

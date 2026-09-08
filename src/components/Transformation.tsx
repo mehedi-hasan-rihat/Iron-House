@@ -8,7 +8,7 @@ export default function Transformation() {
 
         {/* Quote */}
         <div className="md:col-span-5 flex flex-col justify-center">
-          <p className="label mb-2">(06) — Transformation</p>
+          <p className="label mb-2">(05) — Transformation</p>
           <h2 className="text-display">
             &minus;18<span className="text-[#BFE01D]">kg</span><br />
             in 22<br />

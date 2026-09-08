@@ -12,7 +12,7 @@ export default function Contact() {
     <section id="contact" className="bg-[#050505] py-24 md:py-36">
       <div className="mx-auto max-w-[1600px] px-5 md:px-10">
 
-        <p className="label mb-2">(09) — Come In</p>
+        <p className="label mb-2">(08) — Come In</p>
         <h2 className="text-hero mb-14">
           Discipline<br />
           begins <span className="accent-serif">here.</span>

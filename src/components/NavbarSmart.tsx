@@ -4,6 +4,8 @@ import Link from "next/link";
 
 const ACC = "#BFE01D";
 
+const LINKS = ["Experience", "Trainers", "Membership", "Offers", "Contact"];
+
 const DumbbellIcon = () => (
   <div style={{ transform: "rotate(315deg)", display: "flex", alignItems: "center" }}>
     <svg width="28" height="28" viewBox="-2 7 32 14" fill="none">
@@ -26,6 +28,7 @@ export default function NavbarSmart({
   dashboardHref: string;
 }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
@@ -34,76 +37,158 @@ export default function NavbarSmart({
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  return (
-    <header
-      /* `--offer-bar-h` is owned by OfferBar; it falls back to 0 on pages that
-         do not render one, and returns to 0 when the bar is dismissed. */
-      style={{ top: "var(--offer-bar-h, 0px)" }}
-      className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "backdrop-blur-md bg-[#050505]/70 border-b border-[#1a1a1a]"
-          : "bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-5 md:px-10">
-        {/* Wordmark */}
-        <a href="#top" className="flex shrink-0 items-center gap-2">
-          <DumbbellIcon />
-          <span className="whitespace-nowrap font-display text-lg tracking-widest">
-            IRON HOUSE
-          </span>
-        </a>
+  /* Lock body scroll while mobile menu is open */
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
-        {/* Nav links. Six items no longer fit at tablet widths on the old
-            gap-9 / md: pairing, so the row opens later and tightens up. */}
-        <nav className="hidden shrink-0 items-center gap-5 whitespace-nowrap text-xs uppercase tracking-[0.18em] text-[#bdbdbd] lg:flex xl:gap-8 xl:tracking-[0.24em]">
-          {["Experience", "Programs", "Trainers", "Membership", "Offers", "Contact"].map((l) => (
-            <a key={l} href={`#${l.toLowerCase()}`} className="hover:text-white transition">
+  const ctaStyle = { borderColor: ACC, color: ACC };
+  const onEnter  = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (e.currentTarget as HTMLElement).style.backgroundColor = ACC;
+    (e.currentTarget as HTMLElement).style.color = "#050505";
+  };
+  const onLeave  = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+    (e.currentTarget as HTMLElement).style.color = ACC;
+  };
+
+  return (
+    <>
+      <header
+        style={{ top: "var(--offer-bar-h, 0px)" }}
+        className={`fixed left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled || menuOpen
+            ? "backdrop-blur-md bg-[#050505]/90 border-b border-[#1a1a1a]"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="mx-auto flex max-w-[1600px] items-center justify-between px-5 py-5 md:px-10">
+          {/* Wordmark */}
+          <a href="#top" className="flex shrink-0 items-center gap-2" onClick={() => setMenuOpen(false)}>
+            <DumbbellIcon />
+            <span className="whitespace-nowrap font-display text-lg tracking-widest">
+              IRON HOUSE
+            </span>
+          </a>
+
+          {/* Desktop nav links */}
+          <nav className="hidden shrink-0 items-center gap-5 whitespace-nowrap text-xs uppercase tracking-[0.18em] text-[#bdbdbd] lg:flex xl:gap-8 xl:tracking-[0.24em]">
+            {LINKS.map((l) => (
+              <a key={l} href={`#${l.toLowerCase()}`} className="hover:text-white transition">
+                {l}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {/* Desktop CTA — swaps based on login state */}
+            {isLoggedIn ? (
+              <Link
+                href={dashboardHref}
+                className="hidden lg:inline-flex items-center gap-2 border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors"
+                style={ctaStyle}
+                onMouseEnter={onEnter}
+                onMouseLeave={onLeave}
+              >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACC }} />
+                Dashboard
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                className="hidden lg:inline-flex items-center gap-2 border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors"
+                style={ctaStyle}
+                onMouseEnter={onEnter}
+                onMouseLeave={onLeave}
+              >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACC }} />
+                Login
+              </Link>
+            )}
+
+            {/* Mobile hamburger */}
+            <button
+              type="button"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((v) => !v)}
+              className="relative h-5 w-6 lg:hidden text-white"
+            >
+              <span
+                className="absolute left-0 block h-[1.5px] w-6 bg-current transition-all duration-300"
+                style={{ top: menuOpen ? "50%" : "30%", transform: menuOpen ? "translateY(-50%) rotate(45deg)" : "none" }}
+              />
+              <span
+                className="absolute left-0 block h-[1.5px] bg-current transition-all duration-300"
+                style={{ top: "50%", width: menuOpen ? 0 : "1.5rem", transform: "translateY(-50%)", opacity: menuOpen ? 0 : 1 }}
+              />
+              <span
+                className="absolute left-0 block h-[1.5px] w-6 bg-current transition-all duration-300"
+                style={{ top: menuOpen ? "50%" : "70%", transform: menuOpen ? "translateY(-50%) rotate(-45deg)" : "none" }}
+              />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile drawer */}
+      <div
+        aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-40 flex flex-col bg-[#050505] transition-all duration-500 lg:hidden ${
+          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        style={{ paddingTop: "calc(var(--offer-bar-h, 0px) + 4.5rem)" }}
+      >
+        <nav className="flex flex-1 flex-col items-start justify-center gap-2 px-8 pb-20">
+          {LINKS.map((l, i) => (
+            <a
+              key={l}
+              href={`#${l.toLowerCase()}`}
+              onClick={() => setMenuOpen(false)}
+              className="w-full border-b border-[#1a1a1a] py-5 font-display text-4xl uppercase tracking-tight text-white transition-colors hover:text-[#BFE01D]"
+              style={{
+                transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                opacity: menuOpen ? 1 : 0,
+                transition: `opacity 0.4s ease ${i * 55}ms, transform 0.4s ease ${i * 55}ms, color 0.2s`,
+              }}
+            >
               {l}
             </a>
           ))}
-        </nav>
 
-        {/* CTA — swaps based on login state */}
-        {isLoggedIn ? (
-          <Link
-            href={dashboardHref}
-            className="group relative inline-flex items-center gap-2 border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors hover:text-black"
-            style={{
-              borderColor: ACC,
-              color:       ACC,
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = ACC;
-              (e.currentTarget as HTMLElement).style.color = "#050505";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              (e.currentTarget as HTMLElement).style.color = ACC;
-            }}
-          >
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACC }} />
-            Dashboard
-          </Link>
-        ) : (
-          <Link
-            href="/login"
-            className="group relative inline-flex items-center gap-2 border px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] transition-colors"
-            style={{ borderColor: ACC, color: ACC }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = ACC;
-              (e.currentTarget as HTMLElement).style.color = "#050505";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-              (e.currentTarget as HTMLElement).style.color = ACC;
-            }}
-          >
-            <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: ACC }} />
-            Login
-          </Link>
-        )}
+          {/* Mobile CTA */}
+          {isLoggedIn ? (
+            <Link
+              href={dashboardHref}
+              onClick={() => setMenuOpen(false)}
+              className="mt-8 inline-flex items-center gap-2 bg-[#BFE01D] px-8 py-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-black"
+              style={{
+                transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                opacity: menuOpen ? 1 : 0,
+                transition: `opacity 0.4s ease ${LINKS.length * 55}ms, transform 0.4s ease ${LINKS.length * 55}ms`,
+              }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-black" />
+              Dashboard
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              onClick={() => setMenuOpen(false)}
+              className="mt-8 inline-flex items-center gap-2 bg-[#BFE01D] px-8 py-4 font-mono text-xs font-semibold uppercase tracking-[0.25em] text-black"
+              style={{
+                transform: menuOpen ? "translateY(0)" : "translateY(16px)",
+                opacity: menuOpen ? 1 : 0,
+                transition: `opacity 0.4s ease ${LINKS.length * 55}ms, transform 0.4s ease ${LINKS.length * 55}ms`,
+              }}
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-black" />
+              Login
+            </Link>
+          )}
+        </nav>
       </div>
-    </header>
+    </>
   );
 }
