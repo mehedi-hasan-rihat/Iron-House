@@ -19,10 +19,10 @@ const NAV = [
 
 export default function CustomerShell({
   children,
-  session,
+  memberStatus,
 }: {
   children: React.ReactNode;
-  session: { user: { email?: string | null; name?: string | null } };
+  memberStatus: string;
 }) {
   const pathname = usePathname();
   const root  = useRef<HTMLDivElement>(null);
@@ -137,6 +137,32 @@ export default function CustomerShell({
           })}
         </div>
       </nav>
+
+      {/* Frozen banner — visible on all pages when membership is frozen */}
+      {memberStatus === "FROZEN" && (
+        <div className="border-b border-blue-400/30 bg-blue-400/5 px-5 py-3">
+          <div className="mx-auto max-w-3xl flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-blue-400 shrink-0" />
+              <div>
+                <p className="text-xs font-semibold text-blue-400 uppercase tracking-[0.2em]">
+                  Membership Frozen
+                </p>
+                <p className="text-[11px] text-[#9aa87a] mt-0.5">
+                  Your membership is paused. Gym access is suspended until you unfreeze.
+                  Contact reception to resume — your end date will be extended.
+                </p>
+              </div>
+            </div>
+            <a
+              href="tel:+8801601797188"
+              className="shrink-0 text-[10px] uppercase tracking-[0.2em] border border-blue-400/40 text-blue-400 px-3 py-1.5 hover:bg-blue-400/10 transition-colors"
+            >
+              Call us
+            </a>
+          </div>
+        </div>
+      )}
 
       {/* content */}
       <main className="mx-auto max-w-3xl px-5 py-8 pb-24 md:pb-8">

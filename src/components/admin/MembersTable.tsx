@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Eye, Edit, MoreVertical, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import Stagger from "@/components/motion/Stagger";
 import { createPortal } from "react-dom";
 
 const STATUS_COLORS: Record<string, string> = {
@@ -20,129 +19,134 @@ type Member = {
 
 type SortKey = "memberId" | "fullName" | "createdAt" | "status";
 
+/* Actions shown depend on current status — never show the one already active */
+const ACTIONS_FOR: Record<string, { label: string; status: string; color: string; desc: string }[]> = {
+  ACTIVE: [
+    { label: "Suspend", status: "SUSPENDED", color: "text-orange-400", desc: "Block entry, clock runs" },
+    { label: "Freeze",  status: "FROZEN",    color: "text-blue-400",   desc: "Pause — extends end date" },
+  ],
+  SUSPENDED: [
+    { label: "Activate", status: "ACTIVE",  color: "text-[#BFE01D]",  desc: "Restore full access"      },
+    { label: "Freeze",   status: "FROZEN",  color: "text-blue-400",   desc: "Pause — extends end date" },
+  ],
+  FROZEN: [
+    { label: "Activate", status: "ACTIVE",     color: "text-[#BFE01D]",  desc: "Unfreeze + extend end date" },
+    { label: "Suspend",  status: "SUSPENDED",  color: "text-orange-400", desc: "Block entry, clock runs"    },
+  ],
+};
+
 /* ── Sortable column header ── */
-function SortTh({
-  col, label, current, dir,
-}: {
+function SortTh({ col, label, current, dir }: {
   col: SortKey; label: string; current: SortKey | null; dir: "asc" | "desc";
 }) {
-  const router      = useRouter();
-  const pathname    = usePathname();
+  const router       = useRouter();
+  const pathname     = usePathname();
   const searchParams = useSearchParams();
-
-  const active  = current === col;
-  const nextDir = active && dir === "asc" ? "desc" : "asc";
+  const active       = current === col;
+  const nextDir      = active && dir === "asc" ? "desc" : "asc";
 
   function toggle() {
     const p = new URLSearchParams(searchParams.toString());
-    p.set("sort", col);
-    p.set("dir",  nextDir);
-    p.set("page", "1");
+    p.set("sort", col); p.set("dir", nextDir); p.set("page", "1");
     router.push(`${pathname}?${p.toString()}`);
   }
 
   return (
     <th className="text-left px-4 py-3 label text-[#9aa87a] whitespace-nowrap">
-      <button
-        onClick={toggle}
-        className="inline-flex items-center gap-1 hover:text-[#f2f4e8] transition-colors"
-      >
+      <button onClick={toggle} className="inline-flex items-center gap-1 hover:text-[#f2f4e8] transition-colors">
         {label}
-        {active ? (
-          dir === "asc"
-            ? <ChevronUp size={11} className="text-[#BFE01D]" />
+        {active
+          ? dir === "asc"
+            ? <ChevronUp   size={11} className="text-[#BFE01D]" />
             : <ChevronDown size={11} className="text-[#BFE01D]" />
-        ) : (
-          <ChevronsUpDown size={11} className="opacity-30" />
-        )}
+          : <ChevronsUpDown size={11} className="opacity-30" />
+        }
       </button>
     </th>
   );
 }
 
-/* ── Portal dropdown — renders outside the table so overflow never clips it ── */
+/* ── Portal dropdown ── */
 function ActionMenu({
-  memberId,
-  anchorRef,
-  onClose,
+  memberId, memberStatus, btnMap, onClose,
 }: {
   memberId: string;
-  anchorRef: React.RefObject<HTMLButtonElement | null>;
+  memberStatus: string;
+  btnMap: React.RefObject<Map<string, HTMLButtonElement>>;
   onClose: () => void;
 }) {
-  const [pos, setPos]       = useState({ top: 0, left: 0, openUp: false });
-  const [loading, setLoading] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos]         = useState({ top: 0, left: 0 });
+  const [loading, setLoading] = useState<string | null>(null);
+  const menuRef               = useRef<HTMLDivElement>(null);
+  const actions               = ACTIONS_FOR[memberStatus] ?? [];
+  const menuH                 = actions.length * 56 + 8;
 
-  /* Position on mount, recalc on scroll/resize */
   useEffect(() => {
     function calc() {
-      const btn = anchorRef.current;
+      const btn = btnMap.current?.get(memberId);
       if (!btn) return;
-      const r         = btn.getBoundingClientRect();
-      const menuH     = 120; // approx height of 3 items
+      const r          = btn.getBoundingClientRect();
       const spaceBelow = window.innerHeight - r.bottom;
       const openUp     = spaceBelow < menuH + 8;
       setPos({
-        top:    openUp ? r.top - menuH - 4 : r.bottom + 4,
-        left:   r.right - 160,          // right-align to button
-        openUp,
+        top:  openUp ? r.top - menuH - 4 : r.bottom + 4,
+        left: r.right - 192,
       });
     }
     calc();
     window.addEventListener("scroll", calc, { passive: true });
     window.addEventListener("resize", calc);
-    return () => {
-      window.removeEventListener("scroll", calc);
-      window.removeEventListener("resize", calc);
-    };
-  }, [anchorRef]);
+    return () => { window.removeEventListener("scroll", calc); window.removeEventListener("resize", calc); };
+  }, [memberId, btnMap, menuH]);
 
-  /* Close on outside click */
   useEffect(() => {
     function handler(e: MouseEvent) {
+      const btn = btnMap.current?.get(memberId);
       if (
         menuRef.current && !menuRef.current.contains(e.target as Node) &&
-        anchorRef.current && !anchorRef.current.contains(e.target as Node)
-      ) {
-        onClose();
-      }
+        btn && !btn.contains(e.target as Node)
+      ) onClose();
     }
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [anchorRef, onClose]);
+  }, [memberId, btnMap, onClose]);
 
-  async function setStatus(status: string) {
-    setLoading(true);
-    await fetch(`/api/members/${memberId}`, {
-      method:  "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ status }),
-    });
-    onClose();
-    window.location.reload();
+  async function applyStatus(status: string) {
+    setLoading(status);
+    try {
+      await fetch(`/api/members/${memberId}`, {
+        method:  "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ status }),
+      });
+      onClose();
+      window.location.reload();
+    } catch {
+      setLoading(null);
+    }
   }
 
-  const actions = [
-    { label: "Activate",  status: "ACTIVE"    },
-    { label: "Suspend",   status: "SUSPENDED" },
-    { label: "Freeze",    status: "FROZEN"    },
-  ];
+  if (!actions.length) return null;
 
   return createPortal(
     <div
       ref={menuRef}
-      style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999, width: 160 }}
-      className="bg-[#111] border border-[#BFE01D]/20 shadow-2xl"
+      style={{ position: "fixed", top: pos.top, left: pos.left, zIndex: 9999, width: 192 }}
+      className="bg-[#111] border border-[#BFE01D]/20 shadow-2xl py-1"
     >
       {actions.map((a) => (
         <button
           key={a.status}
-          disabled={loading}
-          onClick={() => setStatus(a.status)}
-          className="w-full text-left px-4 py-2.5 text-xs text-[#9aa87a] hover:text-[#f2f4e8] hover:bg-[#BFE01D]/6 uppercase tracking-[0.15em] transition-colors disabled:opacity-40"
+          disabled={!!loading}
+          onClick={() => applyStatus(a.status)}
+          className={`w-full text-left px-4 py-3 transition-colors disabled:opacity-40 hover:bg-[#BFE01D]/6 ${a.color}`}
         >
-          {a.label}
+          <span className="block text-xs uppercase tracking-[0.18em] font-semibold">
+            {loading === a.status ? "Saving…" : a.label}
+          </span>
+          <span className="block text-[10px] text-[#9aa87a] mt-0.5 normal-case tracking-normal">
+            {a.desc}
+          </span>
         </button>
       ))}
     </div>,
@@ -152,16 +156,15 @@ function ActionMenu({
 
 /* ── Main table ── */
 export default function MembersTable({
-  members,
-  sort,
-  dir,
+  members, sort, dir,
 }: {
   members: Member[];
   sort: SortKey | null;
   dir: "asc" | "desc";
 }) {
-  const [openMenu, setOpenMenu]   = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const btnRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const openMember = openMenu ? members.find((x) => x.id === openMenu) ?? null : null;
 
   if (!members.length) {
     return (
@@ -190,8 +193,7 @@ export default function MembersTable({
               <th className="px-4 py-3" />
             </tr>
           </thead>
-          <Stagger as="tbody" selector="tr" className="divide-y divide-[#BFE01D]/15"
-            stagger={0.035} y={12} blur={false}>
+          <tbody className="divide-y divide-[#BFE01D]/15">
             {members.map((m) => {
               const activeMembership = m.memberships[0];
               const expired = activeMembership
@@ -233,13 +235,10 @@ export default function MembersTable({
                         <Edit size={14} />
                       </Link>
                       <button
-                        ref={(el) => {
-                          if (el) btnRefs.current.set(m.id, el);
-                          else btnRefs.current.delete(m.id);
-                        }}
+                        ref={(el) => { if (el) btnRefs.current.set(m.id, el); else btnRefs.current.delete(m.id); }}
                         onClick={() => setOpenMenu(openMenu === m.id ? null : m.id)}
-                        className="p-1.5 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors"
-                        title="More actions"
+                        className={`p-1.5 transition-colors ${openMenu === m.id ? "text-[#BFE01D]" : "text-[#9aa87a] hover:text-[#f2f4e8]"}`}
+                        title="Actions"
                       >
                         <MoreVertical size={14} />
                       </button>
@@ -248,15 +247,15 @@ export default function MembersTable({
                 </tr>
               );
             })}
-          </Stagger>
+          </tbody>
         </table>
       </div>
 
-      {/* Portal dropdown — lives outside the table, never clipped */}
-      {openMenu && (
+      {openMenu && openMember && (
         <ActionMenu
           memberId={openMenu}
-          anchorRef={{ current: btnRefs.current.get(openMenu) ?? null }}
+          memberStatus={openMember.status}
+          btnMap={btnRefs}
           onClose={() => setOpenMenu(null)}
         />
       )}
