@@ -6,7 +6,16 @@ import MembersTable from "@/components/admin/MembersTable";
 
 const ACC = "#BFE01D";
 
-async function getMembers(search: string, status: string, page: number) {
+type SortKey = "memberId" | "fullName" | "createdAt" | "status";
+const VALID_SORT: SortKey[] = ["memberId", "fullName", "createdAt", "status"];
+
+async function getMembers(
+  search: string,
+  status: string,
+  page: number,
+  sort: SortKey,
+  dir: "asc" | "desc",
+) {
   const limit = 20;
   const skip  = (page - 1) * limit;
 
@@ -26,7 +35,7 @@ async function getMembers(search: string, status: string, page: number) {
       where,
       skip,
       take:    limit,
-      orderBy: { createdAt: "desc" },
+      orderBy: { [sort]: dir },
       include: {
         memberships: {
           where:   { status: "ACTIVE" },
@@ -45,15 +54,17 @@ async function getMembers(search: string, status: string, page: number) {
 export default async function MembersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; status?: string; page?: string }>;
+  searchParams: Promise<{ search?: string; status?: string; page?: string; sort?: string; dir?: string }>;
 }) {
   await requireStaff();
   const sp     = await searchParams;
   const search = sp.search ?? "";
   const status = sp.status ?? "";
   const page   = Math.max(1, Number(sp.page ?? 1));
+  const sort   = (VALID_SORT.includes(sp.sort as SortKey) ? sp.sort : "createdAt") as SortKey;
+  const dir    = sp.dir === "asc" ? "asc" : "desc";
 
-  const { members, total, pages } = await getMembers(search, status, page);
+  const { members, total, pages } = await getMembers(search, status, page, sort, dir);
 
   return (
     <div className="space-y-6">
@@ -95,6 +106,9 @@ export default async function MembersPage({
           <option value="SUSPENDED">Suspended</option>
           <option value="FROZEN">Frozen</option>
         </select>
+        {/* Preserve current sort when filter is submitted */}
+        <input type="hidden" name="sort" value={sort} />
+        <input type="hidden" name="dir"  value={dir}  />
         <button
           type="submit"
           className="border border-[#BFE01D]/15 text-[#9aa87a] hover:text-[#f2f4e8] hover:border-[#BFE01D]/50 text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors"
@@ -104,7 +118,7 @@ export default async function MembersPage({
       </form>
 
       {/* Table */}
-      <MembersTable members={members} />
+      <MembersTable members={members} sort={sort} dir={dir} />
 
       {/* Pagination */}
       {pages > 1 && (
@@ -112,7 +126,7 @@ export default async function MembersPage({
           {Array.from({ length: pages }, (_, i) => i + 1).map((p) => (
             <Link
               key={p}
-              href={`?search=${search}&status=${status}&page=${p}`}
+              href={`?search=${search}&status=${status}&sort=${sort}&dir=${dir}&page=${p}`}
               className={`w-8 h-8 flex items-center justify-center text-xs border transition-colors
                 ${p === page
                   ? "border-[#BFE01D] text-black font-bold"

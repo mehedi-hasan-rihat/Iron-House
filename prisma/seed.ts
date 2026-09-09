@@ -83,7 +83,7 @@ async function main() {
   });
 
   await prisma.staff.upsert({
-    where:  { userId: ownerUser.id },
+    where:  { staffId: "STF-0001" },
     update: {},
     create: {
       staffId:     "STF-0001",
