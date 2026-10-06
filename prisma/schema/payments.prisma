@@ -26,6 +26,12 @@ model Payment {
 }
 
 enum PaymentMethod {
+  CASH
+  CARD
+  BKASH
+  NAGAD
+  ROCKET
+  BANK_TRANSFER
   MONEYBAG
 }
 

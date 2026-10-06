@@ -48,7 +48,31 @@ async function getMembers(
     prisma.member.count({ where }),
   ]);
 
-  return { members, total, pages: Math.ceil(total / limit) };
+  // Serialize Decimal fields — plain objects only cross the server→client boundary
+  const serialized = members.map((m) => ({
+    ...m,
+    memberships: m.memberships.map((ms) => ({
+      ...ms,
+      amount:      Number(ms.amount),
+      discount:    Number(ms.discount),
+      tax:         Number(ms.tax),
+      finalAmount: Number(ms.finalAmount),
+      startDate:   ms.startDate.toISOString(),
+      endDate:     ms.endDate.toISOString(),
+      createdAt:   ms.createdAt.toISOString(),
+      updatedAt:   ms.updatedAt.toISOString(),
+      plan: ms.plan ? {
+        ...ms.plan,
+        price:     Number(ms.plan.price),
+        createdAt: ms.plan.createdAt.toISOString(),
+        updatedAt: ms.plan.updatedAt.toISOString(),
+      } : null,
+    })),
+    createdAt: m.createdAt.toISOString(),
+    updatedAt: m.updatedAt.toISOString(),
+  }));
+
+  return { members: serialized, total, pages: Math.ceil(total / limit) };
 }
 
 export default async function MembersPage({

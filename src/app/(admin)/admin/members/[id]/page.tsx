@@ -2,9 +2,7 @@ import { requireStaff } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Edit, CreditCard, ArrowLeft } from "lucide-react";
-
-const ACC = "#BFE01D";
+import { Edit, ArrowLeft } from "lucide-react";
 
 const STATUS_COLORS: Record<string, string> = {
   ACTIVE:    "text-[#BFE01D] bg-[#BFE01D]/10",
@@ -34,7 +32,7 @@ export default async function MemberProfilePage({
 
   if (!member) notFound();
 
-  const activeMembership = member.memberships.find((m) => m.status === "ACTIVE");
+  const activeMembership = member.memberships.find((m) => m.status === "ACTIVE" || m.status === "FROZEN");
 
   return (
     <div className="space-y-6 max-w-4xl">
@@ -59,11 +57,6 @@ export default async function MemberProfilePage({
           <Link href={`/admin/members/${id}/edit`}
             className="inline-flex items-center gap-2 border border-[#BFE01D]/15 text-[#9aa87a] hover:border-[#BFE01D]/50 hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors">
             <Edit size={13} /> Edit
-          </Link>
-          <Link href={`/admin/memberships/new?memberId=${id}`}
-            className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-4 py-2.5 hover:opacity-85 transition-opacity"
-            style={{ backgroundColor: ACC }}>
-            <CreditCard size={13} /> New Membership
           </Link>
         </div>
       </div>

@@ -13,8 +13,8 @@ const STATUS_COLORS: Record<string, string> = {
 
 type Member = {
   id: string; memberId: string; fullName: string; phone: string;
-  email?: string | null; status: string; createdAt: Date;
-  memberships: Array<{ plan: { name: string } | null; endDate: Date }>;
+  email?: string | null; status: string; createdAt: string;
+  memberships: Array<{ plan: { name: string } | null; endDate: string }>;
 };
 
 type SortKey = "memberId" | "fullName" | "createdAt" | "status";

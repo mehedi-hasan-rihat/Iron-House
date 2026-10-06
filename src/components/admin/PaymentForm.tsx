@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 const ACC = "#BFE01D";
-const METHODS = ["MONEYBAG"];
+const METHODS = ["CASH","CARD","BKASH","NAGAD","ROCKET","BANK_TRANSFER","MONEYBAG"];
 
 type Member = { id: string; memberId: string; fullName: string };
 
