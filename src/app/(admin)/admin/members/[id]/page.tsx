@@ -88,15 +88,26 @@ export default async function MemberProfilePage({
           />
           <Row label="Blood" value={member.bloodGroup} />
           <Row label="Address" value={member.address} />
+          {!member.email && !member.gender && !member.dob && !member.bloodGroup && !member.address && (
+            <p className="text-[#9aa87a] text-xs">No additional details on record. <Link href={`/admin/members/${id}/edit`} className="text-[#BFE01D] hover:underline">Edit member →</Link></p>
+          )}
         </InfoCard>
 
         <InfoCard title="Emergency & Medical">
           <Row label="Emergency Contact" value={member.emergencyContact} />
           <Row label="Medical Info" value={member.medicalInfo} vertical />
+          {!member.emergencyContact && !member.medicalInfo && (
+            <p className="text-[#9aa87a] text-xs">No emergency or medical information on record.</p>
+          )}
         </InfoCard>
       </div>
 
       {/* Active membership */}
+      {!activeMembership && (
+        <InfoCard title="Active Membership">
+          <p className="text-[#9aa87a] text-xs">No active membership. <Link href={`/admin/memberships`} className="text-[#BFE01D] hover:underline">Assign a plan →</Link></p>
+        </InfoCard>
+      )}
       {activeMembership && (
         <InfoCard title="Active Membership">
           <Row label="Plan" value={activeMembership.plan.name} />
@@ -123,7 +134,7 @@ export default async function MemberProfilePage({
       {/* Membership history */}
       <InfoCard title={`Membership History (${member.memberships.length})`}>
         {member.memberships.length === 0 ? (
-          <p className="text-[#9aa87a] text-xs">No memberships yet.</p>
+          <p className="text-[#9aa87a] text-xs">This member has not been assigned any membership plan yet.</p>
         ) : (
           <div className="space-y-2">
             {member.memberships.map((ms) => (
@@ -152,7 +163,7 @@ export default async function MemberProfilePage({
       {/* Recent payments */}
       <InfoCard title={`Recent Payments (${member.payments.length})`}>
         {member.payments.length === 0 ? (
-          <p className="text-[#9aa87a] text-xs">No payments yet.</p>
+          <p className="text-[#9aa87a] text-xs">No payment records found for this member.</p>
         ) : (
           <div className="space-y-2">
             {member.payments.map((p) => (

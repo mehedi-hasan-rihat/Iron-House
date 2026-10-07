@@ -4,9 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
-  LayoutDashboard, Users, CreditCard, Dumbbell,
-  UserCog, ShieldCheck, BarChart3, Settings,
-  LogOut, ChevronRight, Menu, X,
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  Dumbbell,
+  UserCog,
+  ShieldCheck,
+  BarChart3,
+  Settings,
+  LogOut,
+  ChevronRight,
+  Menu,
+  X,
 } from "lucide-react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import NotificationBell from "./NotificationBell";
@@ -15,15 +24,15 @@ import MagneticBox from "@/components/motion/MagneticBox";
 import BackToTop from "@/components/motion/BackToTop";
 
 const NAV = [
-  { href: "/admin/dashboard",   label: "Dashboard",   icon: LayoutDashboard },
-  { href: "/admin/members",     label: "Members",     icon: Users           },
-  { href: "/admin/plans",       label: "Plans",       icon: Dumbbell        },
-  { href: "/admin/memberships", label: "Memberships", icon: CreditCard      },
-  { href: "/admin/payments",    label: "Payments",    icon: CreditCard      },
-  { href: "/admin/staff",       label: "Staff",       icon: UserCog         },
-  { href: "/admin/roles",       label: "Roles",       icon: ShieldCheck     },
-  { href: "/admin/reports",     label: "Reports",     icon: BarChart3       },
-  { href: "/admin/settings",    label: "Settings",    icon: Settings        },
+  { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/members", label: "Members", icon: Users },
+  { href: "/admin/plans", label: "Plans", icon: Dumbbell },
+  { href: "/admin/memberships", label: "Memberships", icon: CreditCard },
+  { href: "/admin/payments", label: "Payments", icon: CreditCard },
+  { href: "/admin/staff", label: "Staff", icon: UserCog },
+  { href: "/admin/roles", label: "Roles", icon: ShieldCheck },
+  { href: "/admin/reports", label: "Reports", icon: BarChart3 },
+  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 const ACC = "#BFE01D";
@@ -34,17 +43,20 @@ export default function AdminShell({
   session,
 }: {
   children: React.ReactNode;
-  session: { user: { name?: string | null; email?: string | null; role?: string } };
+  session: {
+    user: { name?: string | null; email?: string | null; role?: string };
+  };
 }) {
-  const pathname   = usePathname();
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const activeHref = NAV.find((n) => pathname.startsWith(n.href))?.href;
-
+  const activeHref = NAV.find(
+    (n) => pathname === n.href || pathname.startsWith(`${n.href}/`),
+  )?.href;
   /* ── Sliding active-link indicator (GSAP only — no sidebar involvement) ── */
-  const root      = useRef<HTMLDivElement>(null);
-  const navRef    = useRef<HTMLElement>(null);
+  const root = useRef<HTMLDivElement>(null);
+  const navRef = useRef<HTMLElement>(null);
   const indicator = useRef<HTMLSpanElement>(null);
-  const placed    = useRef(false);
+  const placed = useRef(false);
 
   useGSAP(
     () => {
@@ -53,13 +65,16 @@ export default function AdminShell({
       if (!bar || !nav) return;
 
       const active = nav.querySelector<HTMLElement>('[data-nav-active="true"]');
-      if (!active) { gsap.set(bar, { autoAlpha: 0 }); return; }
+      if (!active) {
+        gsap.set(bar, { autoAlpha: 0 });
+        return;
+      }
 
       const navRect = nav.getBoundingClientRect();
-      const rect    = active.getBoundingClientRect();
+      const rect = active.getBoundingClientRect();
       const to = {
-        y:         rect.top - navRect.top + nav.scrollTop,
-        height:    rect.height,
+        y: rect.top - navRect.top + nav.scrollTop,
+        height: rect.height,
         autoAlpha: 1,
       };
 
@@ -70,14 +85,17 @@ export default function AdminShell({
       }
       gsap.to(bar, { ...to, duration: 0.45, ease: "expo.out" });
     },
-    { scope: root, dependencies: [activeHref] }
+    { scope: root, dependencies: [activeHref] },
   );
 
   const sidebarContent = (
     <>
       {/* Logo */}
       <div className="flex items-center gap-2 px-6 py-5 border-b border-[#BFE01D]/15 shrink-0">
-        <span className="h-2 w-2 rounded-full accent-dot" style={{ backgroundColor: ACC }} />
+        <span
+          className="h-2 w-2 rounded-full accent-dot"
+          style={{ backgroundColor: ACC }}
+        />
         <span className="font-display text-sm tracking-[0.35em] uppercase text-[#f2f4e8]">
           Iron House
         </span>
@@ -94,6 +112,7 @@ export default function AdminShell({
         <div className="relative space-y-0.5">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = href === activeHref;
+            console.log(href, activeHref);
             return (
               <Link
                 key={href}
@@ -103,7 +122,7 @@ export default function AdminShell({
                 onClick={() => setOpen(false)}
                 className={`relative flex items-center gap-3 px-3 py-2.5 text-xs uppercase tracking-[0.2em] transition-colors rounded-sm ${
                   active
-                    ? "text-black font-bold"
+                    ? "text-[#f2f4e8 bg-[#BFE01D]/6"
                     : "text-[#9aa87a] hover:text-[#f2f4e8] hover:bg-[#BFE01D]/6"
                 }`}
               >
@@ -126,8 +145,12 @@ export default function AdminShell({
             {session.user.name?.[0] ?? session.user.email?.[0] ?? "?"}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-[#f2f4e8] truncate">{session.user.email}</p>
-            <p className="text-[10px] text-[#9aa87a] uppercase tracking-widest">{session.user.role}</p>
+            <p className="text-xs text-[#f2f4e8] truncate">
+              {session.user.email}
+            </p>
+            <p className="text-[10px] text-[#9aa87a] uppercase tracking-widest">
+              {session.user.role}
+            </p>
           </div>
         </div>
         <MagneticBox>
@@ -160,7 +183,9 @@ export default function AdminShell({
         <div
           onClick={() => setOpen(false)}
           className={`fixed inset-0 z-40 bg-black/70 backdrop-blur-sm lg:hidden transition-opacity duration-300 ${
-            open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            open
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
           }`}
         />
         {/* Drawer */}
@@ -175,7 +200,6 @@ export default function AdminShell({
 
       {/* ── Main ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-
         {/* Top bar */}
         <header className="relative flex items-center gap-4 px-5 py-4 border-b border-[#BFE01D]/15 bg-[#050505]/80 backdrop-blur-sm shrink-0">
           <button
@@ -189,11 +213,18 @@ export default function AdminShell({
 
           <div className="flex-1" />
 
-          <ScrollProgress targetId={SCROLL_ID} variant="ring" className="hidden sm:block" />
+          <ScrollProgress
+            targetId={SCROLL_ID}
+            variant="ring"
+            className="hidden sm:block"
+          />
           <NotificationBell />
           <span className="label text-[#9aa87a]">
             {new Date().toLocaleDateString("en-BD", {
-              weekday: "short", day: "numeric", month: "short", year: "numeric",
+              weekday: "short",
+              day: "numeric",
+              month: "short",
+              year: "numeric",
             })}
           </span>
 
