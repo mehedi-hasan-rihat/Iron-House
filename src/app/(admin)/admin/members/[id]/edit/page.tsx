@@ -34,7 +34,7 @@ export default async function EditMemberPage({
           phone:            member.phone,
           email:            member.email          ?? "",
           gender:           member.gender         ?? "",
-          dob:              member.dob ? member.dob.toISOString().split("T")[0] : "",
+          dob:              member.dob && !isNaN(member.dob.getTime()) ? member.dob.toISOString().split("T")[0] : "",
           address:          member.address        ?? "",
           bloodGroup:       member.bloodGroup     ?? "",
           medicalInfo:      member.medicalInfo    ?? "",

@@ -82,15 +82,6 @@ export default async function RolesPage() {
           </Stagger>
         </table>
       </div>
-
-      {/* Default permission reference */}
-      <div className="border border-[#BFE01D]/15 panel p-5">
-        <p className="label text-[#9aa87a] mb-3">Default permission source</p>
-        <p className="text-[#9aa87a] text-xs font-mono">src/lib/permissions.ts → DEFAULT_PERMISSIONS</p>
-        <p className="text-[#9aa87a] text-xs mt-2">
-          To change permissions: edit the file, then run <code className="text-[#BFE01D]">npm run db:seed</code> to re-apply.
-        </p>
-      </div>
     </div>
   );
 }
