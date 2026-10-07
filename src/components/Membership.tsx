@@ -1,20 +1,20 @@
 import Magnetic from "./Magnetic";
 import prisma from "@/lib/prisma";
 
-/** Maps DB plan type → display config so the UI stays consistent with the landing copy */
-const PLAN_META: Record<string, { per: string; eq: string; badge?: string; highlight?: boolean }> = {
-  MONTHLY:    { per: "/ month",    eq: "৳3,500 a month"  },
-  QUARTERLY:  { per: "/ 3 months", eq: "৳3,200 a month"  },
-  HALF_YEARLY:{ per: "/ 6 months", eq: "৳3,000 a month",  badge: "Most chosen", highlight: true },
-  YEARLY:     { per: "/ year",     eq: "৳2,670 a month"  },
+/** Maps plan type → per-period label */
+const PLAN_PERIOD: Record<string, string> = {
+  MONTHLY:    "/ month",
+  QUARTERLY:  "/ 3 months",
+  HALF_YEARLY: "/ 6 months",
+  YEARLY:     "/ year",
 };
 
 /** Fallback static list so the section renders even without a DB connection */
 const FALLBACK = [
-  { id: null, name: "Monthly",   price: 3500,  type: "MONTHLY"     },
-  { id: null, name: "Quarterly", price: 9600,  type: "QUARTERLY"   },
-  { id: null, name: "Half-Year", price: 18000, type: "HALF_YEARLY" },
-  { id: null, name: "Annual",    price: 32000, type: "YEARLY"      },
+  { id: null, name: "Monthly",   price: 3500,  type: "MONTHLY",     isPopular: false },
+  { id: null, name: "Quarterly", price: 9600,  type: "QUARTERLY",   isPopular: false },
+  { id: null, name: "Half-Year", price: 18000, type: "HALF_YEARLY", isPopular: true  },
+  { id: null, name: "Annual",    price: 32000, type: "YEARLY",      isPopular: false },
 ];
 
 const PERKS: Record<string, string[]> = {
@@ -26,7 +26,7 @@ const PERKS: Record<string, string[]> = {
 
 export default async function Membership() {
   // Fetch live plans from DB — fall back to static if unavailable
-  let plans: { id: string | null; name: string; price: number; type: string }[] = FALLBACK;
+  let plans: { id: string | null; name: string; price: number; type: string; isPopular: boolean }[] = FALLBACK;
   try {
     const dbPlans = await prisma.membershipPlan.findMany({
       where:   { isActive: true },
@@ -34,10 +34,11 @@ export default async function Membership() {
     });
     if (dbPlans.length > 0) {
       plans = dbPlans.map((p) => ({
-        id:    p.id,
-        name:  p.name,
-        price: Number(p.price),
-        type:  p.type,
+        id:        p.id,
+        name:      p.name,
+        price:     Number(p.price),
+        type:      p.type,
+        isPopular: p.isPopular,
       }));
     }
   } catch {
@@ -64,22 +65,22 @@ export default async function Membership() {
 
         <div className="grid gap-4 md:grid-cols-4">
           {plans.map((p) => {
-            const meta  = PLAN_META[p.type] ?? { per: "", eq: "" };
-            const perks = PERKS[p.type]     ?? [];
+            const period  = PLAN_PERIOD[p.type] ?? "";
+            const perks   = PERKS[p.type] ?? [];
             const ctaHref = p.id ? `/checkout?plan=${p.id}` : "/login";
 
             return (
               <div
                 key={p.name}
                 className={`relative flex flex-col justify-between border p-6 md:p-8 transition-colors ${
-                  meta.highlight
+                  p.isPopular
                     ? "border-[#BFE01D] bg-[#0b0b0b]"
                     : "border-[#1a1a1a] bg-[#0b0b0b] hover:border-white/30"
                 }`}
               >
-                {meta.badge && (
+                {p.isPopular && (
                   <div className="absolute -top-3 left-6 bg-[#BFE01D] px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.2em] text-black">
-                    {meta.badge}
+                    Most chosen
                   </div>
                 )}
 
@@ -89,10 +90,7 @@ export default async function Membership() {
                     <span className="text-xs text-[#bdbdbd]">৳</span>
                     <span className="font-display text-5xl">{p.price.toLocaleString()}</span>
                   </div>
-                  <p className="mt-1 font-mono text-xs text-[#bdbdbd]">{meta.per}</p>
-                  <p className="mt-3 border-t border-[#1a1a1a] pt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-[#BFE01D]">
-                    {meta.eq}
-                  </p>
+                  <p className="mt-1 font-mono text-xs text-[#bdbdbd]">{period}</p>
                   <ul className="mt-7 space-y-3 text-sm text-[#bdbdbd]">
                     {perks.map((k) => (
                       <li key={k} className="flex items-start gap-3">
@@ -107,7 +105,7 @@ export default async function Membership() {
                 <a
                   href={ctaHref}
                   className={`mt-8 flex items-center justify-center gap-2 border py-3 text-xs font-bold uppercase tracking-[0.2em] transition-colors ${
-                    meta.highlight
+                    p.isPopular
                       ? "border-[#BFE01D] bg-[#BFE01D] text-black hover:opacity-85"
                       : "border-[#BFE01D]/40 text-[#BFE01D] hover:bg-[#BFE01D] hover:text-black"
                   }`}

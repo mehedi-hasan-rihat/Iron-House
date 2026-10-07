@@ -36,8 +36,7 @@ export default async function EditPlanPage({
           price:        Number(plan.price),
           type:         plan.type,
           isActive:     plan.isActive,
-          trialEnabled: plan.trialEnabled,
-          autoRenewal:  plan.autoRenewal,
+          isPopular:    plan.isPopular,
           features:     plan.features as Record<string, boolean>,
         }}
       />

@@ -2,14 +2,8 @@ import { requireStaff } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-
-const ACC = "#BFE01D";
-
-const TYPE_LABELS: Record<string, string> = {
-  DAILY: "Daily", WEEKLY: "Weekly", MONTHLY: "Monthly",
-  QUARTERLY: "Quarterly", HALF_YEARLY: "Half-Yearly",
-  YEARLY: "Yearly", PERSONAL_TRAINING: "PT", TRIAL: "Trial", DAY_PASS: "Day Pass",
-};
+import DeletePlanButton from "@/components/admin/DeletePlanButton";
+import { PLAN_TYPE_LABELS } from "@/lib/plan-types";
 
 export default async function PlansPage() {
   await requireStaff();
@@ -28,7 +22,7 @@ export default async function PlansPage() {
         </div>
         <Link href="/admin/plans/new"
           className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
-          style={{ backgroundColor: ACC }}>
+          style={{ backgroundColor: "#BFE01D" }}>
           <Plus size={14} /> New Plan
         </Link>
       </div>
@@ -38,10 +32,10 @@ export default async function PlansPage() {
           <div key={p.id} className={`border panel p-5 space-y-4 ${p.isActive ? "border-[#BFE01D]/15" : "border-[#BFE01D]/15 opacity-50"}`}>
             <div className="flex items-start justify-between">
               <div>
-                <p className="label text-[#9aa87a]">{TYPE_LABELS[p.type] ?? p.type}</p>
+                <p className="label text-[#9aa87a]">{PLAN_TYPE_LABELS[p.type as keyof typeof PLAN_TYPE_LABELS] ?? p.type}</p>
                 <h3 className="font-display text-xl text-[#f2f4e8] uppercase mt-1">{p.name}</h3>
               </div>
-              <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-sm ${p.isActive ? "text-[#BFE01D] bg-[#BFE01D]/10" : "text-[#9aa87a] bg-[#BFE01D]/[0.06]"}`}>
+              <span className={`text-[10px] font-bold uppercase tracking-[0.15em] px-2 py-0.5 rounded-sm ${p.isActive ? "text-[#BFE01D] bg-[#BFE01D]/10" : "text-[#9aa87a] bg-[#BFE01D]/6"}`}>
                 {p.isActive ? "Active" : "Inactive"}
               </span>
             </div>
@@ -55,10 +49,17 @@ export default async function PlansPage() {
 
             <div className="flex items-center justify-between pt-2 border-t border-[#BFE01D]/15">
               <span className="label text-[#9aa87a]">{p._count.memberships} memberships</span>
-              <Link href={`/admin/plans/${p.id}/edit`}
-                className="text-[10px] uppercase tracking-[0.2em] text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
-                Edit →
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link href={`/admin/plans/${p.id}/edit`}
+                  className="text-[10px] uppercase tracking-[0.2em] text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
+                  Edit →
+                </Link>
+                <DeletePlanButton
+                  planId={p.id}
+                  planName={p.name}
+                  membershipCount={p._count.memberships}
+                />
+              </div>
             </div>
           </div>
         ))}

@@ -71,10 +71,11 @@ Gym operators in the Bangladesh market manage members through paper registers, W
 - Document upload — NID, medical certificate, consent form
 
 ### 5. Admin — Membership Plans
-- CRUD for plans with 9 types: DAILY, WEEKLY, MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY, PERSONAL_TRAINING, TRIAL, DAY_PASS
+- CRUD for plans with 4 types: MONTHLY, QUARTERLY, HALF_YEARLY, YEARLY
 - Per-plan feature flags — gym access, group classes, personal trainer, locker, diet consult
-- Activate / deactivate plans
-- Trial and auto-renewal flags
+- Activate / deactivate plans without deleting
+- Hard delete — blocked if any active, frozen, or pending memberships reference the plan
+- Plan types are defined centrally in `src/lib/plan-types.ts` — single source of truth for labels and durations
 
 ### 6. Admin — Memberships
 - Assign plan to member — start date, end date, trainer, discount

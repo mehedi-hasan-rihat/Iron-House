@@ -11,6 +11,7 @@ model MembershipPlan {
   type         PlanType
   features     Json         @default("{}")
   isActive     Boolean      @default(true)
+  isPopular    Boolean      @default(false)
   memberships  Membership[]
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
@@ -20,15 +21,10 @@ model MembershipPlan {
 }
 
 enum PlanType {
-  DAILY
-  WEEKLY
   MONTHLY
   QUARTERLY
   HALF_YEARLY
   YEARLY
-  PERSONAL_TRAINING
-  TRIAL
-  DAY_PASS
 }
 
 // ─────────────────────────────────────

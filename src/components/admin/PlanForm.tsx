@@ -1,18 +1,15 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { PLAN_TYPES, PLAN_TYPE_LABELS } from "@/lib/plan-types";
 
 const ACC = "#BFE01D";
-const PLAN_TYPES = [
-  "DAILY","WEEKLY","MONTHLY","QUARTERLY",
-  "HALF_YEARLY","YEARLY","PERSONAL_TRAINING","TRIAL","DAY_PASS",
-];
 
 type Props = {
   defaultValues?: {
     id?: string; name?: string; description?: string;
     durationDays?: number; price?: number; type?: string;
-    isActive?: boolean;
+    isActive?: boolean; isPopular?: boolean;
     features?: Record<string, boolean>;
   };
   mode?: "create" | "edit";
@@ -27,6 +24,7 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
     price:        defaultValues.price        ?? 0,
     type:         defaultValues.type         ?? "MONTHLY",
     isActive:     defaultValues.isActive     ?? true,
+    isPopular:    defaultValues.isPopular    ?? false,
     features: {
       gymAccess:      defaultValues.features?.gymAccess      ?? true,
       groupClasses:   defaultValues.features?.groupClasses   ?? false,
@@ -78,7 +76,7 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
         <div className="grid gap-5 md:grid-cols-3">
           <Field label="Type *">
             <select required value={form.type} onChange={set("type")} className={inputCls}>
-              {PLAN_TYPES.map((t) => <option key={t} value={t}>{t.replace("_", " ")}</option>)}
+              {PLAN_TYPES.map((t) => <option key={t} value={t}>{PLAN_TYPE_LABELS[t]}</option>)}
             </select>
           </Field>
           <Field label="Duration (days) *">
@@ -91,7 +89,8 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
 
         <div className="flex flex-wrap gap-6 pt-1">
           {[
-            { key: "isActive", label: "Active" },
+            { key: "isActive",  label: "Active"   },
+            { key: "isPopular", label: "Popular"  },
           ].map(({ key, label }) => (
             <label key={key} className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={(form as Record<string, unknown>)[key] as boolean}
