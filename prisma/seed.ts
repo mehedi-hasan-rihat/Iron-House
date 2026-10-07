@@ -26,7 +26,8 @@ async function main() {
   });
 
   // ── Roles ─────────────────────────────────────
-  const roleNames = ["owner", "manager", "receptionist", "trainer", "accountant", "member"];
+  // Derive role list from DEFAULT_PERMISSIONS so they always stay in sync
+  const roleNames = Object.keys(DEFAULT_PERMISSIONS);
   const roles: Record<string, { id: string }> = {};
 
   for (const name of roleNames) {
@@ -59,7 +60,9 @@ async function main() {
 
   // ── Role Permissions ──────────────────────────
   for (const [roleName, perms] of Object.entries(DEFAULT_PERMISSIONS)) {
-    const roleId = roles[roleName].id;
+    const role = roles[roleName];
+    if (!role) throw new Error(`Role "${roleName}" not found in roles map — check DEFAULT_PERMISSIONS keys match seeded role names`);
+    const roleId = role.id;
     for (const [module, action] of perms) {
       const permId = permMap[`${module}:${action}`].id;
       await prisma.rolePermission.upsert({
@@ -152,10 +155,10 @@ async function main() {
 
   for (const plan of plans) {
     await prisma.membershipPlan.upsert({
-      where:  { id: plan.name },   // fallback — will always miss, so always creates
+      where:  { name: plan.name },
       update: {},
       create: { ...plan, features: plan.features },
-    }).catch(() => null); // skip if already exists
+    });
   }
   console.log(`  ✅ Membership plans: ${plans.length} created`);
 

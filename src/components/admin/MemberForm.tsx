@@ -128,14 +128,14 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
       {/* Medical */}
       <div className="border border-[#BFE01D]/15 panel p-6 space-y-5">
         <h2 className="label text-[#9aa87a]">Medical & Emergency</h2>
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="flex flex-col gap-5">
           <Field label="Emergency Contact">
             <input type="text" value={form.emergencyContact} onChange={set("emergencyContact")}
               className={inputCls} placeholder="Name · Phone" />
           </Field>
           <Field label="Medical Information">
-            <input type="text" value={form.medicalInfo} onChange={set("medicalInfo")}
-              className={inputCls} placeholder="Conditions, allergies…" />
+            <textarea value={form.medicalInfo} onChange={set("medicalInfo")}
+              className={`${inputCls} resize-none`} rows={5} placeholder="Conditions, allergies…" />
           </Field>
         </div>
       </div>
