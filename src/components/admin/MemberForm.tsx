@@ -30,13 +30,31 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
 
-  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+  const dobError = error.toLowerCase().includes("date of birth") || error.toLowerCase().includes("dob");
+
+  const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm((f) => ({ ...f, [k]: e.target.value }));
+    if (k === "dob") setError("");
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setLoading(true);
     setError("");
+
+    if (form.dob) {
+      const parsed = new Date(form.dob);
+      if (isNaN(parsed.getTime())) {
+        setError("Date of birth is invalid. Please enter a valid date.");
+        return;
+      }
+      const now = new Date();
+      if (parsed > now) {
+        setError("Date of birth cannot be in the future.");
+        return;
+      }
+    }
+
+    setLoading(true);
 
     const url    = mode === "edit" ? `/api/members/${defaultValues.id}` : "/api/members";
     const method = mode === "edit" ? "PATCH" : "POST";
@@ -81,7 +99,9 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
               className={inputCls} placeholder="rahim@example.com" />
           </Field>
           <Field label="Date of Birth">
-            <input type="date" value={form.dob} onChange={set("dob")} className={inputCls} />
+            <input type="date" value={form.dob} onChange={set("dob")}
+              className={`${inputCls} ${dobError ? "border-red-500 focus:border-red-500" : ""}`} />
+            {dobError && <p className="text-red-400 text-[10px] mt-1">{error}</p>}
           </Field>
           <Field label="Gender">
             <select value={form.gender} onChange={set("gender")} className={inputCls}>
@@ -120,7 +140,7 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
         </div>
       </div>
 
-      {error && <p className="text-red-400 text-xs">{error}</p>}
+      {error && !dobError && <p className="text-red-400 text-xs">{error}</p>}
 
       <div className="flex items-center gap-4">
         <button

@@ -157,6 +157,13 @@ export const PATCH = apiHandler(async (req, { params }) => {
   }
 
   // ── Non-status field updates ─────────────────────────────────────────────
+  if (body.dob !== undefined && body.dob !== "") {
+    const parsed = new Date(body.dob);
+    if (isNaN(parsed.getTime())) {
+      return NextResponse.json({ error: "Invalid date of birth." }, { status: 400 });
+    }
+  }
+
   const member = await prisma.member.update({
     where: { id },
     data: {
@@ -164,7 +171,7 @@ export const PATCH = apiHandler(async (req, { params }) => {
       phone:            body.phone            ?? undefined,
       email:            body.email            ?? undefined,
       gender:           body.gender           ?? undefined,
-      dob:              body.dob ? new Date(body.dob) : undefined,
+      dob:              body.dob !== undefined ? (body.dob ? new Date(body.dob) : null) : undefined,
       address:          body.address          ?? undefined,
       bloodGroup:       body.bloodGroup       ?? undefined,
       medicalInfo:      body.medicalInfo      ?? undefined,

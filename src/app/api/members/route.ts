@@ -56,6 +56,13 @@ export const POST = apiHandler(async (req: NextRequest) => {
     return NextResponse.json({ error: "fullName and phone are required" }, { status: 400 });
   }
 
+  if (dob) {
+    const parsed = new Date(dob);
+    if (isNaN(parsed.getTime())) {
+      return NextResponse.json({ error: "Invalid date of birth." }, { status: 400 });
+    }
+  }
+
   const memberRole = await prisma.role.findUnique({ where: { name: "member" } });
   if (!memberRole) return NextResponse.json({ error: "Member role not found" }, { status: 500 });
 
