@@ -181,6 +181,21 @@ POST /api/moneybag/webhook (IPN)
 
 ---
 
+---
+
+## Documentation
+
+Full technical docs live in [`docs/`](./docs/):
+
+| Doc | Contents |
+|---|---|
+| [architecture.md](./docs/architecture.md) | Request flows, directory layout, DB schema, payment lifecycle |
+| [prd.md](./docs/prd.md) | Product requirements, all feature areas, non-functional requirements |
+| [design-system.md](./docs/design-system.md) | Colour tokens, component patterns, animation wrappers |
+| [security.md](./docs/security.md) | Auth, route guards, payment security, known gaps |
+
+---
+
 ## License
 
 Private project — all rights reserved.
