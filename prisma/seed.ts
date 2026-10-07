@@ -2,6 +2,7 @@ import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { DEFAULT_PERMISSIONS } from "../src/lib/permissions";
+import { PLANS } from "./data/plans";
 import bcrypt from "bcryptjs";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
@@ -101,66 +102,14 @@ async function main() {
   console.log("  ✅ Owner account: owner@ironhouse.com / admin123");
 
   // ── Default Membership Plans ──────────────────
-  const plans = [
-    {
-      name: "Monthly",
-      description: "Full gym access for one month",
-      durationDays: 30,
-      price: 1500,
-      type: "MONTHLY" as const,
-      features: { gymAccess: true, groupClasses: true, personalTrainer: false, locker: true, dietConsult: false },
-    },
-    {
-      name: "Quarterly",
-      description: "Full access for 3 months",
-      durationDays: 90,
-      price: 4000,
-      type: "QUARTERLY" as const,
-      features: { gymAccess: true, groupClasses: true, personalTrainer: false, locker: true, dietConsult: false },
-    },
-    {
-      name: "Half-Yearly",
-      description: "Best value — 6 months full access",
-      durationDays: 180,
-      price: 7000,
-      type: "HALF_YEARLY" as const,
-      features: { gymAccess: true, groupClasses: true, personalTrainer: true, locker: true, dietConsult: true },
-    },
-    {
-      name: "Annual",
-      description: "12 months full access + priority booking",
-      durationDays: 365,
-      price: 12000,
-      type: "YEARLY" as const,
-      features: { gymAccess: true, groupClasses: true, personalTrainer: true, locker: true, dietConsult: true },
-    },
-    {
-      name: "Day Pass",
-      description: "Single day access",
-      durationDays: 1,
-      price: 200,
-      type: "DAY_PASS" as const,
-      features: { gymAccess: true, groupClasses: false, personalTrainer: false, locker: false, dietConsult: false },
-    },
-    {
-      name: "Free Trial",
-      description: "3-day free trial for new members",
-      durationDays: 3,
-      price: 0,
-      type: "TRIAL" as const,
-      trialEnabled: true,
-      features: { gymAccess: true, groupClasses: false, personalTrainer: false, locker: false, dietConsult: false },
-    },
-  ];
-
-  for (const plan of plans) {
+  for (const plan of PLANS) {
     await prisma.membershipPlan.upsert({
       where:  { name: plan.name },
       update: {},
-      create: { ...plan, features: plan.features },
+      create: plan,
     });
   }
-  console.log(`  ✅ Membership plans: ${plans.length} created`);
+  console.log(`  ✅ Membership plans: ${PLANS.length} seeded`);
 
   console.log("\n✅ Seeding complete!");
   console.log("\n📋 Login credentials:");

@@ -12,7 +12,7 @@ type Props = {
   defaultValues?: {
     id?: string; name?: string; description?: string;
     durationDays?: number; price?: number; type?: string;
-    isActive?: boolean; trialEnabled?: boolean; autoRenewal?: boolean;
+    isActive?: boolean;
     features?: Record<string, boolean>;
   };
   mode?: "create" | "edit";
@@ -27,8 +27,6 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
     price:        defaultValues.price        ?? 0,
     type:         defaultValues.type         ?? "MONTHLY",
     isActive:     defaultValues.isActive     ?? true,
-    trialEnabled: defaultValues.trialEnabled ?? false,
-    autoRenewal:  defaultValues.autoRenewal  ?? false,
     features: {
       gymAccess:      defaultValues.features?.gymAccess      ?? true,
       groupClasses:   defaultValues.features?.groupClasses   ?? false,
@@ -93,9 +91,7 @@ export default function PlanForm({ defaultValues = {}, mode = "create" }: Props)
 
         <div className="flex flex-wrap gap-6 pt-1">
           {[
-            { key: "isActive",     label: "Active"        },
-            { key: "trialEnabled", label: "Trial Enabled" },
-            { key: "autoRenewal",  label: "Auto Renewal"  },
+            { key: "isActive", label: "Active" },
           ].map(({ key, label }) => (
             <label key={key} className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" checked={(form as Record<string, unknown>)[key] as boolean}

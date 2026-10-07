@@ -29,7 +29,7 @@ export default async function Membership() {
   let plans: { id: string | null; name: string; price: number; type: string }[] = FALLBACK;
   try {
     const dbPlans = await prisma.membershipPlan.findMany({
-      where:   { isActive: true, trialEnabled: false },
+      where:   { isActive: true },
       orderBy: { price: "asc" },
     });
     if (dbPlans.length > 0) {
