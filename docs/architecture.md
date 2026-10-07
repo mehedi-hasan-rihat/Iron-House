@@ -66,6 +66,7 @@ src/
 │   ├── api/
 │   │   ├── auth/             NextAuth handler + signup
 │   │   ├── members/          GET/POST list, GET/PATCH/DELETE by ID
+│   │   │   └── [id]/notes/   POST (add note), GET (list), DELETE by noteId
 │   │   ├── memberships/      GET/POST list, GET/PATCH by ID
 │   │   ├── payments/         GET/POST list, GET/PATCH by ID
 │   │   ├── plans/            GET/POST list, GET/PATCH/DELETE by ID
