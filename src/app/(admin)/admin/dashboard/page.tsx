@@ -262,7 +262,6 @@ export default async function DashboardPage() {
           {[
             { label: "Add Member",       href: "/admin/members/new"     },
             { label: "New Membership",   href: "/admin/memberships/new" },
-            { label: "Record Payment",   href: "/admin/payments/new"    },
             { label: "Add Staff",        href: "/admin/staff/new"       },
             { label: "Create Plan",      href: "/admin/plans/new"       },
           ].map((a) => (

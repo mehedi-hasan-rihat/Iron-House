@@ -1,7 +1,6 @@
 import { requireStaff } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
-import { Plus } from "lucide-react";
 import Stagger from "@/components/motion/Stagger";
 
 const ACC = "#BFE01D";
@@ -55,11 +54,7 @@ export default async function PaymentsPage({
             {total} records · Monthly: <span style={{ color: ACC }}>৳{Number(monthRevenue._sum.totalAmount ?? 0).toLocaleString()}</span>
           </p>
         </div>
-        <Link href="/admin/payments/new"
-          className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
-          style={{ backgroundColor: ACC }}>
-          <Plus size={14} /> Record Payment
-        </Link>
+
       </div>
 
       {/* Filters */}

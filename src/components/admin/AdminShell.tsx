@@ -31,7 +31,6 @@ const NAV = [
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/staff", label: "Staff", icon: UserCog },
   { href: "/admin/roles", label: "Roles", icon: ShieldCheck },
-  { href: "/admin/reports", label: "Reports", icon: BarChart3 },
 ];
 
 const ACC = "#BFE01D";
