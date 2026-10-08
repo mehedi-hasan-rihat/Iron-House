@@ -22,6 +22,7 @@ export default async function MemberProfilePage({
   const member = await prisma.member.findUnique({
     where: { id },
     include: {
+      user:        true,
       memberships: {
         include: { plan: true, trainer: true },
         orderBy: { createdAt: "desc" },
@@ -76,7 +77,7 @@ export default async function MemberProfilePage({
       <div className="grid gap-4 md:grid-cols-2">
         <InfoCard title="Personal Details">
           <Row label="Phone" value={member.phone} />
-          <Row label="Email" value={member.email} />
+          <Row label="Email" value={member.user.email} />
           <Row label="Gender" value={member.gender} />
           <Row
             label="DOB"
@@ -88,7 +89,7 @@ export default async function MemberProfilePage({
           />
           <Row label="Blood" value={member.bloodGroup} />
           <Row label="Address" value={member.address} />
-          {!member.email && !member.gender && !member.dob && !member.bloodGroup && !member.address && (
+          {!member.gender && !member.dob && !member.bloodGroup && !member.address && (
             <p className="text-[#9aa87a] text-xs">No additional details on record. <Link href={`/admin/members/${id}/edit`} className="text-[#BFE01D] hover:underline">Edit member →</Link></p>
           )}
         </InfoCard>

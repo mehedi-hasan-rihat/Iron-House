@@ -20,7 +20,7 @@ export default async function EditStaffPage({
   if (!staff) notFound();
 
   const roles = await prisma.role.findMany({
-    where:   { name: { not: "member" } },
+    where:   { name: { notIn: ["member", "owner"] } },
     orderBy: { name: "asc" },
   });
 
@@ -41,7 +41,7 @@ export default async function EditStaffPage({
           id:          staff.id,
           name:        staff.name,
           phone:       staff.phone,
-          email:       staff.email       ?? "",
+          email:       staff.user.email,
           address:     staff.address     ?? "",
           designation: staff.designation,
           roleName:    staff.user.role.name,

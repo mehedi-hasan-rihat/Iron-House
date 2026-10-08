@@ -9,6 +9,14 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
   const { id } = await params!;
   const body = await req.json();
 
+  // Guard: cannot assign owner role
+  if (body.roleName === "owner") {
+    return NextResponse.json(
+      { error: "Cannot assign the owner role." },
+      { status: 403 }
+    );
+  }
+
   // Guard: owner cannot be suspended or resigned
   if (body.status === "SUSPENDED" || body.status === "RESIGNED") {
     const target = await prisma.staff.findUnique({
@@ -28,7 +36,6 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
     data: {
       name:        body.name        ?? undefined,
       phone:       body.phone       ?? undefined,
-      email:       body.email       ?? undefined,
       address:     body.address     ?? undefined,
       designation: body.designation ?? undefined,
       salary:      body.salary ? Number(body.salary) : undefined,

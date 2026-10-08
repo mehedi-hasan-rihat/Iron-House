@@ -7,7 +7,7 @@ const ACC = "#BFE01D";
 
 type Props = {
   defaultValues?: {
-    id?: string; fullName?: string; phone?: string; email?: string;
+    id?: string; fullName?: string; phone?: string;
     gender?: string; dob?: string; address?: string;
     bloodGroup?: string; medicalInfo?: string; emergencyContact?: string;
   };
@@ -19,7 +19,8 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
   const [form, setForm] = useState({
     fullName:        defaultValues.fullName        ?? "",
     phone:           defaultValues.phone           ?? "",
-    email:           defaultValues.email           ?? "",
+    email:           "",   // create only — becomes User.email
+    password:        "",   // create only — defaults to member123
     gender:          defaultValues.gender          ?? "",
     dob:             defaultValues.dob             ?? "",
     address:         defaultValues.address         ?? "",
@@ -86,18 +87,26 @@ export default function MemberForm({ defaultValues = {}, mode = "create" }: Prop
         <h2 className="label text-[#9aa87a]">Personal Information</h2>
 
         <div className="grid gap-5 md:grid-cols-2">
-          <Field label="Full Name *" required>
+          <Field label="Full Name" required>
             <input type="text" required value={form.fullName} onChange={set("fullName")}
               className={inputCls} placeholder="Rahim Uddin" />
           </Field>
-          <Field label="Phone *" required>
+          <Field label="Phone" required>
             <input type="tel" required value={form.phone} onChange={set("phone")}
               className={inputCls} placeholder="+880 1700 000 000" />
           </Field>
-          <Field label="Email">
-            <input type="email" value={form.email} onChange={set("email")}
-              className={inputCls} placeholder="rahim@example.com" />
-          </Field>
+          {mode === "create" && (
+            <>
+              <Field label="Email" required>
+                <input type="email" required value={form.email} onChange={set("email")}
+                  className={inputCls} placeholder="rahim@example.com" />
+              </Field>
+              <Field label="Password">
+                <input type="password" value={form.password} onChange={set("password")}
+                  className={inputCls} placeholder="Default: member123" autoComplete="new-password" />
+              </Field>
+            </>
+          )}
           <Field label="Date of Birth">
             <input type="date" value={form.dob} onChange={set("dob")}
               className={`${inputCls} ${dobError ? "border-red-500 focus:border-red-500" : ""}`} />

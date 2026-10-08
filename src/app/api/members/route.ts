@@ -22,8 +22,8 @@ export const GET = apiHandler(async (req: NextRequest) => {
       OR: [
         { fullName: { contains: search, mode: "insensitive" as const } },
         { phone:    { contains: search } },
-        { email:    { contains: search, mode: "insensitive" as const } },
         { memberId: { contains: search, mode: "insensitive" as const } },
+        { user: { email: { contains: search, mode: "insensitive" as const } } },
       ],
     } : {}),
   };
@@ -52,8 +52,8 @@ export const POST = apiHandler(async (req: NextRequest) => {
   const { fullName, phone, email, gender, dob, address, bloodGroup,
           medicalInfo, emergencyContact, password = "member123" } = body;
 
-  if (!fullName || !phone) {
-    return NextResponse.json({ error: "fullName and phone are required" }, { status: 400 });
+  if (!fullName || !phone || !email) {
+    return NextResponse.json({ error: "fullName, phone and email are required" }, { status: 400 });
   }
 
   if (dob) {
@@ -66,18 +66,20 @@ export const POST = apiHandler(async (req: NextRequest) => {
   const memberRole = await prisma.role.findUnique({ where: { name: "member" } });
   if (!memberRole) return NextResponse.json({ error: "Member role not found" }, { status: 500 });
 
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) return NextResponse.json({ error: "A user with this email already exists." }, { status: 409 });
+
   const memberId   = await generateMemberId();
   const hashedPass = await bcrypt.hash(password, 12);
 
   const user = await prisma.user.create({
     data: {
-      email:    email ?? `${memberId.toLowerCase()}@ironhouse.local`,
+      email,
       password: hashedPass,
       roleId:   memberRole.id,
       member: {
         create: {
           memberId, fullName, phone,
-          email:           email            ?? null,
           gender:          gender           ?? null,
           dob:             dob ? new Date(dob) : null,
           address:         address          ?? null,
