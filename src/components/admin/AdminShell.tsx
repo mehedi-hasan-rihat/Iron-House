@@ -22,6 +22,7 @@ import NotificationBell from "./NotificationBell";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import MagneticBox from "@/components/motion/MagneticBox";
 import BackToTop from "@/components/motion/BackToTop";
+import { Toaster } from "sonner";
 
 const NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -241,6 +242,18 @@ export default function AdminShell({
 
         <BackToTop targetId={SCROLL_ID} />
       </div>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "#111",
+            border: "1px solid rgba(191,224,29,0.15)",
+            color: "#f2f4e8",
+            fontFamily: "inherit",
+            fontSize: "12px",
+          },
+        }}
+      />
     </div>
   );
 }

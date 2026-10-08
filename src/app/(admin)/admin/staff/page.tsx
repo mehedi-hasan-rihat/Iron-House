@@ -3,7 +3,6 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
 import StaffActions from "@/components/admin/StaffActions";
-import Stagger from "@/components/motion/Stagger";
 
 const ACC = "#BFE01D";
 const STATUS_COLORS: Record<string, string> = {
@@ -44,8 +43,7 @@ export default async function StaffPage() {
               ))}
             </tr>
           </thead>
-          <Stagger as="tbody" selector="tr" className="divide-y divide-[#BFE01D]/15"
-          stagger={0.035} y={12} blur={false}>
+          <tbody className="divide-y divide-[#BFE01D]/15">
             {staffList.length === 0 && (
               <tr><td colSpan={9} className="px-4 py-8 text-center text-[#9aa87a] text-xs">No staff yet.</td></tr>
             )}
@@ -72,17 +70,11 @@ export default async function StaffPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-2">
-                    <Link href={`/admin/staff/${s.id}/edit`}
-                      className="text-[10px] uppercase tracking-[0.15em] text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
-                      Edit
-                    </Link>
-                    <StaffActions staffId={s.id} currentStatus={s.status} />
-                  </div>
+                  <StaffActions staffId={s.id} currentStatus={s.status} isOwner={s.user.role.name === "owner"} />
                 </td>
               </tr>
             ))}
-          </Stagger>
+          </tbody>
         </table>
       </div>
     </div>

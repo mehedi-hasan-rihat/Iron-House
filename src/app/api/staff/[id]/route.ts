@@ -8,6 +8,21 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params!;
   const body = await req.json();
+
+  // Guard: owner cannot be suspended or resigned
+  if (body.status === "SUSPENDED" || body.status === "RESIGNED") {
+    const target = await prisma.staff.findUnique({
+      where:   { id },
+      include: { user: { include: { role: true } } },
+    });
+    if (target?.user.role.name === "owner") {
+      return NextResponse.json(
+        { error: "The owner account cannot be suspended or resigned." },
+        { status: 403 }
+      );
+    }
+  }
+
   const staff = await prisma.staff.update({
     where: { id },
     data: {
