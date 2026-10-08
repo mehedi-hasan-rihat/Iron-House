@@ -22,7 +22,6 @@ export const PATCH = apiHandler(async (req: NextRequest) => {
     data: {
       fullName:        body.fullName        || undefined,
       phone:           body.phone           || undefined,
-      email:           body.email           || undefined,
       address:         body.address         || undefined,
       emergencyContact: body.emergencyContact || undefined,
     },
