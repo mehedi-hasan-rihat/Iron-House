@@ -13,7 +13,7 @@ export default async function EditMemberPage({
   await requireStaff();
   const { id } = await params;
 
-  const member = await prisma.member.findUnique({ where: { id } });
+  const member = await prisma.member.findUnique({ where: { id }, include: { user: true } });
   if (!member) notFound();
 
   return (
@@ -32,7 +32,6 @@ export default async function EditMemberPage({
           id:               member.id,
           fullName:         member.fullName,
           phone:            member.phone,
-          email:            member.email          ?? "",
           gender:           member.gender         ?? "",
           dob:              member.dob && !isNaN(member.dob.getTime()) ? member.dob.toISOString().split("T")[0] : "",
           address:          member.address        ?? "",

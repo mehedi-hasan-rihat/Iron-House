@@ -92,6 +92,7 @@ src/
 │   ├── auth-guard.ts         requireAuth/requireStaff/requireAdmin/requireOwner
 │   ├── id-generator.ts       GYM-xxxx, MEM-xxxx, INV-xxxxxx, STF-xxxx
 │   ├── permissions.ts        hasPermission(), getRolePermissions(), DEFAULT_PERMISSIONS
+│   ├── plan-types.ts         PLAN_TYPES, PLAN_TYPE_LABELS, PLAN_TYPE_DURATION — central source of truth
 │   ├── prisma.ts             Singleton PrismaClient
 │   └── payments/
 │       └── moneybag.ts       createCheckout(), verifyPayment()

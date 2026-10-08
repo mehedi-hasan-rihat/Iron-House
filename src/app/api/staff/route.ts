@@ -23,24 +23,31 @@ export const POST = apiHandler(async (req: NextRequest) => {
   const { name, phone, email, address, designation, roleName,
           salary, joiningDate, password = "staff123" } = body;
 
-  if (!name || !phone || !designation || !roleName) {
-    return NextResponse.json({ error: "name, phone, designation and roleName are required" }, { status: 400 });
+  if (!name || !phone || !designation || !roleName || !email) {
+    return NextResponse.json({ error: "name, phone, email, designation and roleName are required" }, { status: 400 });
+  }
+
+  if (roleName === "owner") {
+    return NextResponse.json({ error: "Cannot assign the owner role to new staff." }, { status: 403 });
   }
 
   const role = await prisma.role.findUnique({ where: { name: roleName } });
   if (!role) return NextResponse.json({ error: "Role not found" }, { status: 404 });
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) return NextResponse.json({ error: "A user with this email already exists." }, { status: 409 });
 
   const staffId    = await generateStaffId();
   const hashedPass = await bcrypt.hash(password, 12);
 
   const user = await prisma.user.create({
     data: {
-      email:    email ?? `${staffId.toLowerCase()}@ironhouse.local`,
+      email,
       password: hashedPass, roleId: role.id,
       staff: {
         create: {
           staffId, name, phone,
-          email:       email       ?? null,
+          email:       email,
           address:     address     ?? null,
           designation,
           salary:      salary ? Number(salary) : null,

@@ -18,8 +18,7 @@ export const POST = apiHandler(async (req: NextRequest) => {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { name, description, durationDays, price, type, features,
-          isActive, trialEnabled, autoRenewal } = body;
+  const { name, description, durationDays, price, type, features, isActive, isPopular } = body;
 
   if (!name || !durationDays || price === undefined || !type) {
     return NextResponse.json({ error: "name, durationDays, price and type are required" }, { status: 400 });
@@ -29,10 +28,9 @@ export const POST = apiHandler(async (req: NextRequest) => {
     data: {
       name, description: description ?? null,
       durationDays: Number(durationDays), price: Number(price), type,
-      features:     features     ?? {},
-      isActive:     isActive     ?? true,
-      trialEnabled: trialEnabled ?? false,
-      autoRenewal:  autoRenewal  ?? false,
+      features:  features  ?? {},
+      isActive:  isActive  ?? true,
+      isPopular: isPopular ?? false,
     },
   });
   return NextResponse.json(plan, { status: 201 });

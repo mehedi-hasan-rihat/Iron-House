@@ -5,7 +5,7 @@ import StaffForm from "@/components/admin/StaffForm";
 export default async function NewStaffPage() {
   await requireAdmin();
   const roles = await prisma.role.findMany({
-    where: { name: { not: "member" } },
+    where: { name: { notIn: ["member", "owner"] } },
     orderBy: { name: "asc" },
   });
   return (

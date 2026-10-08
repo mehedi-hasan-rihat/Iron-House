@@ -10,7 +10,6 @@ model Staff {
   name        String
   photo       String?
   phone       String
-  email       String?
   address     String?
   designation String
   salary      Decimal?    @db.Decimal(10, 2)

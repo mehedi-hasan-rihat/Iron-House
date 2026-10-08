@@ -8,12 +8,34 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const { id } = await params!;
   const body = await req.json();
+
+  // Guard: cannot assign owner role
+  if (body.roleName === "owner") {
+    return NextResponse.json(
+      { error: "Cannot assign the owner role." },
+      { status: 403 }
+    );
+  }
+
+  // Guard: owner cannot be suspended or resigned
+  if (body.status === "SUSPENDED" || body.status === "RESIGNED") {
+    const target = await prisma.staff.findUnique({
+      where:   { id },
+      include: { user: { include: { role: true } } },
+    });
+    if (target?.user.role.name === "owner") {
+      return NextResponse.json(
+        { error: "The owner account cannot be suspended or resigned." },
+        { status: 403 }
+      );
+    }
+  }
+
   const staff = await prisma.staff.update({
     where: { id },
     data: {
       name:        body.name        ?? undefined,
       phone:       body.phone       ?? undefined,
-      email:       body.email       ?? undefined,
       address:     body.address     ?? undefined,
       designation: body.designation ?? undefined,
       salary:      body.salary ? Number(body.salary) : undefined,

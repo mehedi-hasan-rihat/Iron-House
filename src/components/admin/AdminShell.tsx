@@ -11,7 +11,6 @@ import {
   UserCog,
   ShieldCheck,
   BarChart3,
-  Settings,
   LogOut,
   ChevronRight,
   Menu,
@@ -22,6 +21,7 @@ import NotificationBell from "./NotificationBell";
 import ScrollProgress from "@/components/motion/ScrollProgress";
 import MagneticBox from "@/components/motion/MagneticBox";
 import BackToTop from "@/components/motion/BackToTop";
+import { Toaster } from "sonner";
 
 const NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -32,7 +32,6 @@ const NAV = [
   { href: "/admin/staff", label: "Staff", icon: UserCog },
   { href: "/admin/roles", label: "Roles", icon: ShieldCheck },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 const ACC = "#BFE01D";
@@ -241,6 +240,18 @@ export default function AdminShell({
 
         <BackToTop targetId={SCROLL_ID} />
       </div>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          style: {
+            background: "#111",
+            border: "1px solid rgba(191,224,29,0.15)",
+            color: "#f2f4e8",
+            fontFamily: "inherit",
+            fontSize: "12px",
+          },
+        }}
+      />
     </div>
   );
 }

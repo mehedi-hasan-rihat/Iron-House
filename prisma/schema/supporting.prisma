@@ -24,6 +24,17 @@ model MemberNote {
   @@map("member_notes")
 }
 
+model MembershipComment {
+  id           String     @id @default(cuid())
+  membershipId String
+  membership   Membership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  comment      String
+  createdBy    String?
+  createdAt    DateTime   @default(now())
+
+  @@map("membership_comments")
+}
+
 model Notification {
   id        String   @id @default(cuid())
   userId    String

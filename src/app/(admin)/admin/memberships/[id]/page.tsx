@@ -4,6 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import MembershipActions from "@/components/admin/MembershipActions";
+import ManualPaymentForm from "@/components/admin/ManualPaymentForm";
+import MembershipComments from "@/components/admin/MembershipComments";
 
 const STATUS_COLORS: Record<string, string> = {
   ACTIVE:    "text-[#BFE01D] bg-[#BFE01D]/10",
@@ -28,6 +30,7 @@ export default async function MembershipDetailPage({
       plan:     true,
       trainer:  true,
       timeline: { orderBy: { createdAt: "asc" } },
+      comments: { orderBy: { createdAt: "desc" } },
       payments: { orderBy: { createdAt: "desc" } },
     },
   });
@@ -57,7 +60,16 @@ export default async function MembershipDetailPage({
             {ms.member.fullName} · {ms.member.memberId}
           </Link>
         </div>
-        <MembershipActions membershipId={ms.id} currentStatus={ms.status} planName={ms.plan.name} />
+        <div className="flex flex-wrap gap-2">
+          {ms.status !== "CANCELLED" && ms.status !== "EXPIRED" && (
+            <ManualPaymentForm
+              membershipId={ms.id}
+              defaultAmount={Number(ms.finalAmount)}
+              isPending={ms.status === "PENDING"}
+            />
+          )}
+          <MembershipActions membershipId={ms.id} currentStatus={ms.status} planName={ms.plan.name} />
+        </div>
       </div>
 
       {/* Details */}
@@ -102,17 +114,29 @@ export default async function MembershipDetailPage({
           {ms.timeline.map((t) => (
             <div key={t.id} className="flex gap-4">
               <div className="flex flex-col items-center">
-                <div className="h-2 w-2 rounded-full mt-1" style={{ backgroundColor: "#BFE01D" }} />
+                <div className="h-2 w-2 rounded-full mt-1" style={{ backgroundColor: t.event === "NOTE" ? "#9aa87a" : "#BFE01D" }} />
                 <div className="flex-1 w-px bg-[#1f2408]" />
               </div>
               <div className="pb-3">
                 <p className="text-[#f2f4e8] text-xs uppercase tracking-[0.15em] font-medium">{t.event}</p>
-                <p className="label text-[#9aa87a]">{new Date(t.createdAt).toLocaleString("en-BD")}</p>
+                <p className="label text-[#9aa87a]">{t.createdBy && `${t.createdBy} · `}{new Date(t.createdAt).toLocaleString("en-BD")}</p>
                 {t.note && <p className="text-[#9aa87a] text-xs mt-0.5">{t.note}</p>}
               </div>
             </div>
           ))}
         </div>
+
+      </InfoCard>
+
+      {/* Comments */}
+      <InfoCard title={`Staff Comments (${ms.comments.length})`}>
+        <MembershipComments
+          membershipId={ms.id}
+          initialComments={ms.comments.map((c) => ({
+            ...c,
+            createdAt: c.createdAt.toISOString(),
+          }))}
+        />
       </InfoCard>
     </div>
   );

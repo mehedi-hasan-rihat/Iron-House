@@ -1,11 +1,12 @@
-import { PlanType } from "../../src/generated/prisma/client";
+import { PlanTypeKey } from "../../src/lib/plan-types";
 
 export type PlanSeed = {
   name:         string;
   description:  string;
   durationDays: number;
   price:        number;
-  type:         PlanType;
+  type:         PlanTypeKey;
+  isPopular?:   boolean;
   features: {
     gymAccess:       boolean;
     groupClasses:    boolean;
@@ -16,14 +17,6 @@ export type PlanSeed = {
 };
 
 export const PLANS: PlanSeed[] = [
-  {
-    name:         "Daily",
-    description:  "Single day full gym access",
-    durationDays: 1,
-    price:        200,
-    type:         "DAY_PASS",
-    features:     { gymAccess: true,  groupClasses: false, personalTrainer: false, locker: false, dietConsult: false },
-  },
   {
     name:         "Monthly",
     description:  "Full gym access for one month",
@@ -46,6 +39,7 @@ export const PLANS: PlanSeed[] = [
     durationDays: 180,
     price:        7000,
     type:         "HALF_YEARLY",
+    isPopular:    true,
     features:     { gymAccess: true,  groupClasses: true,  personalTrainer: true,  locker: true,  dietConsult: true  },
   },
   {
@@ -55,21 +49,5 @@ export const PLANS: PlanSeed[] = [
     price:        12000,
     type:         "YEARLY",
     features:     { gymAccess: true,  groupClasses: true,  personalTrainer: true,  locker: true,  dietConsult: true  },
-  },
-  {
-    name:         "Personal Training",
-    description:  "Monthly plan with dedicated personal trainer",
-    durationDays: 30,
-    price:        5000,
-    type:         "PERSONAL_TRAINING",
-    features:     { gymAccess: true,  groupClasses: true,  personalTrainer: true,  locker: true,  dietConsult: true  },
-  },
-  {
-    name:         "Free Trial",
-    description:  "3-day trial — admin assigned only",
-    durationDays: 3,
-    price:        0,
-    type:         "TRIAL",
-    features:     { gymAccess: true,  groupClasses: false, personalTrainer: false, locker: false, dietConsult: false },
   },
 ];

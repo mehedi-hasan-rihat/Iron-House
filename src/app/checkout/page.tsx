@@ -31,7 +31,7 @@ export default async function CheckoutPage({ searchParams }: Props) {
 
   // Load available active plans
   const plans = await prisma.membershipPlan.findMany({
-    where:   { isActive: true, trialEnabled: false },
+    where:   { isActive: true },
     orderBy: { price: "asc" },
   });
 

@@ -28,6 +28,7 @@ export default function StaffForm({
     roleName:    defaultValues.roleName    ?? roles[0]?.name ?? "",
     salary:      defaultValues.salary?.toString() ?? "",
     joiningDate: defaultValues.joiningDate ?? new Date().toISOString().split("T")[0],
+    password:    "",
   });
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
@@ -62,10 +63,10 @@ export default function StaffForm({
 
         <div className="grid gap-5 md:grid-cols-2">
           {[
-            { key: "name",        label: "Full Name *",  type: "text",  required: true,  placeholder: "Karim Ahmed" },
-            { key: "phone",       label: "Phone *",      type: "tel",   required: true,  placeholder: "+880 1700 000 000" },
-            { key: "email",       label: "Email",        type: "email", required: false, placeholder: "karim@example.com" },
-            { key: "designation", label: "Designation *",type: "text",  required: true,  placeholder: "Trainer" },
+            { key: "name",        label: "Full Name *",    type: "text",  required: true,  placeholder: "Karim Ahmed" },
+            { key: "phone",       label: "Phone *",        type: "tel",   required: true,  placeholder: "+880 1700 000 000" },
+            { key: "email",       label: "Email *",        type: "email", required: true,  placeholder: "karim@ironhouse.com" },
+            { key: "designation", label: "Designation *",  type: "text",  required: true,  placeholder: "Trainer" },
           ].map(({ key, label, type, required, placeholder }) => (
             <div key={key}>
               <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">{label}</label>
@@ -77,19 +78,29 @@ export default function StaffForm({
           <div>
             <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Role *</label>
             <select required value={form.roleName} onChange={set("roleName")} className={cls}>
-              {roles.map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
+              {roles.filter((r) => r.name !== "member").map((r) => <option key={r.id} value={r.name}>{r.name}</option>)}
             </select>
           </div>
 
           <div>
-            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Joining Date</label>
-            <input type="date" value={form.joiningDate} onChange={set("joiningDate")} className={cls} />
+            <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Joining Date *</label>
+            <input type="date" required value={form.joiningDate} onChange={set("joiningDate")} className={cls} />
           </div>
 
           <div>
             <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">Salary (৳)</label>
             <input type="number" min={0} value={form.salary} onChange={set("salary")} className={cls} placeholder="15000" />
           </div>
+
+          {mode === "create" && (
+            <div>
+              <label className="block text-[10px] uppercase tracking-[0.3em] text-[#9aa87a] mb-2">
+                Password <span className="normal-case tracking-normal text-[#9aa87a]">(default: staff123)</span>
+              </label>
+              <input type="password" value={form.password} onChange={set("password")}
+                className={cls} placeholder="Leave blank for default" autoComplete="new-password" />
+            </div>
+          )}
         </div>
 
         <div>

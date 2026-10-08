@@ -169,7 +169,6 @@ export const PATCH = apiHandler(async (req, { params }) => {
     data: {
       fullName:         body.fullName         ?? undefined,
       phone:            body.phone            ?? undefined,
-      email:            body.email            ?? undefined,
       gender:           body.gender           ?? undefined,
       dob:              body.dob !== undefined ? (body.dob ? new Date(body.dob) : null) : undefined,
       address:          body.address          ?? undefined,

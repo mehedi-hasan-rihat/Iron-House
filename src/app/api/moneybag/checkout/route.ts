@@ -18,7 +18,10 @@ export const POST = apiHandler(async (req: NextRequest) => {
   const plan = await prisma.membershipPlan.findUnique({ where: { id: planId } });
   if (!plan || !plan.isActive) return NextResponse.json({ error: "Plan not found or inactive" }, { status: 404 });
 
-  const member = await prisma.member.findUnique({ where: { userId: session.user.id } });
+  const member = await prisma.member.findUnique({
+    where:   { userId: session.user.id },
+    include: { user: true },
+  });
   if (!member) return NextResponse.json({ error: "Member profile not found" }, { status: 404 });
 
   const invoiceNumber    = await generateInvoiceId();
@@ -55,7 +58,7 @@ export const POST = apiHandler(async (req: NextRequest) => {
     ipnUrl:      `${APP_URL}/api/moneybag/webhook`,
     customer: {
       name:  member.fullName,
-      email: member.email ?? `${member.memberId.toLowerCase()}@ironhouse.local`,
+      email: member.user.email,
       phone: member.phone,
     },
   });
