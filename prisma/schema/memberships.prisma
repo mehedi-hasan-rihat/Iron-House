@@ -48,6 +48,7 @@ model Membership {
   finalAmount      Decimal              @db.Decimal(10, 2)
   status           MembershipStatus     @default(PENDING)
   timeline         MembershipTimeline[]
+  comments         MembershipComment[]
   payments         Payment[]
   createdAt        DateTime             @default(now())
   updatedAt        DateTime             @updatedAt
