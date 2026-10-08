@@ -47,7 +47,6 @@ export const POST = apiHandler(async (req: NextRequest) => {
       staff: {
         create: {
           staffId, name, phone,
-          email:       email,
           address:     address     ?? null,
           designation,
           salary:      salary ? Number(salary) : null,
