@@ -11,7 +11,6 @@ import {
   UserCog,
   ShieldCheck,
   BarChart3,
-  Settings,
   LogOut,
   ChevronRight,
   Menu,
@@ -33,7 +32,6 @@ const NAV = [
   { href: "/admin/staff", label: "Staff", icon: UserCog },
   { href: "/admin/roles", label: "Roles", icon: ShieldCheck },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 const ACC = "#BFE01D";
