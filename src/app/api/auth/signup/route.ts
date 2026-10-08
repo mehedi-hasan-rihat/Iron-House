@@ -37,7 +37,6 @@ export const POST = apiHandler(async (req: NextRequest) => {
           memberId,
           fullName: fullName.trim(),
           phone:    phone.trim(),
-          email,
           status:   "ACTIVE",
         },
       },
