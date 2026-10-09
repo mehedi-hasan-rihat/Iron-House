@@ -164,16 +164,23 @@ export default function AdminShell({
       {/* User + signout */}
       <div className="px-4 py-4 border-t border-[#BFE01D]/15 shrink-0">
         <div className="flex items-center gap-3 mb-3">
-          <div
-            className="h-7 w-7 rounded-full flex items-center justify-center text-black text-xs font-bold"
+          <Link
+            href="/admin/profile"
+            onClick={() => setOpen(false)}
+            className="h-7 w-7 rounded-full flex items-center justify-center text-black text-xs font-bold shrink-0 hover:opacity-80 transition-opacity"
             style={{ backgroundColor: ACC }}
+            title="View profile"
           >
             {session.user.name?.[0] ?? session.user.email?.[0] ?? "?"}
-          </div>
+          </Link>
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-[#f2f4e8] truncate">
+            <Link
+              href="/admin/profile"
+              onClick={() => setOpen(false)}
+              className="text-xs text-[#f2f4e8] truncate block hover:text-[#BFE01D] transition-colors"
+            >
               {session.user.email}
-            </p>
+            </Link>
             <p className="text-[10px] text-[#9aa87a] uppercase tracking-widest">
               {session.user.role}
             </p>
