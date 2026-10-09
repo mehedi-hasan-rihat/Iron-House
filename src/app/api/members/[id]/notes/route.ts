@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 /** POST /api/members/[id]/notes — add a note */
 export const POST = apiHandler(async (req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "edit");
+  if (denied) return denied;
 
   const { id } = await params!;
   const { note } = await req.json();
@@ -33,6 +35,8 @@ export const POST = apiHandler(async (req, { params }) => {
 export const GET = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "view");
+  if (denied) return denied;
 
   const { id } = await params!;
 

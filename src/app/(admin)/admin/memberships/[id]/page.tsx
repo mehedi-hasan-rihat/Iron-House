@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -20,7 +20,7 @@ export default async function MembershipDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  const session = await requirePermission("memberships", "view");
   const { id } = await params;
 
   const ms = await prisma.membership.findUnique({
@@ -34,6 +34,8 @@ export default async function MembershipDetailPage({
       payments: { orderBy: { createdAt: "desc" } },
     },
   });
+  const perms = session.user.permissions;
+  const canEdit = perms.includes("memberships:edit");
 
   if (!ms) notFound();
 
@@ -61,14 +63,16 @@ export default async function MembershipDetailPage({
           </Link>
         </div>
         <div className="flex flex-wrap gap-2">
-          {ms.status !== "CANCELLED" && ms.status !== "EXPIRED" && (
+          {canEdit && ms.status !== "CANCELLED" && ms.status !== "EXPIRED" && (
             <ManualPaymentForm
               membershipId={ms.id}
               defaultAmount={Number(ms.finalAmount)}
               isPending={ms.status === "PENDING"}
             />
           )}
+          {canEdit && (
           <MembershipActions membershipId={ms.id} currentStatus={ms.status} planName={ms.plan.name} />
+          )}
         </div>
       </div>
 
@@ -132,6 +136,7 @@ export default async function MembershipDetailPage({
       <InfoCard title={`Staff Comments (${ms.comments.length})`}>
         <MembershipComments
           membershipId={ms.id}
+          canEdit={canEdit}
           initialComments={ms.comments.map((c) => ({
             ...c,
             createdAt: c.createdAt.toISOString(),

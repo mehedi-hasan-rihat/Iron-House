@@ -8,5 +8,9 @@ export default async function AdminLayout({
 }) {
   const session = await requireStaff();
 
-  return <AdminShell session={session}>{children}</AdminShell>;
+  return (
+    <AdminShell session={session} permissions={session.user.permissions}>
+      {children}
+    </AdminShell>
+  );
 }

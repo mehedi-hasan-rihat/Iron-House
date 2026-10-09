@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "staff", "edit");
+  if (denied) return denied;
   const { id } = await params!;
   const body = await req.json();
 
@@ -17,18 +19,29 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
     );
   }
 
+  // Guard: owner account can only be edited by the owner themselves
+  const target = await prisma.staff.findUnique({
+    where:   { id },
+    include: { user: { include: { role: true } } },
+  });
+  if (!target) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  if (target.user.role.name === "owner" && target.userId !== session.user.id) {
+    return NextResponse.json(
+      { error: "The owner account can only be edited by the owner themselves." },
+      { status: 403 }
+    );
+  }
+
   // Guard: owner cannot be suspended or resigned
-  if (body.status === "SUSPENDED" || body.status === "RESIGNED") {
-    const target = await prisma.staff.findUnique({
-      where:   { id },
-      include: { user: { include: { role: true } } },
-    });
-    if (target?.user.role.name === "owner") {
-      return NextResponse.json(
-        { error: "The owner account cannot be suspended or resigned." },
-        { status: 403 }
-      );
-    }
+  if (
+    (body.status === "SUSPENDED" || body.status === "RESIGNED") &&
+    target.user.role.name === "owner"
+  ) {
+    return NextResponse.json(
+      { error: "The owner account cannot be suspended or resigned." },
+      { status: 403 }
+    );
   }
 
   const staff = await prisma.staff.update({
@@ -48,9 +61,18 @@ export const PATCH = apiHandler(async (req: NextRequest, { params }) => {
 export const DELETE = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "staff", "delete");
+  if (denied) return denied;
   const { id } = await params!;
-  const staff = await prisma.staff.findUnique({ where: { id } });
+  const staff = await prisma.staff.findUnique({
+    where:   { id },
+    include: { user: { include: { role: true } } },
+  });
   if (!staff) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  // Owner account can never be deleted
+  if (staff.user.role.name === "owner") {
+    return NextResponse.json({ error: "The owner account cannot be deleted." }, { status: 403 });
+  }
   await prisma.user.delete({ where: { id: staff.userId } });
   return NextResponse.json({ success: true });
 });

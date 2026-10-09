@@ -109,13 +109,26 @@ export default function StaffActions({
   staffId,
   currentStatus,
   isOwner,
+  isSelf    = false,
+  canEdit   = true,
+  canDelete: _canDelete = false,
 }: {
   staffId:       string;
   currentStatus: string;
   isOwner:       boolean;
+  isSelf?:       boolean;
+  canEdit?:      boolean;
+  canDelete?:    boolean;
 }) {
   const [open, setOpen] = useState(false);
   const btnRef          = useRef<HTMLButtonElement>(null);
+
+  // Owner rows can only be edited by the owner themselves
+  const editAllowed = canEdit && (!isOwner || isSelf);
+
+  // canDelete is accepted for future use (staff hard-delete); currently
+  // the actions menu only handles status changes, which require canEdit.
+  if (!editAllowed) return null;
 
   return (
     <div className="flex items-center gap-1">

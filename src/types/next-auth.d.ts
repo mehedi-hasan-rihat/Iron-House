@@ -1,23 +1,24 @@
 import { DefaultSession, DefaultJWT } from "next-auth";
+import type { PermissionKey } from "@/lib/permissions";
 
 declare module "next-auth" {
   interface Session {
     user: DefaultSession["user"] & {
-      id:     string;
-      roleId: string;
-      role:   string;
+      id:          string;
+      role:        string;
+      permissions: PermissionKey[];
     };
   }
   interface User {
-    roleId: string;
-    role:   string;
+    role:        string;
+    permissions: PermissionKey[];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
-    id:     string;
-    roleId: string;
-    role:   string;
+    id:          string;
+    role:        string;
+    permissions: PermissionKey[];
   }
 }

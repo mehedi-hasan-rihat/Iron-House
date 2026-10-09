@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 export const GET = apiHandler(async () => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "plans", "view");
+  if (denied) return denied;
   const plans = await prisma.membershipPlan.findMany({
     orderBy: [{ isActive: "desc" }, { price: "asc" }],
     include: { _count: { select: { memberships: true } } },
@@ -16,6 +18,8 @@ export const GET = apiHandler(async () => {
 export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "plans", "create");
+  if (denied) return denied;
 
   const body = await req.json();
   const { name, description, durationDays, price, type, features, isActive, isPopular } = body;

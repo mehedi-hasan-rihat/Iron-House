@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
@@ -13,7 +13,12 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default async function StaffPage() {
-  await requireStaff();
+  const session    = await auth();
+  const perms      = session!.user.permissions ?? [];
+  const canCreate  = perms.includes("staff:create");
+  const canEdit    = perms.includes("staff:edit");
+  const canDelete  = perms.includes("staff:delete");
+  const currentUid = session!.user.id; // logged-in user's DB id
 
   const staffList = await prisma.staff.findMany({
     orderBy: { name: "asc" },
@@ -27,11 +32,13 @@ export default async function StaffPage() {
           <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Staff</h1>
           <p className="label text-[#9aa87a] mt-1">{staffList.length} staff members</p>
         </div>
+        {canCreate && (
         <Link href="/admin/staff/new"
           className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
           style={{ backgroundColor: ACC }}>
           <UserPlus size={14} /> Add Staff
         </Link>
+        )}
       </div>
 
       <div className="overflow-x-auto border border-[#BFE01D]/15">
@@ -70,7 +77,14 @@ export default async function StaffPage() {
                   </span>
                 </td>
                 <td className="px-4 py-3">
-                  <StaffActions staffId={s.id} currentStatus={s.status} isOwner={s.user.role.name === "owner"} />
+                  <StaffActions
+                    staffId={s.id}
+                    currentStatus={s.status}
+                    isOwner={s.user.role.name === "owner"}
+                    isSelf={s.userId === currentUid}
+                    canEdit={canEdit}
+                    canDelete={canDelete}
+                  />
                 </td>
               </tr>
             ))}

@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import MemberForm from "@/components/admin/MemberForm";
 import { notFound } from "next/navigation";
@@ -10,7 +10,7 @@ export default async function EditMemberPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  await requirePermission("members", "edit");
   const { id } = await params;
 
   const member = await prisma.member.findUnique({ where: { id }, include: { user: true } });

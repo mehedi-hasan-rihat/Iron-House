@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -16,21 +16,20 @@ export default async function MemberProfilePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  const session = await requirePermission("members", "view");
   const { id } = await params;
 
   const member = await prisma.member.findUnique({
     where: { id },
     include: {
       user:        true,
-      memberships: {
-        include: { plan: true, trainer: true },
-        orderBy: { createdAt: "desc" },
-      },
-      payments: { orderBy: { createdAt: "desc" }, take: 10 },
-      notes: { orderBy: { createdAt: "desc" } },
+      memberships: { include: { plan: true, trainer: true }, orderBy: { createdAt: "desc" } },
+      payments:    { orderBy: { createdAt: "desc" }, take: 10 },
+      notes:       { orderBy: { createdAt: "desc" } },
     },
   });
+  const perms = session.user.permissions;
+  const canEdit = perms.includes("members:edit");
 
   if (!member) notFound();
 
@@ -64,12 +63,14 @@ export default async function MemberProfilePage({
           <p className="label text-[#9aa87a] mt-1">{member.memberId}</p>
         </div>
         <div className="flex gap-3">
+          {canEdit && (
           <Link
             href={`/admin/members/${id}/edit`}
             className="inline-flex items-center gap-2 border border-[#BFE01D]/15 text-[#9aa87a] hover:border-[#BFE01D]/50 hover:text-[#f2f4e8] text-xs uppercase tracking-[0.2em] px-4 py-2.5 transition-colors"
           >
             <Edit size={13} /> Edit
           </Link>
+          )}
         </div>
       </div>
 
@@ -196,6 +197,7 @@ export default async function MemberProfilePage({
       <InfoCard title={`Staff Notes (${member.notes.length})`}>
         <MemberNotes
           memberId={id}
+          canEdit={canEdit}
           initialNotes={member.notes.map((n) => ({
             ...n,
             createdAt: n.createdAt.toISOString(),

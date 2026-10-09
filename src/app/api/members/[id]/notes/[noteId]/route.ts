@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 /** DELETE /api/members/[id]/notes/[noteId] */
 export const DELETE = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "edit");
+  if (denied) return denied;
 
   const { noteId } = await params!;
 

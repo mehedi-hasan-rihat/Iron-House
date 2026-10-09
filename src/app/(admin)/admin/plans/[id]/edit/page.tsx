@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import PlanForm from "@/components/admin/PlanForm";
 import { notFound } from "next/navigation";
@@ -10,7 +10,7 @@ export default async function EditPlanPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  await requirePermission("plans", "edit");
   const { id } = await params;
 
   const plan = await prisma.membershipPlan.findUnique({ where: { id } });

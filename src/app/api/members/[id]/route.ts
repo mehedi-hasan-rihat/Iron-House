@@ -1,11 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 export const GET = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "view");
+  if (denied) return denied;
   const { id } = await params!;
   const member = await prisma.member.findUnique({
     where: { id },
@@ -23,6 +25,8 @@ export const GET = apiHandler(async (_req, { params }) => {
 export const PATCH = apiHandler(async (req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "edit");
+  if (denied) return denied;
 
   const { id } = await params!;
   const body   = await req.json();
@@ -183,6 +187,8 @@ export const PATCH = apiHandler(async (req, { params }) => {
 export const DELETE = apiHandler(async (_req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "delete");
+  if (denied) return denied;
   const { id } = await params!;
   await prisma.member.delete({ where: { id } });
   return NextResponse.json({ success: true });

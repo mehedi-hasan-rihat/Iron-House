@@ -1,9 +1,9 @@
-import { requireAdmin } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import StaffForm from "@/components/admin/StaffForm";
 
 export default async function NewStaffPage() {
-  await requireAdmin();
+  await requirePermission("staff", "create");
   const roles = await prisma.role.findMany({
     where: { name: { notIn: ["member", "owner"] } },
     orderBy: { name: "asc" },

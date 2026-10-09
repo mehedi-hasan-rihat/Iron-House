@@ -1,35 +1,47 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import type { Module, Action, PermissionKey } from "./permissions";
 
-type Role = "owner" | "manager" | "receptionist" | "trainer" | "accountant" | "member";
+type StaffRole = "owner" | "manager" | "receptionist" | "trainer" | "accountant";
+
+const STAFF_ROLES: StaffRole[] = ["owner", "manager", "receptionist", "trainer", "accountant"];
 
 /**
- * Call at the top of any Server Component / layout that needs protection.
+ * Call at the top of any Server Component that needs protection.
  * Redirects to /login if unauthenticated.
- * Redirects to /unauthorized if role is not in allowedRoles.
+ * Redirects to /unauthorized if role is not allowed.
  */
-export async function requireAuth(allowedRoles?: Role[]) {
+export async function requireAuth(allowedRoles?: StaffRole[]) {
   const session = await auth();
 
-  if (!session?.user) {
-    redirect("/login");
-  }
+  if (!session?.user) redirect("/login");
 
-  if (allowedRoles && !allowedRoles.includes(session.user.role as Role)) {
+  if (allowedRoles && !allowedRoles.includes(session.user.role as StaffRole)) {
     redirect("/unauthorized");
   }
 
   return session;
 }
 
-/** Convenience: staff only (all except member) */
-export const requireStaff = () =>
-  requireAuth(["owner", "manager", "receptionist", "trainer", "accountant"]);
+/** All staff roles (excludes member) */
+export const requireStaff = () => requireAuth(STAFF_ROLES);
 
-/** Convenience: admin level (owner + manager) */
-export const requireAdmin = () =>
-  requireAuth(["owner", "manager"]);
+/** Owner + manager */
+export const requireAdmin = () => requireAuth(["owner", "manager"]);
 
-/** Convenience: owner only */
-export const requireOwner = () =>
-  requireAuth(["owner"]);
+/** Owner only */
+export const requireOwner = () => requireAuth(["owner"]);
+
+/**
+ * Gate a page by fine-grained permission.
+ * Reads from the JWT — zero DB calls.
+ *
+ * @example
+ *   await requirePermission("members", "create");
+ */
+export async function requirePermission(module: Module, action: Action) {
+  const session = await requireStaff();
+  const key: PermissionKey = `${module}:${action}`;
+  if (!session.user.permissions.includes(key)) redirect("/unauthorized");
+  return session;
+}

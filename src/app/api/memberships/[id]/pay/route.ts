@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateInvoiceId } from "@/lib/id-generator";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 const VALID_METHODS = ["CASH", "CARD", "BKASH", "NAGAD", "ROCKET", "BANK_TRANSFER"];
 
@@ -15,6 +15,8 @@ const VALID_METHODS = ["CASH", "CARD", "BKASH", "NAGAD", "ROCKET", "BANK_TRANSFE
 export const POST = apiHandler(async (req, { params }) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "memberships", "edit");
+  if (denied) return denied;
 
   const { id } = await params!;
   const { amount, method, transactionId, note } = await req.json();

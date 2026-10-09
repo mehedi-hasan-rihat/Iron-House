@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateMemberId } from "@/lib/id-generator";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 import bcrypt from "bcryptjs";
 
 export const GET = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "view");
+  if (denied) return denied;
 
   const { searchParams } = req.nextUrl;
   const search = searchParams.get("search") ?? "";
@@ -47,6 +49,8 @@ export const GET = apiHandler(async (req: NextRequest) => {
 export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "members", "create");
+  if (denied) return denied;
 
   const body = await req.json();
   const { fullName, phone, email, gender, dob, address, bloodGroup,

@@ -14,7 +14,9 @@ export const POST = apiHandler(async (req: NextRequest) => {
     return NextResponse.json({ error: "Full name, phone, email and password are required." }, { status: 400 });
   }
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const normalizedEmail = email.toLowerCase().trim();
+
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) {
     return NextResponse.json({ error: "An account with this email already exists." }, { status: 409 });
   }
@@ -29,7 +31,7 @@ export const POST = apiHandler(async (req: NextRequest) => {
 
   await prisma.user.create({
     data: {
-      email,
+      email:    normalizedEmail,
       password: hashedPass,
       roleId:   memberRole.id,
       member: {
