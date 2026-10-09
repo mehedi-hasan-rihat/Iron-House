@@ -8,10 +8,6 @@ import bcrypt from "bcryptjs";
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL! });
 const prisma  = new PrismaClient({ adapter });
 
-async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, 12);
-}
-
 async function main() {
   console.log("🌱 Seeding database...");
 
@@ -27,8 +23,10 @@ async function main() {
   });
 
   // ── Roles ─────────────────────────────────────
-  // Derive role list from DEFAULT_PERMISSIONS so they always stay in sync
-  const roleNames = Object.keys(DEFAULT_PERMISSIONS);
+  // Permissions are NOT stored in the DB — they live in DEFAULT_PERMISSIONS
+  // in src/lib/permissions.ts and are embedded in the JWT at login.
+  // The DB only stores the role name so users can be assigned a role.
+  const roleNames = [...Object.keys(DEFAULT_PERMISSIONS), "member"];
   const roles: Record<string, { id: string }> = {};
 
   for (const name of roleNames) {
@@ -41,47 +39,13 @@ async function main() {
     console.log(`  ✅ Role: ${name}`);
   }
 
-  // ── Permissions ───────────────────────────────
-  const allPerms = new Set<string>();
-  Object.values(DEFAULT_PERMISSIONS).forEach((perms) =>
-    perms.forEach(([m, a]) => allPerms.add(`${m}:${a}`))
-  );
-
-  const permMap: Record<string, { id: string }> = {};
-  for (const key of allPerms) {
-    const [module, action] = key.split(":");
-    const perm = await prisma.permission.upsert({
-      where:  { module_action: { module, action } },
-      update: {},
-      create: { module, action },
-    });
-    permMap[key] = perm;
-  }
-  console.log(`  ✅ Permissions: ${allPerms.size} created`);
-
-  // ── Role Permissions ──────────────────────────
-  for (const [roleName, perms] of Object.entries(DEFAULT_PERMISSIONS)) {
-    const role = roles[roleName];
-    if (!role) throw new Error(`Role "${roleName}" not found in roles map — check DEFAULT_PERMISSIONS keys match seeded role names`);
-    const roleId = role.id;
-    for (const [module, action] of perms) {
-      const permId = permMap[`${module}:${action}`].id;
-      await prisma.rolePermission.upsert({
-        where:  { roleId_permissionId: { roleId, permissionId: permId } },
-        update: {},
-        create: { roleId, permissionId: permId },
-      });
-    }
-    console.log(`  ✅ Permissions assigned: ${roleName}`);
-  }
-
   // ── Owner account ─────────────────────────────
   const ownerUser = await prisma.user.upsert({
     where:  { email: "owner@ironhouse.com" },
     update: {},
     create: {
       email:    "owner@ironhouse.com",
-      password: await hashPassword("admin123"),
+      password: await bcrypt.hash("admin123", 12),
       roleId:   roles["owner"].id,
     },
   });

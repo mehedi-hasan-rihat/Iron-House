@@ -16,9 +16,11 @@ type Comment = {
 export default function MembershipComments({
   membershipId,
   initialComments,
+  canEdit = false,
 }: {
   membershipId:     string;
   initialComments:  Comment[];
+  canEdit?:         boolean;
 }) {
   const router  = useRouter();
   const [comments, setComments] = useState<Comment[]>(initialComments);
@@ -58,7 +60,8 @@ export default function MembershipComments({
 
   return (
     <div className="space-y-4">
-      {/* Add comment */}
+      {/* Add comment — only for users with memberships:edit */}
+      {canEdit && (
       <form onSubmit={handleSubmit} className="space-y-2">
         <textarea
           value={text}
@@ -79,6 +82,7 @@ export default function MembershipComments({
           </button>
         </div>
       </form>
+      )}
 
       {/* Comment list */}
       {comments.length === 0 ? (
@@ -97,6 +101,7 @@ export default function MembershipComments({
                   })}
                 </p>
               </div>
+              {canEdit && (
               <button
                 onClick={() => handleDelete(c.id)}
                 className="text-[#9aa87a] hover:text-red-400 transition-colors shrink-0 mt-0.5"
@@ -104,6 +109,7 @@ export default function MembershipComments({
               >
                 <Trash2 size={13} />
               </button>
+              )}
             </div>
           ))}
         </div>

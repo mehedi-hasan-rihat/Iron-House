@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import {
   Users, TrendingUp, AlertCircle, DollarSign,
@@ -133,8 +133,16 @@ function KPI({
 }
 
 export default async function DashboardPage() {
-  await requireStaff();
+  const session = await auth();
   const d = await getData();
+  const perms = session!.user.permissions ?? [];
+
+  const quickActions = [
+    { label: "Add Member",     href: "/admin/members/new",     perm: "members:create"     },
+    { label: "New Membership", href: "/admin/memberships/new", perm: "memberships:create" },
+    { label: "Add Staff",      href: "/admin/staff/new",       perm: "staff:create"       },
+    { label: "Create Plan",    href: "/admin/plans/new",       perm: "plans:create"       },
+  ].filter((a) => perms.includes(a.perm as Parameters<typeof perms.includes>[0]));
 
   return (
     <div className="space-y-7">
@@ -256,15 +264,11 @@ export default async function DashboardPage() {
       </div>
 
       {/* Row 5 — quick actions */}
+      {quickActions.length > 0 && (
       <div className="border border-[#BFE01D]/15 panel p-5">
         <p className="label text-[#9aa87a] mb-4">Quick Actions</p>
         <Stagger className="flex flex-wrap gap-3" stagger={0.04}>
-          {[
-            { label: "Add Member",       href: "/admin/members/new"     },
-            { label: "New Membership",   href: "/admin/memberships/new" },
-            { label: "Add Staff",        href: "/admin/staff/new"       },
-            { label: "Create Plan",      href: "/admin/plans/new"       },
-          ].map((a) => (
+          {quickActions.map((a) => (
             <MagneticBox key={a.href}>
               <a href={a.href}
                 className="inline-flex items-center border border-[#BFE01D]/15 panel hover:border-[#BFE01D] hover:text-[#BFE01D] text-[#9aa87a] text-xs uppercase tracking-[0.2em] px-5 py-2.5 transition-colors">
@@ -274,6 +278,7 @@ export default async function DashboardPage() {
           ))}
         </Stagger>
       </div>
+      )}
 
     </div>
   );

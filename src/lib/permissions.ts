@@ -1,5 +1,3 @@
-import prisma from "./prisma";
-
 export type Module =
   | "dashboard"
   | "members"
@@ -7,88 +5,85 @@ export type Module =
   | "memberships"
   | "payments"
   | "staff"
-  | "roles"
-  | "reports"
-  | "settings";
+  | "roles";
 
-export type Action = "view" | "create" | "edit" | "delete" | "export" | "refund";
+export type Action = "view" | "create" | "edit" | "delete" | "refund";
+
+/** Flat permission key, e.g. "members:create" */
+export type PermissionKey = `${Module}:${Action}`;
+
+/**
+ * Default permission matrix — the single source of truth.
+ * No database tables. Permissions are derived from the role name
+ * embedded in the JWT at login time.
+ *
+ * Only modules that exist as pages and only actions enforced in
+ * API routes / page guards are listed.
+ */
+export const DEFAULT_PERMISSIONS: Record<string, PermissionKey[]> = {
+
+  // Full access to everything that exists
+  owner: [
+    "dashboard:view",
+    "members:view",      "members:create",     "members:edit",
+    "plans:view",        "plans:create",        "plans:edit",        "plans:delete",
+    "memberships:view",  "memberships:create",  "memberships:edit",
+    "payments:view",     "payments:edit",       "payments:refund",
+    "staff:view",        "staff:create",        "staff:edit",        "staff:delete",
+    "roles:view",
+  ],
+
+  // Full access
+  manager: [
+    "dashboard:view",
+    "members:view",      "members:create",     "members:edit",
+    "plans:view",        "plans:create",        "plans:edit",        "plans:delete",
+    "memberships:view",  "memberships:create",  "memberships:edit",
+    "payments:view",     "payments:edit",       "payments:refund",
+    "staff:view",        "staff:create",        "staff:edit",        "staff:delete",
+    "roles:view",
+  ],
+
+  // Front-desk — create members/memberships, view the rest
+  receptionist: [
+    "dashboard:view",
+    "members:view",      "members:create",
+    "plans:view",
+    "memberships:view",  "memberships:create",
+    "payments:view",
+  ],
+
+  // Read-only on members and their memberships
+  trainer: [
+    "dashboard:view",
+    "members:view",
+    "memberships:view",
+  ],
+
+  // Finance — payments and refunds only
+  accountant: [
+    "dashboard:view",
+    "plans:view",
+    "memberships:view",
+    "payments:view",     "payments:refund",
+  ],
+
+  // Member — no admin permissions (uses separate layout)
+  member: [],
+};
+
+/**
+ * Get all permissions for a role as a flat array.
+ * Pure in-memory — no database call.
+ */
+export function getPermissionsForRole(role: string): PermissionKey[] {
+  return DEFAULT_PERMISSIONS[role] ?? [];
+}
 
 /**
  * Check if a role has a specific permission.
+ * Pure in-memory — no database call.
  */
-export async function hasPermission(
-  roleId: string,
-  module: Module,
-  action: Action
-): Promise<boolean> {
-  const perm = await prisma.rolePermission.findFirst({
-    where: {
-      roleId,
-      permission: { module, action },
-    },
-  });
-  return !!perm;
+export function can(role: string, key: PermissionKey): boolean {
+  return (DEFAULT_PERMISSIONS[role] ?? []).includes(key);
 }
-
-/**
- * Get all permissions for a role as a flat set.
- * e.g. { "members:view", "members:create", "payments:view" }
- */
-export async function getRolePermissions(roleId: string): Promise<Set<string>> {
-  const rolePerms = await prisma.rolePermission.findMany({
-    where: { roleId },
-    include: { permission: true },
-  });
-  return new Set(rolePerms.map((rp) => `${rp.permission.module}:${rp.permission.action}`));
-}
-
-/**
- * Default permission matrix — used during seeding.
- */
-export const DEFAULT_PERMISSIONS: Record<string, Array<[Module, Action]>> = {
-  owner: [
-    ["dashboard", "view"],
-    ["members",   "view"], ["members",   "create"], ["members",   "edit"], ["members",   "delete"],
-    ["plans",     "view"], ["plans",     "create"], ["plans",     "edit"], ["plans",     "delete"],
-    ["memberships","view"],["memberships","create"],["memberships","edit"],["memberships","delete"],
-    ["payments",  "view"], ["payments",  "create"], ["payments",  "edit"], ["payments",  "delete"],
-    ["payments",  "export"], ["payments", "refund"],
-    ["staff",     "view"], ["staff",     "create"], ["staff",     "edit"], ["staff",     "delete"],
-    ["roles",     "view"], ["roles",     "create"], ["roles",     "edit"], ["roles",     "delete"],
-    ["reports",   "view"], ["reports",   "export"],
-    ["settings",  "view"], ["settings",  "edit"],
-  ],
-  manager: [
-    ["dashboard",  "view"],
-    ["members",    "view"], ["members",   "create"], ["members",   "edit"],
-    ["plans",      "view"], ["plans",     "create"], ["plans",     "edit"],
-    ["memberships","view"], ["memberships","create"],["memberships","edit"],
-    ["payments",   "view"], ["payments",  "create"], ["payments",  "export"],
-    ["staff",      "view"],
-    ["reports",    "view"], ["reports",   "export"],
-  ],
-  receptionist: [
-    ["dashboard",  "view"],
-    ["members",    "view"], ["members",   "create"],
-    ["plans",      "view"],
-    ["memberships","view"], ["memberships","create"],
-    ["payments",   "view"], ["payments",  "create"],
-  ],
-  trainer: [
-    ["dashboard",  "view"],
-    ["members",    "view"],
-    ["memberships","view"],
-  ],
-  accountant: [
-    ["dashboard",  "view"],
-    ["plans",      "view"],
-    ["memberships","view"],
-    ["payments",   "view"], ["payments",  "create"], ["payments",  "export"], ["payments", "refund"],
-    ["reports",    "view"], ["reports",   "export"],
-  ],
-  member: [
-    ["dashboard",  "view"],
-    ["memberships","view"],
-    ["payments",   "view"],
-  ],
-};

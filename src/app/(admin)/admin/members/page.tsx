@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { UserPlus } from "lucide-react";
@@ -81,7 +81,10 @@ export default async function MembersPage({
 }: {
   searchParams: Promise<{ search?: string; status?: string; page?: string; sort?: string; dir?: string }>;
 }) {
-  await requireStaff();
+  const session   = await auth();
+  const perms     = session!.user.permissions ?? [];
+  const canCreate = perms.includes("members:create");
+
   const sp     = await searchParams;
   const search = sp.search ?? "";
   const status = sp.status ?? "";
@@ -90,7 +93,6 @@ export default async function MembersPage({
   const dir    = sp.dir === "asc" ? "asc" : "desc";
 
   const { members, total, pages } = await getMembers(search, status, page, sort, dir);
-
   return (
     <div className="space-y-6">
 
@@ -100,6 +102,7 @@ export default async function MembersPage({
           <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Members</h1>
           <p className="label text-[#9aa87a] mt-1">{total} total</p>
         </div>
+        {canCreate && (
         <Link
           href="/admin/members/new"
           className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 transition-opacity hover:opacity-85"
@@ -108,6 +111,7 @@ export default async function MembersPage({
           <UserPlus size={14} />
           Add Member
         </Link>
+        )}
       </div>
 
       {/* Filters */}

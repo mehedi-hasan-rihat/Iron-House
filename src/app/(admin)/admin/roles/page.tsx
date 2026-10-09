@@ -1,29 +1,25 @@
-import { requireOwner } from "@/lib/auth-guard";
-import prisma from "@/lib/prisma";
-import { DEFAULT_PERMISSIONS } from "@/lib/permissions";
+import { requireAdmin } from "@/lib/auth-guard";
+import { DEFAULT_PERMISSIONS, type PermissionKey } from "@/lib/permissions";
 import Stagger from "@/components/motion/Stagger";
 
 const ACC = "#BFE01D";
-const MODULES = ["dashboard","members","plans","memberships","payments","staff","roles","reports","settings"];
-const ACTIONS = ["view","create","edit","delete","export","refund"];
+
+// Derive modules and actions from the actual matrix — no hardcoded lists
+const allKeys = Object.values(DEFAULT_PERMISSIONS).flat();
+const MODULES = [...new Set(allKeys.map((k) => k.split(":")[0]))];
+const ACTIONS = [...new Set(allKeys.map((k) => k.split(":")[1]))];
+
+const STAFF_ROLES = ["owner", "manager", "receptionist", "trainer", "accountant"] as const;
 
 export default async function RolesPage() {
-  await requireOwner();
+  // requireAdmin guards this page — only Admins can view the permission matrix
+  await requireAdmin();
 
-  const roles = await prisma.role.findMany({
-    include: { permissions: { include: { permission: true } } },
-    orderBy: { name: "asc" },
-  });
-
-  // build a set per role: "module:action"
-  const rolePerms: Record<string, Set<string>> = {};
-  for (const role of roles) {
-    rolePerms[role.name] = new Set(
-      role.permissions.map((rp) => `${rp.permission.module}:${rp.permission.action}`)
-    );
+  // Build a set per role from in-memory DEFAULT_PERMISSIONS — no DB call needed
+  const rolePerms: Record<string, Set<PermissionKey>> = {};
+  for (const role of STAFF_ROLES) {
+    rolePerms[role] = new Set(DEFAULT_PERMISSIONS[role] ?? []);
   }
-
-  const staffRoles = roles.filter((r) => r.name !== "member");
 
   return (
     <div className="space-y-8">
@@ -34,10 +30,10 @@ export default async function RolesPage() {
 
       {/* Summary cards */}
       <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
-        {staffRoles.map((r) => (
-          <div key={r.id} className="border border-[#BFE01D]/15 panel p-4">
-            <p className="label" style={{ color: ACC }}>{r.name}</p>
-            <p className="font-display text-3xl text-[#f2f4e8] mt-2">{r.permissions.length}</p>
+        {STAFF_ROLES.map((role) => (
+          <div key={role} className="border border-[#BFE01D]/15 panel p-4">
+            <p className="label capitalize" style={{ color: ACC }}>{role}</p>
+            <p className="font-display text-3xl text-[#f2f4e8] mt-2">{rolePerms[role].size}</p>
             <p className="label text-[#9aa87a] mt-1">permissions</p>
           </div>
         ))}
@@ -49,17 +45,16 @@ export default async function RolesPage() {
           <thead>
             <tr className="border-b border-[#BFE01D]/15 panel">
               <th className="text-left px-4 py-3 label text-[#9aa87a] w-32">Module · Action</th>
-              {staffRoles.map((r) => (
-                <th key={r.id} className="px-4 py-3 label text-center" style={{ color: ACC }}>{r.name}</th>
+              {STAFF_ROLES.map((role) => (
+                <th key={role} className="px-4 py-3 label text-center capitalize" style={{ color: ACC }}>{role}</th>
               ))}
             </tr>
           </thead>
-          <Stagger as="tbody" selector="tr" className="divide-y divide-[#BFE01D]/15"
-          stagger={0.035} y={12} blur={false}>
-            {MODULES.map((mod) => (
+          <Stagger as="tbody" selector="tr" className="divide-y divide-[#BFE01D]/15" stagger={0.035} y={12} blur={false}>
+            {MODULES.map((mod) =>
               ACTIONS.map((act, ai) => {
-                const key = `${mod}:${act}`;
-                const anyRole = staffRoles.some((r) => rolePerms[r.name]?.has(key));
+                const key = `${mod}:${act}` as PermissionKey;
+                const anyRole = STAFF_ROLES.some((r) => rolePerms[r].has(key));
                 if (!anyRole) return null;
                 return (
                   <tr key={key} className={`${ai === 0 ? "bg-[#0d0f08]/60" : "bg-[#050505]"} hover:bg-[#121509] transition-colors`}>
@@ -67,18 +62,18 @@ export default async function RolesPage() {
                       {ai === 0 && <span className="label text-[#f2f4e8] uppercase">{mod}</span>}
                       <span className="ml-2 text-[#9aa87a] capitalize">{act}</span>
                     </td>
-                    {staffRoles.map((r) => (
-                      <td key={r.id} className="px-4 py-2.5 text-center">
-                        {rolePerms[r.name]?.has(key)
+                    {STAFF_ROLES.map((role) => (
+                      <td key={role} className="px-4 py-2.5 text-center">
+                        {rolePerms[role].has(key)
                           ? <span className="inline-block w-4 h-4 rounded-full" style={{ backgroundColor: ACC }} />
-                          : <span className="inline-block w-4 h-4 rounded-full bg-[#BFE01D]/[0.06]" />
+                          : <span className="inline-block w-4 h-4 rounded-full bg-[#BFE01D]/6" />
                         }
                       </td>
                     ))}
                   </tr>
                 );
               })
-            ))}
+            )}
           </Stagger>
         </table>
       </div>

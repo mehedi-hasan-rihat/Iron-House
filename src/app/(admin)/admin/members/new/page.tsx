@@ -1,8 +1,8 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import MemberForm from "@/components/admin/MemberForm";
 
 export default async function NewMemberPage() {
-  await requireStaff();
+  await requirePermission("members", "create");
   return (
     <div className="max-w-2xl space-y-6">
       <div>

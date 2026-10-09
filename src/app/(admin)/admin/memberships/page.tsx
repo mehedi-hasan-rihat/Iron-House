@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -18,7 +18,10 @@ export default async function MembershipsPage({
 }: {
   searchParams: Promise<{ status?: string; page?: string }>;
 }) {
-  await requireStaff();
+  const session   = await auth();
+  const perms     = session!.user.permissions ?? [];
+  const canCreate = perms.includes("memberships:create");
+
   const sp     = await searchParams;
   const status = sp.status ?? "";
   const page   = Math.max(1, Number(sp.page ?? 1));
@@ -44,11 +47,13 @@ export default async function MembershipsPage({
           <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Memberships</h1>
           <p className="label text-[#9aa87a] mt-1">{total} total</p>
         </div>
+        {canCreate && (
         <Link href="/admin/memberships/new"
           className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
           style={{ backgroundColor: ACC }}>
           <Plus size={14} /> New Membership
         </Link>
+        )}
       </div>
 
       {/* Status filter */}

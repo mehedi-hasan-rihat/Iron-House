@@ -1,7 +1,7 @@
-import { requireAdmin } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import StaffForm from "@/components/admin/StaffForm";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
@@ -10,7 +10,7 @@ export default async function EditStaffPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireAdmin();
+  const session = await requirePermission("staff", "edit");
   const { id } = await params;
 
   const staff = await prisma.staff.findUnique({
@@ -18,6 +18,11 @@ export default async function EditStaffPage({
     include: { user: { include: { role: true } } },
   });
   if (!staff) notFound();
+
+  // Owner accounts can only be edited by the owner themselves
+  if (staff.user.role.name === "owner" && staff.userId !== session.user.id) {
+    redirect("/unauthorized");
+  }
 
   const roles = await prisma.role.findMany({
     where:   { name: { notIn: ["member", "owner"] } },

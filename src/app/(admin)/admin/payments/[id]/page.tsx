@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -19,7 +19,7 @@ export default async function PaymentDetailPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  await requireStaff();
+  const session = await requirePermission("payments", "view");
   const { id } = await params;
 
   const payment = await prisma.payment.findUnique({
@@ -30,6 +30,8 @@ export default async function PaymentDetailPage({
       attempts:   { orderBy: { attemptAt: "desc" } },
     },
   });
+  const perms = session.user.permissions;
+  const canRefund = perms.includes("payments:refund");
 
   if (!payment) notFound();
 
@@ -54,7 +56,7 @@ export default async function PaymentDetailPage({
             {payment.member.fullName} · {payment.member.memberId}
           </Link>
         </div>
-        {payment.status === "PAID" && <RefundButton paymentId={payment.id} />}
+        {canRefund && payment.status === "PAID" && <RefundButton paymentId={payment.id} />}
       </div>
 
       {/* Details */}

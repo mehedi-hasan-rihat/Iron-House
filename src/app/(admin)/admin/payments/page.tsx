@@ -1,4 +1,3 @@
-import { requireStaff } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import Stagger from "@/components/motion/Stagger";
@@ -18,7 +17,6 @@ export default async function PaymentsPage({
 }: {
   searchParams: Promise<{ status?: string; method?: string; page?: string }>;
 }) {
-  await requireStaff();
   const sp     = await searchParams;
   const status = sp.status ?? "";
   const method = sp.method ?? "";

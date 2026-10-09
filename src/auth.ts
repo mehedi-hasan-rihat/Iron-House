@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { getPermissionsForRole, type PermissionKey } from "@/lib/permissions";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   session: { strategy: "jwt" },
@@ -31,10 +32,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         if (!valid) return null;
 
         return {
-          id:     user.id,
-          email:  user.email,
-          roleId: user.roleId,
-          role:   user.role.name,
+          id:          user.id,
+          email:       user.email,
+          role:        user.role.name,
+          permissions: getPermissionsForRole(user.role.name),
         };
       },
     }),
@@ -43,17 +44,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id     = user.id;
-        token.roleId = (user as { roleId: string }).roleId;
-        token.role   = (user as { role: string }).role;
+        token.id          = user.id;
+        token.role        = (user as { role: string }).role;
+        token.permissions = (user as { permissions: PermissionKey[] }).permissions;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id     = token.id     as string;
-        session.user.roleId = token.roleId as string;
-        session.user.role   = token.role   as string;
+        session.user.id          = token.id          as string;
+        session.user.role        = token.role        as string;
+        session.user.permissions = token.permissions as PermissionKey[];
       }
       return session;
     },

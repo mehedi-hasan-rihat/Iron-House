@@ -1,8 +1,8 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import PlanForm from "@/components/admin/PlanForm";
 
 export default async function NewPlanPage() {
-  await requireStaff();
+  await requirePermission("plans", "create");
   return (
     <div className="max-w-xl space-y-6">
       <div>

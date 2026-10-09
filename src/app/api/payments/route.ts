@@ -2,11 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateInvoiceId } from "@/lib/id-generator";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 
 export const GET = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "payments", "view");
+  if (denied) return denied;
 
   const { searchParams } = req.nextUrl;
   const memberId = searchParams.get("memberId") ?? "";

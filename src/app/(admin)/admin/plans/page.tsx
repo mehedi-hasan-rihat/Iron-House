@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { Plus } from "lucide-react";
@@ -6,7 +6,11 @@ import DeletePlanButton from "@/components/admin/DeletePlanButton";
 import { PLAN_TYPE_LABELS } from "@/lib/plan-types";
 
 export default async function PlansPage() {
-  await requireStaff();
+  const session = await auth();
+  const perms   = session!.user.permissions ?? [];
+  const canCreate = perms.includes("plans:create");
+  const canEdit   = perms.includes("plans:edit");
+  const canDelete = perms.includes("plans:delete");
 
   const plans = await prisma.membershipPlan.findMany({
     orderBy: [{ isActive: "desc" }, { price: "asc" }],
@@ -20,11 +24,13 @@ export default async function PlansPage() {
           <h1 className="font-display text-3xl text-[#f2f4e8] uppercase tracking-wide">Membership Plans</h1>
           <p className="label text-[#9aa87a] mt-1">{plans.length} plans</p>
         </div>
-        <Link href="/admin/plans/new"
-          className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
-          style={{ backgroundColor: "#BFE01D" }}>
-          <Plus size={14} /> New Plan
-        </Link>
+        {canCreate && (
+          <Link href="/admin/plans/new"
+            className="inline-flex items-center gap-2 text-black text-xs font-bold uppercase tracking-[0.2em] px-5 py-3 hover:opacity-85 transition-opacity"
+            style={{ backgroundColor: "#BFE01D" }}>
+            <Plus size={14} /> New Plan
+          </Link>
+        )}
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -50,15 +56,15 @@ export default async function PlansPage() {
             <div className="flex items-center justify-between pt-2 border-t border-[#BFE01D]/15">
               <span className="label text-[#9aa87a]">{p._count.memberships} memberships</span>
               <div className="flex items-center gap-3">
-                <Link href={`/admin/plans/${p.id}/edit`}
-                  className="text-[10px] uppercase tracking-[0.2em] text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
-                  Edit →
-                </Link>
-                <DeletePlanButton
-                  planId={p.id}
-                  planName={p.name}
-                  membershipCount={p._count.memberships}
-                />
+                {canEdit && (
+                  <Link href={`/admin/plans/${p.id}/edit`}
+                    className="text-[10px] uppercase tracking-[0.2em] text-[#9aa87a] hover:text-[#f2f4e8] transition-colors">
+                    Edit →
+                  </Link>
+                )}
+                {canDelete && (
+                  <DeletePlanButton planId={p.id} planName={p.name} membershipCount={p._count.memberships} />
+                )}
               </div>
             </div>
           </div>

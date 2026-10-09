@@ -14,9 +14,10 @@ type Note = {
 type Props = {
   memberId:     string;
   initialNotes: Note[];
+  canEdit?:     boolean;
 };
 
-export default function MemberNotes({ memberId, initialNotes }: Props) {
+export default function MemberNotes({ memberId, initialNotes, canEdit = false }: Props) {
   const [notes,   setNotes]   = useState<Note[]>(initialNotes);
   const [text,    setText]    = useState("");
   const [loading, setLoading] = useState(false);
@@ -59,7 +60,8 @@ export default function MemberNotes({ memberId, initialNotes }: Props) {
   return (
     <div className="space-y-4">
 
-      {/* Add note form */}
+      {/* Add note form — only for users with members:edit */}
+      {canEdit && (
       <form onSubmit={addNote} className="space-y-2">
         <textarea
           value={text}
@@ -83,6 +85,7 @@ export default function MemberNotes({ memberId, initialNotes }: Props) {
           </button>
         </div>
       </form>
+      )}
 
       {/* Notes list */}
       {notes.length === 0 ? (
@@ -101,6 +104,7 @@ export default function MemberNotes({ memberId, initialNotes }: Props) {
                   })}
                 </p>
               </div>
+              {canEdit && (
               <button
                 onClick={() => deleteNote(n.id)}
                 className="text-[#9aa87a] hover:text-red-400 transition-colors shrink-0 mt-0.5"
@@ -108,6 +112,7 @@ export default function MemberNotes({ memberId, initialNotes }: Props) {
               >
                 <Trash2 size={13} />
               </button>
+              )}
             </div>
           ))}
         </div>

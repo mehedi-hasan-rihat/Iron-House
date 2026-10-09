@@ -2,12 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import prisma from "@/lib/prisma";
 import { generateStaffId } from "@/lib/id-generator";
-import { apiHandler } from "@/lib/api";
+import { apiHandler, checkPermission } from "@/lib/api";
 import bcrypt from "bcryptjs";
 
 export const GET = apiHandler(async () => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "staff", "view");
+  if (denied) return denied;
   const staff = await prisma.staff.findMany({
     orderBy: { name: "asc" },
     include: { user: { include: { role: true } } },
@@ -18,6 +20,8 @@ export const GET = apiHandler(async () => {
 export const POST = apiHandler(async (req: NextRequest) => {
   const session = await auth();
   if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const denied = await checkPermission(session, "staff", "create");
+  if (denied) return denied;
 
   const body = await req.json();
   const { name, phone, email, address, designation, roleName,

@@ -1,4 +1,4 @@
-import { requireStaff } from "@/lib/auth-guard";
+import { requirePermission } from "@/lib/auth-guard";
 import prisma from "@/lib/prisma";
 import MembershipForm from "@/components/admin/MembershipForm";
 
@@ -7,7 +7,7 @@ export default async function NewMembershipPage({
 }: {
   searchParams: Promise<{ memberId?: string }>;
 }) {
-  await requireStaff();
+  await requirePermission("memberships", "create");
   const sp = await searchParams;
 
   const [members, plans, trainers] = await Promise.all([
