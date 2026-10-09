@@ -124,7 +124,7 @@ async function main() {
   const staffMap: Record<string, { id: string; name: string }> = {};
 
   for (const s of STAFF_DATA) {
-    const email = `${s.name.toLowerCase().replace(/\s+/g, ".")}@ironhouse.com`;
+    const email = `${s.name.toLowerCase().replace(/\s+/g, ".")}@ironhouse.com`.toLowerCase();
     const staffId = nextStaffId();
 
     const existing = await prisma.user.findUnique({ where: { email } });
@@ -177,7 +177,7 @@ async function main() {
 
   for (let i = 0; i < MEMBER_DATA.length; i++) {
     const m = MEMBER_DATA[i];
-    const email    = `${m.name.toLowerCase().replace(/\s+/g, ".")}@example.com`;
+    const email    = `${m.name.toLowerCase().replace(/\s+/g, ".")}@example.com`.toLowerCase();
     const memberId = nextMemberId();
 
     const existing = await prisma.user.findUnique({ where: { email } });

@@ -38,7 +38,8 @@ export const POST = apiHandler(async (req: NextRequest) => {
   const role = await prisma.role.findUnique({ where: { name: roleName } });
   if (!role) return NextResponse.json({ error: "Role not found" }, { status: 404 });
 
-  const existing = await prisma.user.findUnique({ where: { email } });
+  const normalizedEmail = (email as string).toLowerCase().trim();
+  const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } });
   if (existing) return NextResponse.json({ error: "A user with this email already exists." }, { status: 409 });
 
   const staffId    = await generateStaffId();
@@ -46,7 +47,7 @@ export const POST = apiHandler(async (req: NextRequest) => {
 
   const user = await prisma.user.create({
     data: {
-      email,
+      email:    normalizedEmail,
       password: hashedPass, roleId: role.id,
       staff: {
         create: {
