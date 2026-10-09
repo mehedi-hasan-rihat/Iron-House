@@ -6,7 +6,6 @@ import { signOut } from "next-auth/react";
 import { LayoutDashboard, CreditCard, User, LogOut } from "lucide-react";
 import { gsap, useGSAP, prefersReducedMotion } from "@/lib/gsap";
 import ScrollProgress from "@/components/motion/ScrollProgress";
-import MagneticBox from "@/components/motion/MagneticBox";
 import BackToTop from "@/components/motion/BackToTop";
 
 const ACC = "#BFE01D";
@@ -87,26 +86,23 @@ export default function CustomerShell({
                 style={{ backgroundColor: ACC, visibility: "hidden" }}
               />
               {NAV.map(({ href, icon: Icon, label }) => (
-                <MagneticBox key={href} strength={0.3}>
-                  <Link
-                    href={href}
-                    aria-label={label}
-                    data-nav-active={href === activeHref}
-                    className={`p-2 rounded-sm transition-colors ${
-                      href === activeHref ? "text-[#BFE01D]" : "text-[#9aa87a] hover:text-[#f2f4e8]"
-                    }`}
-                  >
-                    <Icon size={18} />
-                  </Link>
-                </MagneticBox>
+                <Link
+                  key={href}
+                  href={href}
+                  aria-label={label}
+                  data-nav-active={href === activeHref}
+                  className={`p-2 rounded-sm transition-colors ${
+                    href === activeHref ? "text-[#BFE01D]" : "text-[#9aa87a] hover:text-[#f2f4e8]"
+                  }`}
+                >
+                  <Icon size={18} />
+                </Link>
               ))}
             </div>
-            <MagneticBox>
-              <button onClick={() => signOut({ callbackUrl: "/login" })}
-                className="p-2 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors ml-1">
-                <LogOut size={18} />
-              </button>
-            </MagneticBox>
+            <button onClick={() => signOut({ callbackUrl: "/login" })}
+              className="p-2 text-[#9aa87a] hover:text-[#f2f4e8] transition-colors ml-1">
+              <LogOut size={18} />
+            </button>
           </div>
         </div>
 

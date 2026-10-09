@@ -1,30 +1,31 @@
 /**
  * Moneybag payment gateway helper.
  * All requests are server-side only — the merchant key never leaves the server.
+ * API base: https://sandbox.api.moneybag.com.bd/api/v2
  */
 
-const BASE_URL = process.env.MONEYBAG_BASE_URL ?? "https://api.sandbox.moneybag.com.bd";
+const BASE_URL = process.env.MONEYBAG_BASE_URL ?? "https://sandbox.api.moneybag.com.bd/api/v2";
 const API_KEY  = process.env.MONEYBAG_MERCHANT_KEY ?? "";
 
 export interface MoneybagCustomer {
-  name:     string;
-  email:    string;
-  phone:    string;
-  address?: string;
-  city?:    string;
+  name:      string;
+  email:     string;
+  phone:     string;
+  address?:  string;
+  city?:     string;
   postcode?: string;
-  country?: string;
+  country?:  string;
 }
 
 export interface CreateCheckoutParams {
-  orderId:          string;   // your internal invoice / order ID
-  amount:           number;   // in BDT, two-decimal string sent to API
-  description:      string;
-  successUrl:       string;
-  cancelUrl:        string;
-  failUrl:          string;
-  ipnUrl:           string;
-  customer:         MoneybagCustomer;
+  orderId:     string;   // your internal invoice / order ID
+  amount:      number;   // in BDT
+  description: string;
+  successUrl:  string;
+  cancelUrl:   string;
+  failUrl:     string;
+  ipnUrl:      string;
+  customer:    MoneybagCustomer;
 }
 
 export interface CheckoutResponse {
@@ -44,9 +45,9 @@ export interface VerifyResponse {
   [key: string]: unknown;
 }
 
-/** POST /api/v2/payments/checkout */
+/** POST /payments/checkout */
 export async function createCheckout(params: CreateCheckoutParams): Promise<CheckoutResponse> {
-  const res = await fetch(`${BASE_URL}/api/v2/payments/checkout`, {
+  const res = await fetch(`${BASE_URL}/payments/checkout`, {
     method:  "POST",
     headers: {
       "Content-Type":       "application/json",
@@ -79,17 +80,16 @@ export async function createCheckout(params: CreateCheckoutParams): Promise<Chec
   }
 
   const json = await res.json();
-  console.log("[moneybag] checkout raw response:", JSON.stringify(json));
-  // Response is wrapped: { success, message, data: { checkout_url, session_id, expires_at } }
+  console.log("[moneybag] checkout response:", JSON.stringify(json));
+  // Response shape: { success, message, data: { checkout_url, session_id, expires_at } }
   return (json.data ?? json) as CheckoutResponse;
 }
 
-/** GET /api/v2/payments/verify/{transaction_id} */
+/** GET /payments/verify/{transaction_id} */
 export async function verifyPayment(transactionId: string): Promise<VerifyResponse> {
-  const res = await fetch(`${BASE_URL}/api/v2/payments/verify/${encodeURIComponent(transactionId)}`, {
+  const res = await fetch(`${BASE_URL}/payments/verify/${encodeURIComponent(transactionId)}`, {
     headers: { "X-Merchant-API-Key": API_KEY },
-    // Never cache verification — always hit the origin
-    cache: "no-store",
+    cache:   "no-store",
   });
 
   if (!res.ok) {
@@ -98,7 +98,7 @@ export async function verifyPayment(transactionId: string): Promise<VerifyRespon
   }
 
   const json = await res.json();
-  console.log("[moneybag] verify raw response:", JSON.stringify(json));
-  // Response may be wrapped: { success, data: { ... } }
+  console.log("[moneybag] verify response:", JSON.stringify(json));
+  // Response shape: { success, data: { ... } }
   return (json.data ?? json) as VerifyResponse;
 }
